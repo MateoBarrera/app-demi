@@ -8,7 +8,7 @@ from io import StringIO, BytesIO
 import json
 import numpy as np
 import base64
-#import cv2
+import cv2
 from flask_login import login_required, current_user
 #from app.webcam_web import frames, endframes
 from app.forms import CuestionarioForm, ConclusionesForm
