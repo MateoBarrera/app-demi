@@ -1,0 +1,240 @@
+<!-- RESPONSIVE REQUIRED -->
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{ super() }}
+Panel de Control
+{% endblock %}
+
+{% block navbar %}
+{% include 'navbar_2.html' %}
+{% endblock %}
+
+{% block content %}
+<section id="conclusiones" class="feature-section feature-style-2">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="section-title">
+          <h3 class="text-center">Panel de control</h3>
+        </div>
+      </div>
+    </div>
+    <div class="contact-section contact-style-6" style="background-color: white;">
+      <div class="contact-form-wrapper m-auto p-auto">
+        <div class="row">
+          <div class="col-sm-5 col-md-5">
+            <div class="card id-student mb-3 p-4 shadow-lg mb-40 radius-30">
+            <div class="row g-0 align-items-center justify-content-center">
+              <div class="col-auto">
+                <label for="d">
+                  <h5>Estudiante</h5>
+                </label>
+              </div>
+            </div>
+            <div class="row text-uppercase">
+              <div class="col-md-7">
+                <div class="row mt-20 p-2 justify-content-between">
+                  <h6>Nombre: </h6> 
+                  <div class="d-flex justify-content-end">
+                    <h7 class="text-muted fs-1">{{student.nombre}}</h7>
+                  </div>
+                </div>
+                <div class="row p-2">
+                  <h6>Institución: </h6>
+                  <div class="d-flex justify-content-end">
+                  <h7 class="text-muted  fs-1">{{student.institucion}} </h7>
+                  </div>
+                </div>
+                <div class="row p-2">
+                  <h6>Grado: </h6>
+                  <div class="d-flex justify-content-end">
+                  <h7 class="text-muted fs-1">{{student.grado}}</h7>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-5 iconify order-sm-first order-md-last p-4">
+                <img src="{{url_for('static',filename='images/avatar.png')}}"
+                  class="rounded float-center img-thumbnail" alt="...">
+              </div>
+            </div>
+            <div class="row p-2 pb-0 justify-content-center text-uppercase">
+              <h6>Docente a cargo: </h6>
+              <div class="d-flex justify-content-end pr-3">
+                <h7 class="text-muted fs-1">{{student.docente}}</h7>
+              </div>
+            </div>
+            </div>
+            <div class="d-flex justify-content-start pl-1">
+              <button id="pop" type="button" class="btn btn-primary mb-1" data-bs-toggle="popover" title="Información"
+                data-bs-content="Mediante esta ventana podrá visualizar el estado para la sesión remota y a su vez obtener los enlaces de acceso para que los estudiante desarrollen la evaluación emocional."><i
+                  class="bx bx-info-circle"></i></button>
+            </div>
+          </div>
+          <div class="col-sm-5 col-md-7">
+            <div class="row">
+              <div class="col text-center mb-20">
+                <h5>Sesión virtual</h5>
+              </div>
+            </div>
+            <div class="row align-items-center justify-content-center mb-20">
+              <div class="col-md-10 col-sm-12">
+                <h6>Fecha y hora de inicio: </h6>
+                <div class="d-flex justify-content-end">
+                  <h6 class="text-muted fs-1">{{student.fecha}}</h6>
+                </div>
+              </div>
+            </div>
+            <div class="row align-items-center justify-content-center text-center mb-40">
+              <div class="col-md-10 col-sm-12 mb-20">
+                <h6>Evaluación de estado de animo</h6>
+              </div>
+              <div class="row align-items-center justify-content-center mb-40">
+                <div class="col-10">
+                  <div class="row">
+                    <div class="col-md-7 col-sm-12 order-first text-left">
+                      <h6 class="text-muted mt-3">Evaluación inicial</h6>
+                      <label for="clipboard"><small>Enlace de acceso</small></label>
+                      <div class="input-group clipboard-input">
+                        <input id="text-inicial" type="text" class="form-control text-center cursor-not-allowed" readonly value="{{url_inicial}}"
+                          aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button id="btn-inicial" class="btn" type="button" onclick="copy('inicial')" ><i class="bx bx-copy w-100 h-40"></i></button>
+                      </div>
+                    </div>
+                    <div class="col-md-5 mb-50 mb-md-0">
+                      <h6 class="text-muted mt-3 mb-4">Estado</h6>
+                        <button id="btn-info-inicial" type="button" class="btn btn-labeled btn-secondary" disabled>
+                        Sin iniciar</button>
+                    </div>                   
+                  </div>
+                  <div class="row">
+                    <div class="col-md-7 col-sm-12 order-first text-left">
+                      <h6 class="text-muted">Evaluación final</h6>
+                      <label for="clipboard"><small>Enlace de acceso</small></label>
+                      <div class="input-group clipboard-input">
+                        <input id="text-final" type="text" class="form-control text-center cursor-not-allowed" readonly value="{{url_final}}"
+                          aria-label="Recipient's username" aria-describedby="button-addon2">
+                        <button id="btn-final" class="btn" type="button" id="button-addon2"><i class="bx bx-copy" onclick="copy('final');"></i></button>
+                      </div>
+                    </div>
+                    <div class="col-md-5 mb-50 mb-md-0">
+                      <h6 class="text-muted mb-4">Estado</h6>
+                      <button id="btn-info-final" type="button" class="btn btn-labeled btn-secondary" disabled>
+                        Sin iniciar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <form action="{{ url_for('script.panel_virtual') }}" method="POST">
+              <div>
+                <button class="button button-sm w-25 radius-10 d-lg-flex ml-auto">Finalizar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+{% endblock %}
+
+{% block scripts%}
+{{super()}}
+<script type="text/javascript ">
+  function copy(arr) {
+    
+    const btn = document.getElementById("btn-"+arr);
+    // Select text input element
+    const text = document.getElementById('text-'+arr);
+    text.focus();
+    text.select();
+    // Copy content to clipboard
+    document.execCommand('copy');
+    // Remember the button current text
+    const oldText = btn.innerHTML;
+    // Set the button text to 'copied'
+    text.classList.add('copied');
+    btn.classList.add('copied');
+    btn.innerHTML = '<i class="bx bx-check-circle"></i>';
+    btn.classList.toggle('cursor-default');
+    btn.setAttribute('tooltip','Copiado!');
+    // After 2s change it back
+    setTimeout(() => {
+      btn.innerHTML = oldText;
+      text.classList.remove('copied');
+      btn.classList.remove('copied');
+      btn.classList.toggle('cursor-default');
+      btn.setAttribute('tooltip','Click para copiar')
+    }, 2000);
+
+  };  
+</script>
+
+<script type="text/javascript ">
+  var exampleEl = document.getElementById('pop')
+  var popover = new bootstrap.Popover(exampleEl)
+</script>
+
+<script type="text/javascript ">
+  const text_field_i = document.getElementById('text-inicial');
+  const text_field_f = document.getElementById('text-final');
+
+  $(document).ready(function () {
+
+    var socket_admin= io('/admin-info')
+
+    socket_admin.on('connect', function () {
+      console.log("Connected...!", socket_admin.connected)
+      var socket_id = socket_admin.id
+      console.log("id", socket_id)
+      
+      text_field_i.value = text_field_i.value + '&admin_id=' + socket_id;
+      text_field_f.value = text_field_f.value + '&admin_id=' + socket_id;
+    });
+
+    socket_admin.on('virtual_status', function (msg) {
+      console.log("Recibido "+msg)
+      var messages = msg.split(",")
+      if (messages[0]=='inicial') {
+        var btn = document.getElementById('btn-info-inicial');
+      } else {
+        var btn = document.getElementById('btn-info-final');
+      }
+
+
+      btn.classList.remove('btn-secondary');
+      if (messages[1]=="1") {
+        btn.classList.add('btn-primary');
+        btn.innerHTML = 'En proceso'
+      } else if (messages[1]=="2") {
+        btn.classList.add('btn-success');
+        btn.innerHTML = 'Finalizado'
+      } else{
+        btn.classList.remove('btn-success');
+        btn.classList.remove('btn-primary');
+        btn.classList.add('btn-secondary'); 
+        btn.innerHTML = 'Sin Iniciar'       
+      }
+
+      console.log("Recibidos "+messages[0])
+    });
+  
+    $('#message').on('click', function () {
+      var message_to_send = 'inicial,2';
+      var recipient = socket_admin.id
+      console.log("a punto de enviar")
+
+      socket_admin.emit('virtual_status', { 'admin_id': recipient, 'info': message_to_send });
+    });
+
+
+
+  });
+   
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" onload="init_socket();"></script>
+{% endblock%}

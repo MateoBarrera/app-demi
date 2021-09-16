@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{ super() }}
+Consulta
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"/>
+<link rel="stylesheet" href="{{url_for('static',filename='css/styles.css')}}">
+{% endblock %}
+
+{% block navbar %}
+{% include 'navbar_3.html' %}
+{% endblock %}
+
+{% block content %}
+
+<body id="body-pd">
+  
+  <!--Container Main start-->
+  <!--Container Main end-->
+  <section id="vista-general">
+    <h3 class="mb-30">Vista general</h4>
+      <div class="row">
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-primary text-white mb-4">
+            <div class="card-title">
+              <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
+              <p class="pl-15 text-aling-center font-weight-bold">Docentes e investigadores registrados</p>            
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_users|safe}})">Ver Detalles</a>
+              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-warning text-white mb-4">
+            <div class="card-title">
+              <div class="text-white iconify">{{all_students|length}}<i class="bx bx-face"></i></div><br>
+              <p class="pl-15 text-aling-center font-weight-bold">Estudiante registrados</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_students|safe}})">Ver Detalles</a>
+              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-success text-white mb-4">
+            <div class="card-title">
+              <div class="text-white iconify">{{all_sessions|length}}<i class="bx bx-bar-chart-alt-2"></i></div><br>
+              <p class="pl-15 text-aling-center font-weight-bold">Sesiones almacenadas</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_sessions|safe}})">Ver Detalles</a>
+              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+          <div class="card bg-danger text-white mb-4">
+            <div class="card-title">
+              <div class="text-white iconify">{{recent_sessions|length}}<i class="bx bx-calendar-check"></i></div><br>
+              <p class="pl-15 text-aling-center font-weight-bold">Sesiones realizadas la ultima semana</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{recent_sessions|safe}})" >Ver Detalles</a>
+              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+      <div class="col-lg-6 ">
+        <h5 class="mb-30">Detalles</h5>
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-table me-1"></i>
+              Información
+            </div>
+            <div class="card-body">
+              <div class="table-responsive-sm info-table" id="table_content">   
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="content-wrapper">
+          <div class="section-title mb-40">
+            <h5 class="mb-20">Agenda</h5>
+            <div class="w-100" id="AgendaJS"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-chart-area me-1"></i>
+              Gráfico de Area
+            </div>
+            <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+          </div>
+        </div>
+        <div class="col-xl-6">
+          <div class="card mb-4">
+            <div class="card-header">
+              <i class="fas fa-chart-bar me-1"></i>
+              Gráfico Circular
+            </div>
+            <div class="card-body"><canvas id="myPieChart" width="100%" height="40"></canvas></div>
+          </div>
+        </div>
+      </div>
+  
+  </section>
+  <section id="configuracion" hidden>
+    <h3 class="mb-30">Perfil de usuario</h4>
+    <div class="contact-section contact-style-6 bg-white">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5">
+        <div class="left-wrapper">
+          <div class="d-flex align-items-start py-3 border-bottom"> <img
+              src="https://images.pexels.com/photos/1037995/pexels-photo-1037995.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+              class="img-profile" alt="">
+            <div class="pl-sm-4 pl-2" id="img-section"> <b>Profile Photo</b>
+              <p>Accepted file type .png. Less than 1MB</p> <button class="btn button border"><b>Upload</b></button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-lg-12 col-md-6">
+              <div class="single-item">
+                <div class="icon">
+                  📞
+                </div>
+                <div class="text">
+                  <p>Numero</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="col-lg-7 order-first order-lg-last">
+          <div class="contact-form-wrapper">
+            <form action="{{ url_for('inicio') }}" method="POST">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="single-input">
+                    {{ contacto_form.csrf_token()}}
+                    <label for="name">{{ contacto_form.nombre.label() }}</label>
+                    {{ contacto_form.nombre() }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="single-input">
+                    <label for="email">{{ contacto_form.correo.label() }}</label>
+                    {{ contacto_form.correo() }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="single-input">
+                    <label for="number">{{ contacto_form.numero.label() }}</label>
+                    {{ contacto_form.numero() }}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="single-input">
+                    <label for="subject">{{ contacto_form.asunto.label() }}</label>
+                    {{ contacto_form.asunto() }}
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="single-input">
+                    <label for="message">{{ contacto_form.mensaje.label() }}</label>
+                    {{ contacto_form.mensaje() }}
+                  </div>
+                </div>
+                <div class="col-md-12">
+                  <div class="form-button">
+                    <button type="submit" class="button radius-10">enviar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      </div>
+
+  </section>
+  <section id="calendario" hidden> 
+    <h3>Calendario</h3>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-5 m-5 mid-image">
+          <div class="section-title cup-strar">
+            <div class="w-100" id="CalendarJS"></div>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <div class="content-wrapper">
+            <div class="section-title mb-40">
+              <h4 class="mb-60">Agenda</h4>
+              <div class="w-100" id="AgendaJS"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </section>
+  <section id="busqueda1" hidden>
+    <h3 class="mb-30">Búsqueda 1</h4>
+    <div class="card mb-4">
+      <div class="card-header">
+        <i class="fas fa-table me-1"></i>
+        DataTable Example
+      </div>
+      <div class="card-body">
+        <table id="datatablesSimple2">
+          <thead>
+            <tr>
+              {% for key, value in all_users[0].items() %}
+                <th> {{ key }} </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in all_users %}
+              <tr>
+              {% for key, value in item.items() %}
+                <th> {{ value }} </th>
+              {% endfor %}
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+  </section>
+  <section id="busqueda2" hidden>
+    <h3 class="mb-30">Búsqueda 2</h3>
+      <h3 class="mb-30">Búsqueda 1</h3>
+        <div class="card mb-4">
+          <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            DataTable Example
+          </div>
+          <div class="card-body">
+            <table id="datatablesSimple3">
+
+            </table>
+          </div>
+        </div>
+  </section>
+
+  
+
+{% endblock %}
+
+{% block scripts%}
+{{ super() }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
+<script src="{{url_for('static',filename='js/scripts.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+
+
+
+<script>
+    let agendaEl = document.getElementById('AgendaJS');
+    let agenda = new FullCalendar.Calendar(agendaEl, { headerToolbar: {
+            right: 'dayGridMonth,timeGridWeek,timeGridDay',
+            left: 'prev,next',
+            center: 'title',
+          },
+          initialView: 'dayGridMonth',
+        events:
+          [
+            
+            {% for event in events %}
+            {
+              title: '{{event.todo}}',
+              start: '{{event.date}}',
+              end: '{{event.hora_1}}'
+              
+            },
+            {% endfor %}
+      ], allDay: false,
+
+    });
+
+    agenda.render();
+
+    var cal2GoTo = function (date) {
+      console.log('cal2go '+date)
+        agenda.fullCalendar('gotoDate', date);
+      }
+</script>
+
+<script>
+  var _table_ = document.createElement('table'),
+      _tr_ = document.createElement('tr'),
+      _th_ = document.createElement('th'),
+      _td_ = document.createElement('td'),
+      _thead_ = document.createElement('thead'),
+      _tbody_ = document.createElement('tbody');
+
+    function  loadTable(arr){
+    
+      var table = _table_.cloneNode(false);
+      var tbody = _tbody_.cloneNode(false),
+        columns = addAllColumnHeaders(arr, table);
+      for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+        var tr = _tr_.cloneNode(false);
+        for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+          var th = _th_.cloneNode(false);
+          cellValue = arr[i][columns[j]];
+          th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+          console.log("Click" + th.textContent)
+          tr.appendChild(th);
+        }   
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+      
+      table.id = "table_info"
+      table.classList.add("table");
+      table.classList.add("table-hover");
+      table.classList.add("text-secondary");
+
+      function addAllColumnHeaders(arr, table) {
+        var columnSet = [],
+          thead = _thead_.cloneNode(false);
+          tr = _tr_.cloneNode(false);
+        for (var i = 0, l = arr.length; i < l; i++) {
+          for (var key in arr[i]) {
+            if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
+              columnSet.push(key);
+              var th = _th_.cloneNode(false);
+              th.appendChild(document.createTextNode(key));
+              tr.appendChild(th);
+            }
+          }
+        }
+        thead.appendChild(tr);
+        thead.classList.add("text-primary");
+        table.appendChild(thead);
+        return columnSet;
+      }
+
+      var el = document.getElementById("table_content");
+      el.innerHTML= "";
+      el.appendChild(table);
+      const datatablesSimple = document.getElementById('table_info');
+      if (datatablesSimple) {
+        new simpleDatatables.DataTable(datatablesSimple,);
+      }
+    }
+    
+
+</script>
+
+{% endblock %}
+
+{%block footer%}
+{% include 'footer.html' %}
+{% endblock %}

@@ -1,0 +1,300 @@
+<!-- RESPONSIVE REQUIRED -->
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{ super() }}
+Conclusiones
+{% endblock %}
+
+{% block navbar %}
+{% include 'navbar_2.html' %}
+{% endblock %}
+
+{% block content %}
+<section id="conclusiones" class="feature-section feature-style-2">
+  <div class="container">
+    <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="section-title">
+          <h3 class="text-center">Conclusiones de la sesión</h3>
+        </div>
+      </div>
+    </div>
+      <div class="contact-section contact-style-6" style="background-color: white;" >
+        <div class="contact-form-wrapper m-auto p-auto">
+          <form action="{{ url_for('script.conclusion') }}" method="POST">
+            {{ conclusion_form.csrf_token() }}
+            <div class="row">
+              <div class="col">
+                <h4>Evaluación Inicial</h4>
+              </div>
+            </div>
+            <div class="row align-items-center justify-content-center mb-20">
+              <div class="col-auto">
+                <label for="d">
+                  <h5 class="text-muted">Estados de animo</h5>
+                </label>
+              </div>
+            </div>          
+            <div class="row align-items-center justify-content-center text-center mb-40">
+              <div class="col-auto single-input w-25">
+                <label for="est-inicial"><h7>Autopercepción del Estudiante</h7></label>
+                <input type="text" readonly class="form-control-plaintext text-center" id="est-inicial" value="{{ev_ini_est}}">
+              </div>
+              <div class="col-auto single-input w-25">
+                <label for="doc-inicial"><h7>Percepción del docente</h7></label>
+              <input type="text" readonly class="form-control-plaintext text-center" id="doc-inicial" value="{{ev_ini_doc}}">
+              </div>
+              <div class="col-auto single-input w-25">
+                <label for="herr-inicial"><h7>Reconocimiento facial</h7></label>
+                <input type="text" readonly class="form-control-plaintext text-center" id="herr-inicial" value="{{ev_ini_herr}}">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col">
+                <h4>Evaluación Final</h4>
+              </div>
+            </div>
+            <div class="row align-items-center justify-content-center text-center mb-20">
+              <div class="col-auto">
+                <label for="d">
+                  <h5 class="text-muted">Estados de animo</h5>
+                </label>
+              </div>
+            </div>
+            <div class="row align-items-center justify-content-center text-center mb-40">
+              <div class="col-auto single-input w-25">
+                <label for="est-final">
+                  <h7>Autopercepción del Estudiante</h7>
+                </label>
+                <input type="text" readonly class="form-control-plaintext text-center" id="est-final" value="{{ev_fin_est}}">
+              </div>
+              <div class="col-auto select-input w-25">
+                  {% if conclusion_form.emocion_percibida.errors %}
+                  <label for="doc-final">
+                    <h7 class="text-danger">Percepción del docente*</h7>
+                  </label>
+                  {{conclusion_form.emocion_percibida(class_="text-primary border-danger")}}
+                  {% else %}
+                  <label for="doc-final">
+                    <h7 class="text-primary">Percepción del docente*</h7>
+                  </label>
+                  {{conclusion_form.emocion_percibida(class_="text-primary ")}}
+                  {% endif %}
+              </div>
+              <div class="col-auto single-input w-25">
+                <label for="herr-final">
+                  <h7>Reconocimiento facial</h7>
+                </label>
+                <input type="text" readonly class="form-control-plaintext text-center" id="herr-final" value="{{ev_fin_herr}}">
+              </div>
+            </div>
+              <div class="single-input">
+                <label for="#observasiones">
+                  <h4>{{conclusion_form.observacion.label()}}</h4>
+                </label>
+                {{conclusion_form.observacion()}}
+              </div>
+              <div class="row justify-content-end">
+                <div class="col-auto">
+                  {% if conclusion_form.errors %}
+                  {% for error in conclusion_form.errors %}
+                  <div class="single-input">
+                    <div class="error-input">{{error}}</div>
+                  </div>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+              </div>
+              <div>
+                {{conclusion_form.iniciar(class_="button button-sm w-25 radius-10 d-lg-flex ml-auto")}}
+              </div>
+          </form>
+        </div>
+      </div>
+  </div>
+  <div class="contact-section contact-style-6" style="background-color: white;">
+    <div class="contact-form-wrapper m-auto p-auto">
+      <div class="row">
+        <div class="col text-center">
+          <h4 class="mb-40">Información adicional</h4>
+          <div class="row align-items-center justify-content-center text-center mb-40">
+            <div class="col-xl-6">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <i class="fas fa-chart-area me-1"></i>
+                  <h6>Reconocimiento Evaluación Inicial</h6>
+                </div>
+                <div class="card-body"><canvas id="myPieChart_1" width="100%" height="40"></canvas></div>
+              </div>
+            </div>
+            <div class="col-xl-6">
+              <div class="card mb-4">
+                <div class="card-header">
+                  <i class="fas fa-chart-area me-1"></i>
+                  <h6>Reconocimiento Evaluación Final</h6>
+                </div>
+                <div class="card-body"><canvas id="myPieChart_2" width="100%" height="40"></canvas></div>
+              </div>
+            </div>
+        </div>
+        <div class="row align-items-center justify-content-center text-center mb-40">
+          <div class="col-xl-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                <i class="fas fa-chart-area me-1"></i>
+                <h6>Valores de predicción por Reconocimiento <br> Evaluación Inicial</h6>
+              </div>
+              <div class="card-body"><canvas id="myPieChart_3" width="100%" height="40"></canvas></div>
+            </div>
+          </div>
+          <div class="col-xl-6">
+            <div class="card mb-4">
+              <div class="card-header">
+                <i class="fas fa-chart-area me-1"></i>
+                <h6>Valores de predicción por Reconocimiento <br> Evaluación Final </h6>
+              </div>
+              <div class="card-body"><canvas id="myPieChart_4" width="100%" height="40"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+  
+{% endblock %}
+
+{% block scripts%}
+{{super()}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  // Pie Chart Example
+    var ctx = document.getElementById("myPieChart_1");
+    var myPieChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ["Feliz", "Triste", "Enojado", "Sorprendido","Neutro","No se reconoce"],
+        datasets: [{
+          data: ["{{conteo_inicial['Felicidad']}}", "{{conteo_inicial['Tristeza']}}", "{{conteo_inicial['Enojo']}}", "{{conteo_inicial['Sorpresa']}}", "{{conteo_inicial['Neutral']}}","{{conteo_inicial['No se reconoce']}}"],
+          backgroundColor: ['#28a745','#007bff', '#dc3545', '#ffc107', '#767676'],
+        }],
+      },
+    });
+
+  // Pie Chart Example
+    var ctx = document.getElementById("myPieChart_2");
+    var myPieChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
+        datasets: [{
+          label:'Reconocimiento',
+          data: ["{{conteo_final['Felicidad']}}", "{{conteo_final['Tristeza']}}", "{{conteo_final['Enojo']}}", "{{conteo_final['Sorpresa']}}", "{{conteo_final['Neutral']}}", "{{conteo_final['No se reconoce']}}"],
+          backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
+        }],
+      },
+    });
+
+  // Pie Chart Example
+    var ctx = document.getElementById("myPieChart_3");
+    var myPieChart = new Chart(ctx, {
+      type: 'bar',
+      options:{
+        responsive: true,
+        scales: {
+          xAxes: [{
+            stacked: true,
+          }],
+          yAxes: [{
+            stacked: true
+          }]
+        },
+      },
+      
+      data: {
+        labels: Array(...Array({{preds_inicial['1']|length}}).keys()),
+        datasets: [
+          {
+            label: 'Felicidad',
+            data: {{preds_inicial['1']}},
+            backgroundColor: '#28a745',
+          },
+          {
+            label: 'Tristeza',
+            data: {{preds_inicial['2']}},
+            backgroundColor: '#007bff',
+          },
+          {
+            label: 'Enojo',
+            data: {{preds_inicial['0']}},
+            backgroundColor: '#dc3545',
+          },
+          {
+            label: 'Sorpresa',
+            data: {{preds_inicial['3']}},
+            backgroundColor: '#ffc107',
+          },
+          {
+            label: 'Neutral',
+            data: {{preds_inicial['4']}},
+            backgroundColor: '#767676',
+          }],
+      },
+    });
+
+    // Pie Chart Example
+    var ctx = document.getElementById("myPieChart_4");
+    var myPieChart = new Chart(ctx, {
+        type: 'bar',
+        options: {
+          responsive: true,
+          scales: {
+            xAxes: [{
+              stacked: true,
+            }],
+            yAxes: [{
+              min: 0,
+              max: 2,
+              stacked: true,
+            }]
+          },
+        },
+
+        data: {
+          labels: Array(...Array({{ preds_final['1']| length }}).keys()),
+          datasets: [
+            {
+              label: 'Felicidad',
+              data: {{preds_final['1']}},
+              backgroundColor: '#28a745',
+            },
+            {
+              label: 'Tristeza',
+              data: {{preds_final['2']}},
+              backgroundColor: '#007bff',
+            },
+            {
+              label: 'Enojo',
+              data: {{preds_final['0']}},
+              backgroundColor: '#dc3545',
+            },
+            {
+              label: 'Sorpresa',
+              data: {{preds_final['3']}},
+              backgroundColor: '#ffc107',
+            },
+            {
+              label: 'Neutral',
+              data: {{preds_final['4']}},
+              backgroundColor: '#767676',
+            }],
+        },
+      });
+</script>
+{% endblock%}

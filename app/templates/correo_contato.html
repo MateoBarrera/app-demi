@@ -1,0 +1,158 @@
+{% extends 'bootstrap/base.html' %}
+
+
+{% block head %}
+{{super()}}
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="{{url_for('static',filename='css/main.css')}}">
+{% endblock %}
+
+{% block body%}
+<div id="print-content"> 
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <!-- LOGO -->
+  <tr>
+    <td class=" content-table" bgcolor="#2f80ed">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+        <tr>
+          <td align="center" valign="top" style="padding: 40px 10px 40px 10px;"> 
+            <canvas id="myChart" width="100" height="100"></canvas>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="#2f80ed" align="center" style="padding: 0px 10px 0px 10px;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+        <tr>
+          <td class="td-style" bgcolor="#ffffff" align="center" valign="top">
+            <img src="{{url_for('static',filename='/images/IconWebApp.jpg')}}" alt="Icono WebAPP">
+            <h4 style="font-size: 48px; font-weight: 400; margin: 2;">Contacto WebAPP!</h4> 
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr class="pb-20">
+    <td bgcolor="#f4f4f4" align="center" style="padding: 0px 10px 0px 10px;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
+        <tr>
+          <td bgcolor="#ffffff" align="left"
+            style="padding: 20px 30px 40px 30px; color: #2e2e2e; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+            <p style="margin: 0;"><h1>Información del usuario:</h1></p>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#ffffff" align="center">
+              <div class="icon text">
+                <h2>👤</h2>
+              </div>
+              <div class="text">
+                <h3>Nombre: {{ nombre }}</h3>
+              </div>
+              <div class="icon">
+                <h2>📞</h2>
+              </div>
+              <div class="text">
+                <h3>Numero: {{ numero }}</h3>
+              </div>
+              <div class="icon">
+                <h2>📧</h2>
+              </div>
+              <div class="text">
+                <h3>Correo:<a href="mailto:{{ correo }}" class="mail">{{ correo }}</a></h3>
+              </div>
+          </td>
+            
+        </tr>
+        <tr>
+          <td bgcolor="#ffffff" align="left"
+            style="padding: 20px 30px 20px 30px; color: #2e2e2e; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+            <p style="margin: 0;">
+            <h1>Mensaje:</h1>
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#ffffff" align="left"
+            style="padding: 0px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
+            <h4 style="margin: 0;">{{ mensaje }}</h4>
+          </td>
+        </tr> <!-- COPY -->
+        <tr>
+          <td bgcolor="#ffffff" align="center"
+            style="padding: 0px 30px 40px 30px; border-radius: 0px 0px 4px 4px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 400; line-height: 25px;">
+            <p style="margin: 0;">Generado automáticamente por WebAPP.</p>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+
+  </tr>
+
+</table>
+</div>
+<button id="print" onclick="window.print();return false">Print</button>
+
+
+{% block scripts%}
+{{super()}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<<!-- script src="http://d3js.org/d3.v3.min.js"></script> -->
+
+<script type="text/javascript">
+  // utils.js
+  function printContent(el) {
+  var restorepage = $('body').html();
+  var printcontent = $('#' + el).clone();
+  $('body').empty().html(printcontent);
+  window.print();
+  $('body').html(restorepage);
+  }
+
+  new Chart(document.getElementById("myChart"), {
+      type: 'bar',
+      data: {
+        labels: ["1900", "1950", "1999", "2050"],
+        datasets: [{
+          label: "Europe",
+          type: "line",
+          borderColor: "#8e5ea2",
+          data: [408, 547, 675, 734],
+          fill: false
+        }, {
+          label: "Africa",
+          type: "line",
+          borderColor: "#3e95cd",
+          data: [133, 221, 783, 2478],
+          fill: false
+        }, {
+          label: "Europe",
+          type: "bar",
+          backgroundColor: "rgba(0,0,0,0.2)",
+          data: [408, 547, 675, 734],
+        }, {
+          label: "Africa",
+          type: "bar",
+          backgroundColor: "rgba(0,0,0,0.2)",
+          backgroundColorHover: "#3e95cd",
+          data: [133, 221, 783, 2478]
+        }
+        ]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Population growth (millions): Europe & Africa'
+        },
+        legend: { display: false }
+      }
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,116 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>WebcamJS Test Page</title>
+  <style type="text/css">
+    body {
+      font-family: Helvetica, sans-serif;
+    }
+
+    h2,
+    h3 {
+      margin-top: 0;
+    }
+
+    form {
+      margin-top: 15px;
+    }
+
+    form>input {
+      margin-right: 15px;
+    }
+
+    #results {
+      float: right;
+      margin: 20px;
+      padding: 20px;
+      border: 1px solid;
+      background: #ccc;
+    }
+  </style>
+</head>
+<body>
+<div>
+  <p><h2>Captura de imagen</h2></p>
+</div>
+<div id="container">
+  <canvas id="canvasOutput"></canvas>
+  <video autoplay="true" id="videoElement"></video>
+</div>
+
+<div class='video'>
+  <img id="image">
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+<script>
+var socket = io();
+
+    socket.on('connect', function(){
+        console.log("Connected...!", socket.connected)
+    });
+
+    const video = document.querySelector("#videoElement");
+
+    video.width = 500; 
+    video.height = 375; ;
+
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function (err0r) {
+            console.log(err0r)
+            console.log("Something went wrong!");
+        });
+    }
+
+    function onOpenCvReady() {
+  cv['onRuntimeInitialized']=()=>{
+    // do all your work here
+    let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+    let dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
+    let cap = new cv.VideoCapture(video);
+
+    const FPS = 30;
+
+    setInterval(() => {
+        const frame = cap.read(src);
+        let tempCanvas = document.createElement("canvas");
+        cv.imshow(tempCanvas,src)
+        let b64image = tempCanvas.toDataURL('image/jpeg',0.1)
+        /* console.log(b64image) */
+        /* var type = "image/png"
+
+        var video_element = document.getElementById("videoElement")
+        var frame = capture(video_element, 1)
+        var data = frame.toDataURL(type); */
+        /* var data = document.getElementById("canvasOutput").toDataURL(type);
+        data = data.replace('data:' + type + ';base64,', ''); //split off junk at the beginning */
+
+        socket.emit('image', b64image);
+        console.log('enviando...'+b64image)
+    }, 10000/FPS);
+
+
+    socket.on('response_back', function(image){
+        const image_id = document.getElementById('image');
+        console.log('recibiendo..')
+        const imageElm = 'data:image/jpeg;base64,$(image)';
+        image_id.src = image;
+    });
+
+        };
+}
+
+</script>
+
+  <script src="{{url_for('static',filename='js/opencv.js')}}" onload="onOpenCvReady()"; ></script>
+
+</body>

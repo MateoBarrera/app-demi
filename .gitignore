@@ -1,0 +1,9 @@
+_pycache_
+**.zip
+**.pyc
+**.pdf
+**.xlsx
+**.sql
+app/_pycache_/
+app/auth/_pycache_/
+venv/

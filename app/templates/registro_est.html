@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{ super() }}
+Registrarse
+{% endblock %}
+
+{% block navbar %}
+{% include 'navbar_2.html' %}
+{% endblock %}
+
+{% block content %}
+
+<section id="signup" class="contact-section contact-style-6 bg-white">
+  <div class="container justify-content-center">
+    <div class="row">
+      <div class="col-lg-5 m-5 mid-image">
+        <div class="hero-image cup-strar">
+          <img src="{{url_for('static',filename='/images/Google_docs.svg')}}" alt="Registrase">
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="content-wrapper">
+          <div class="section-title mb-40">
+            <h3 class="mb-60">Registrar Estudiante</h3>
+            <div class="contact-form-wrapper">
+              <form action="{{ url_for('registro_est', terapia=redirect_terapia) }}" method="POST" enctype="multipart/form-data">
+                <fieldset>
+                  <div class="single-input">
+                    {{ estudiante_form.csrf_token() }}
+                    <label for="name s">
+                      <h6>{{estudiante_form.nombre.label()}} </h6>
+                    </label>
+                    {% if estudiante_form.nombre.errors %}
+                    {{estudiante_form.nombre(class_="text-danger border-danger")}}
+                    {% for error in estudiante_form.nombre.errors %}
+                    <small id="AyudaNombre" class="error-input">{{error}}</small>
+                    {% endfor %}
+                    {% else %}
+                    {{estudiante_form.nombre(title="Nombre completo del estudiante.")}}
+                    <small id="AyudaNombre" class="form-text text-muted">Ingrese nombre y apellidos.</small>
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input">
+                    <label for="name s">
+                      <h6>{{estudiante_form.identificacion.label()}} </h6>
+                    </label>
+                    {% if estudiante_form.identificacion.errors %}
+                    {{estudiante_form.identificacion(class_="text-danger border-danger")}}
+                    {% for error in estudiante_form.identificacion.errors %}
+                    <small id="AyudaNombre" class="error-input">{{error}}</small>
+                    {% endfor %}
+                    {% else %}
+                    {{estudiante_form.identificacion(title="Numero de identificación sin comas o puntos.")}}
+                    {% endif %}
+                    {% if not val_est %}
+                    <small class="error-input">Ya se encuentra registrado un usuario con este numero de identificación.</small>
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input">
+                    <label for="name s">
+                      <h6>{{estudiante_form.nacimiento.label()}}</h6>
+                    </label>
+                    {% if estudiante_form.nacimiento.errors %}
+                    {{estudiante_form.nacimiento(class_="text-danger border-danger")}}
+                    {% for error in estudiante_form.nacimiento.errors %}
+                    <small id="AyudaNacimiento" class="error-input">{{error}}</small>
+                    {% endfor %}
+                    {% else %}
+                    {{estudiante_form.nacimiento()}}
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="select-input ">
+                    <label for="grado s">
+                      <h6>{{estudiante_form.grado.label()}}</h6>
+                    </label>
+                    {% if estudiante_form.grado.errors %}
+                    {{estudiante_form.grado(class_="text-danger border-danger")}}
+                    {% for error in estudiante_form.grado.errors %}
+                    <small id="AyudaGrado" class="error-input">{{error}}</small>
+                    {% endfor %}
+                    {% else %}
+                    {{estudiante_form.grado()}}
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input">
+                    <label for="institucion s">
+                      <h6>{{estudiante_form.institucion.label()}}</h6>
+                    </label>
+                    {% if estudiante_form.institucion.errors %}
+                    {{estudiante_form.institucion(class_="text-danger border-danger")}}
+                    {% for error in estudiante_form.institucion.errors %}
+                    <small id="Ayudainstitucion" class="error-input">{{error}}</small>
+                    {% endfor %}
+                    {% else %}
+                    {{estudiante_form.institucion()}}
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="select-input">
+                    <label for="grado s">
+                      <h6>{{estudiante_form.imagen.label()}}</h6>
+                    </label>
+                    {% if estudiante_form.imagen.errors %}
+                    {{estudiante_form.imagen(class_="text-danger border-danger", accept_="image/gif, image/jpeg")}}
+                    {% for error in estudiante_form.imagen.errors %}
+                    <small id="AyudaImagen" class="error-input">{{error}}</small>
+                    {% endfor %}
+                    {% else %}
+                    {{estudiante_form.imagen(class_="upload-form w-100", title="Foto de perfil en formato .JPG")}}
+                    <small id="Ayuda" class="form-text text-muted">Admite formatos .jpg o .png</small>
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input">
+                    <label for="institucion s">
+                      <h6>{{estudiante_form.anotaciones.label()}}</h6>
+                    </label>
+                    {{estudiante_form.anotaciones()}}
+                    <small id="AyudaAnotaciones" class="form-text text-muted">Resumen general del estado de salud (Opcional).</small>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="text-center">
+                    <p>{{estudiante_form.terminos(class_="form-check-input")}} Política de <a href="#terminos y condiciones">tratamiento de datos personales</a>*</p>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="mt-10">
+                    {{estudiante_form.iniciar(class_=" button radius-10 w-100")}}
+                  </div>
+                </fieldset>
+                <div class="row justify-content-end">
+                  <div class="col-auto">
+                    {% if estudiante_form.errors %}
+                    {% for error in estudiante_form.errors %}
+                    <div class="single-input">
+                      <div class="error-input">{{error}}</div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

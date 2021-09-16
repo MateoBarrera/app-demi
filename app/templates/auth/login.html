@@ -1,0 +1,71 @@
+<!-- DONE 10-mayo -->
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{ super() }}
+Iniciar sesión
+{% endblock %}
+
+{% block navbar %}
+{% include 'navbar_2.html' %}
+{% endblock %}
+{% block content %}
+
+<section id="login" class="contact-section contact-style-6 bg-white">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 m-5 mid-image">
+        <div class="hero-image cup-strar">
+          <img src="{{url_for('static',filename='/images/Safe.svg')}}" alt="Inicio de sesión">
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="content-wrapper">
+          <div class="section-title mb-40">
+            <h3 class="mb-60">Iniciar sesión</h3>
+            <div class="contact-form-wrapper">
+              <form action="{{ url_for('auth.login') }}" method="POST">
+                <fieldset>
+                  <div class="single-input">
+                    {{ login_form.csrf_token() }}
+                    <label for="nombre-usuario">
+                      <h6>{{login_form.nombre.label()}}</h6>
+                    </label>
+                    {{login_form.nombre()}}
+                    {% if not val_name %}
+                    <div class="error-input">Usuario incorrecto</div>
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input">
+                    <label for="contraseña">
+                      <h6>{{login_form.contraseña.label()}}</h6>
+                    </label>
+                    {{login_form.contraseña()}}
+                    {% if not val_cont %}
+                    <div class="error-input">
+                      Contraseña incorrecta
+                    </div>
+                    {% endif %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="mt-30">
+                    {{login_form.login(class_="form-button button radius-10 w-100")}}
+                  </div>
+                  <div class="text-center pt-10">
+                    <a href="{{url_for('auth.signup')}}">Registrarse</a>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

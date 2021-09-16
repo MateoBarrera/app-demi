@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{ super() }}
+Cuestionario
+{% endblock %}
+
+{% block navbar %}
+{% include 'navbar_2.html' %}
+{% endblock %}
+
+{% block content %}
+<section id="cuestionario" class="feature-section feature-style-2">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-xl-7 col-lg-10 col-md-9"></div>
+          <div class="section-title">
+            <h3 class="text-center">Cuestionario</h3>
+          </div>
+        </div>
+      </div>
+      <div class="contact-section contact-style-6 bg-body">
+        <div class="container">
+          <div class="row">
+            <div class="content-wrapper">
+              <form action="{{ url_for('script.cuestionario') }}" method="POST">
+                {{ cuestionario_form.csrf_token() }}
+                <div class="row">
+                  <div class="col">
+                    <h4 class="mt-0 mb-20">Evaluación de la clase</h4>
+                  </div>
+                </div>
+                <div>
+                <ul class="single-input mb-40">
+                  <li class="form-label text-center p-5">
+                    <h5>Pregunta 1</h5>
+                    <h4 class="text-muted m-4">{{cuestionario_form.resp_1.label()}}</h4>
+                    <div class="m-4 radio-cuestionario">
+                      {% for subfield in cuestionario_form.resp_1 %}
+                      {% if loop.first%}
+                        <td>{{ subfield }}</td>
+                        <td><label for="resp_1-0">
+                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                          </label>
+                        </td>
+                      {% else %}
+                        <td>{{ subfield }}</td>
+                        <td><label for="resp_1-1">
+                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                          </label></td>
+                        </tr>
+                      {% endif %}                       
+                      {% endfor %}                 
+                    </div>
+                  </li>
+                  <li class="form-label text-center p-5">
+                    <h5>Pregunta 2</h5>
+                    <h4 class="text-muted m-4">{{cuestionario_form.resp_2.label()}}</h4>
+                    <div class="m-4 radio-cuestionario">
+                      {% for subfield in cuestionario_form.resp_2 %}
+                      {% if loop.first%}
+                      <td>{{ subfield }}</td>
+                      <td><label for="resp_2-0">
+                          <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                        </label>
+                      </td>
+                      {% else %}
+                      <td>{{ subfield }}</td>
+                      <td><label for="resp_2-1">
+                          <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                        </label></td>
+                      </tr>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                  </li>
+                  <li class="form-label text-center p-5">
+                    <h5>Pregunta 3</h5>
+                    <h4 class="text-muted m-4">{{cuestionario_form.resp_3.label()}}</h4>
+                    <div class="m-4 radio-cuestionario">
+                      {% for subfield in cuestionario_form.resp_3 %}
+                      {% if loop.first%}
+                      <td>{{ subfield }}</td>
+                      <td><label for="resp_3-0">
+                          <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                        </label>
+                      </td>
+                      {% else %}
+                      <td>{{ subfield }}</td>
+                      <td><label for="resp_3-1">
+                          <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                        </label></td>
+                      </tr>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                  </li>
+                </ul>
+                </div>
+                
+                <div class="mt-80">
+                  <div class="col-auto">
+                    {{cuestionario_form.iniciar(class_="button w-25 button-sm radius-10 d-lg-flex ml-auto")}}
+                  </div>
+                </div>
+                <div class="row justify-content-end">
+                  <div class="col-auto">
+                    {% if cuestionario_form.errors %}
+                    {% for error in cuestionario_form.errors %}
+                    <div class="single-input">
+                      <div class="error-input">{{error}}</div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+
+{% endblock %}
+
+
+
+<!-- Encuesta del docente
+  <div class="row">
+  <div class="col">
+    <h4 class="mb-20">Evaluación del Docente</h4>
+  </div>
+</div>
+<div>
+  <ul class="single-input mb-60">
+    <li class="form-label text-center mb-40">
+      <h6>{{cuestionario_form.resp_1.label()}}</h6>
+      <p class="form-text mb-20">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+        dolor.</p>
+      <div class="custom-control custom-radio w">
+        <input type="radio" id="customRadio1_d" name="customRadio_d" class="custom-control-input input-hidden">
+        <label for="customRadio1_d">
+          <img src="{{url_for('static',filename='/images/like.svg')}}" class="w-25" alt="">
+        </label>
+        <input type="radio" id="customRadio2_d" name="customRadio_d" class="custom-control-input input-hidden">
+        <label for="customRadio2_d">
+          <img src="{{url_for('static',filename='/images/dislike.svg')}}" class="w-25" alt="">
+        </label>
+      </div>
+    </li>
+    <li class="form-label text-center mb-40">
+      <h6>{{cuestionario_form.resp_2.label()}}</h6>
+      <p class="form-text mb-20">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+        dolor.</p>
+      <div class="custom-control custom-radio">
+        <input type="radio" id="customRadio1_e" name="customRadio_e" class="custom-control-input input-hidden">
+        <label for="customRadio1_e">
+          <img src="{{url_for('static',filename='/images/like.svg')}}" class="w-25" alt="">
+        </label>
+        <input type="radio" id="customRadio2_e" name="customRadio_e" class="custom-control-input input-hidden">
+        <label for="customRadio2_e">
+          <img src="{{url_for('static',filename='/images/dislike.svg')}}" class="w-25" alt="">
+        </label>
+      </div>
+    </li>
+    <li class="form-label text-center mb-40">
+      <h6>{{cuestionario_form.resp_3.label()}}</h6>
+      <p class="form-text mb-20">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+        dolor.</p>
+      <div class="custom-control custom-radio">
+        <input type="radio" id="customRadio1_f" name="customRadio_f" class="custom-control-input input-hidden">
+        <label for="customRadio1_f">
+          <img src="{{url_for('static',filename='/images/like.svg')}}" class="w-25" alt="">
+        </label>
+        <input type="radio" id="customRadio2_f" name="customRadio_f" class="custom-control-input input-hidden">
+        <label for="customRadio2_f">
+          <img src="{{url_for('static',filename='/images/dislike.svg')}}" class="w-25" alt="">
+        </label>
+      </div>
+    </li>
+  </ul>
+</div> -->

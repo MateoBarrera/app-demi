@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}
+{{ super() }}
+{{etapa}}
+{% endblock %}
+
+{% block navbar %}
+{% include 'navbar_2.html' %}
+{% endblock %}
+
+{% block content %}
+  <div class="preloader">
+    <div class="loader">
+      <div class="spinner">
+        <div class="spinner-container">
+          <div class="spinner-rotator">
+            <div class="spinner-left">
+              <div class="spinner-circle"></div>
+            </div>
+            <div class="spinner-right">
+              <div class="spinner-circle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<audio id="feliz-aud" preload="auto">
+  <source src="{{url_for('static',filename='/sound/feliz.ogg')}}">
+  </source>
+  <source src="{{url_for('static',filename='/sound/feliz.mp3')}}">
+  </source>
+  Navegador no compatible
+</audio>
+<audio id="triste-aud" preload="auto">
+  <source src="{{url_for('static',filename='/sound/triste.ogg')}}">
+  </source>
+  <source src="{{url_for('static',filename='/sound/triste.mp3')}}">
+  </source>
+  Navegador no compatible
+</audio>
+<audio id="enojado-aud" preload="auto">
+  <source src="{{url_for('static',filename='/sound/enojado.ogg')}}">
+  </source>
+  <source src="{{url_for('static',filename='/sound/enojado.mp3')}}">
+  </source>
+  Navegador no compatible
+</audio>
+<audio id="sorprendido-aud" preload="auto">
+  <source src="{{url_for('static',filename='/sound/sorprendido.ogg')}}">
+  </source>
+  <source src="{{url_for('static',filename='/sound/sorprendido.mp3')}}">
+  </source>
+  Navegador no compatible
+</audio>
+
+
+<div class="d-flex justify-content-start align-items-center bd-highlight mb-3">
+  <div class="p-2 bd-highlight spinner-grow spinner-grow-sm text-primary" role="status" aria-hidden="true"></div>
+  <small><div id="response-label" class="p-2 bd-highlight text-primary">Loading..</div></small>
+</div>
+
+
+
+<section id="evaluacion" class="feature-section feature-style-2">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-xl-7 col-lg-10 col-md-9"></div>
+          <div class="section-title mb-25">
+            <h3 class="text-center mb-15">{{mensaje}}</h3>
+          </div>
+        </div>
+      </div>
+      <div id="emojis" class="row text-center">
+        <div class="col-md-6 col-lg-6">
+          <div class="single-feature grow">
+            <a id="a_feliz" href="{{url_for('script.final_evaluacion', ev_est='Felicidad', virtual=virtual)}}" onmouseover="PlaySound('feliz-aud')" onmouseout="StopSound('feliz-aud')">
+              <div class="icon-emoji">
+                <img src="{{url_for('static',filename='/images/emoji/feliz_1.svg')}}" alt="Icono WebAPP">
+                <h3 class="mb-25">FELIZ</h3>
+              </div>
+            </a>           
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6">  
+          <div class="single-feature grow">
+            <a href="{{url_for('script.final_evaluacion', ev_est='Triste', virtual=virtual)}}" onmouseover="PlaySound('triste-aud')" onmouseout="StopSound('triste-aud')">
+              <div class="icon-emoji">
+                <img src="{{url_for('static',filename='/images/emoji/triste_1b.svg')}}" alt="Icono WebAPP" >
+                <h3 class="mb-25">TRISTE</h3>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-6">
+          <div class="single-feature grow">
+            <a href="{{url_for('script.final_evaluacion', ev_est='Enojado',  virtual=virtual)}}" onmouseover="PlaySound('enojado-aud')" onmouseout="StopSound('enojado-aud')">
+              <div class="icon-emoji">
+                <img src="{{url_for('static',filename='/images/emoji/enojado_1.svg')}}" alt="Icono WebAPP">
+                <h3 class="mb-25">ENOJADO</h3>
+              </div>
+            </a>
+          </div>          
+        </div>
+        <div class="col-md-6 col-lg-6">
+          <div class="single-feature grow">
+            <a href="{{url_for('script.final_evaluacion', ev_est='Sorprendido',  virtual=virtual )}}" onmouseover="PlaySound('sorprendido-aud')" onmouseout="StopSound('sorprendido-aud')">
+              <div class="icon-emoji">
+                <img src="{{url_for('static',filename='/images/emoji/sorprendido_1.svg')}}" alt="Icono WebAPP">
+                <h3 class="mb-25">SORPRENDIDO</h3>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+    <div>
+      <button id="message" type="button" class="btn btn-labeled btn-secondary">mensaje</button>
+    </div>
+  
+  <div class='video'>
+    <img id="image">
+  </div>
+  <div id="container">
+    <canvas id="canvasOutput" style="visibility: visible;"></canvas>
+    <video autoplay="true" id="videoElement" style="visibility: visible;"></video>
+  </div>
+
+{% endblock %}
+
+{% block scripts%}
+{{super()}}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+  <script type="text/javascript">
+    (function () {
+      window.onload = function () {
+        window.setTimeout(fadeout, 600);
+      }
+
+      function fadeout() {
+        document.querySelector('.preloader').style.opacity = '0';
+        document.querySelector('.preloader').style.display = 'none';
+      }
+    })();
+
+  </script>
+
+  <script type="text/javascript ">
+   $(document).ready(function () {
+
+    $('a').click(function (event) {
+        // Remember the link href
+        var href = this.href;
+
+        // Don't follow the link
+        event.preventDefault();
+
+        // Do the async thing
+        adminInfo(2,href);
+      });
+
+      function redirect(href){
+        window.location = href;
+      }
+
+
+
+
+    var virtual = '{{virtual}}'
+    var recipient = '{{admin_id}}'
+    var stage = '{{stage}}'
+    
+    if (virtual){
+      var socket_admin= io('/admin-info')
+      socket_admin.on('connect', function () {
+        console.log("Conexión Administrador!")
+      });
+      adminInfo(1);
+    } 
+
+
+    socket_admin.on('virtual_status', function (msg) {
+      console.log("Recibido "+msg)
+    });
+
+    $('#message').on('click', function () {
+      var message_to_send = stage+",1";
+      console.log("a punto de enviar")
+      adminInfo(1);
+      /* socket_admin.emit('virtual_status', { 'admin_id': recipient, 'info': message_to_send }); */
+    });
+
+    function adminInfo(status, href="#") {
+      if (status==1){
+        var message_to_send = stage+",1";
+      } else if (status==2){
+        var message_to_send = stage+",2";
+        socket_admin.emit('virtual_status', { 'admin_id': recipient, 'info': message_to_send });
+        var delayInMilliseconds = 500; //1 second
+
+        setTimeout(function() {
+          //your code to be executed after 1 second
+          redirect(href);
+        }, delayInMilliseconds);
+        
+
+      } else if (status==3){
+        var message_to_send = stage+",3";
+      } else {
+        var message_to_send = stage+",4";
+      }
+      console.log("a punto de enviar "+message_to_send)
+
+      socket_admin.emit('virtual_status', { 'admin_id': recipient, 'info': message_to_send });
+    }
+
+    });
+  </script>
+
+  <script type="text/javascript ">
+    const video = document.querySelector("#videoElement");
+
+    video.width = 480; 
+    video.height = 360;
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+        .then(function (stream) {
+            video.srcObject = stream;
+            video.play();
+        })
+        .catch(function (err0r) {
+            console.log(err0r)
+            console.log("Something went wrong!");
+        });
+    }
+    function onOpenCvReady() { 
+      cv['onRuntimeInitialized']=()=>{
+    var socket = io();
+
+    socket.on('connect', function () {
+        console.log("Connected...!", socket.connected)
+    });
+
+    // do all your work here
+    let src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
+    let dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
+    let cap = new cv.VideoCapture(video);
+
+    const FPS = 10;
+
+    setInterval(() => {
+        const frame = cap.read(src);
+        let tempCanvas = document.createElement("canvas");
+        cv.imshow(tempCanvas,src)
+        let b64image = tempCanvas.toDataURL('image/jpeg',0.1)
+        socket.emit('image_ev', b64image);
+        console.log('enviando...')
+    }, 10000/FPS);
+
+    socket.on('response_back', function(image){
+        const image_id = document.getElementById('image');
+        console.log('recibiendo..')
+        image_id.src = image;
+    });
+
+    socket.on('response_label', function(label){
+        const response_label = document.getElementById('response-label');
+        console.log('recibiendo label...')
+        response_label.innerHTML=label;
+    });
+
+        };
+    }
+    function saveProduct(socket) {
+      socket.to(socket_id).emit('product-updated');
+    }
+
+    function PlaySound(soundobj) {
+      var thissound = document.getElementById(soundobj);
+      thissound.play();
+    }
+    function StopSound(soundobj) {
+      var thissound = document.getElementById(soundobj);
+      thissound.pause();
+      thissound.currentTime = 0;
+    }
+  </script>
+
+<script src="{{url_for('static',filename='js/opencv.js')}}" onload="onOpenCvReady()" ;></script>
+{% endblock %}

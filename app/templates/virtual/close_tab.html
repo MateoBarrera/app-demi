@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ super() }}
+¡Todo Listo!
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="#">
+      <img class="w-50"src="{{url_for('static',filename='/images/op8.png')}}" alt="">
+    </a>
+  </div>
+</nav>
+<section id="iniciar_terapia" class="contact-section contact-style-6 bg-white">
+  <div class="container justify-content-center">
+    <div class="row">
+      <div class="col-lg-5 ml-80 pr-100">
+        <div class="section-title mt-100">
+          <h1>¡Todo Listo!</h1>
+          <div class="contact-form-wrapper">
+            <h4 class="text-secondary">Ya puedes cerrar esta pestaña</h4>
+            <!-- <div class="buttons">
+                        <a href="#" onclick="window.open('', '_self', '');window.close();" class="button button-lg btn-block radius-10 wow fadeInUp" 
+                        data-wow-delay=".7s" style="visibility: visible; animation-delay: 0.7s; animation-name: fadeInUp;">Cerrar</a>
+                      </div> -->
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-5 ml-80">
+        <div class="content-wrapper">
+          <div class="hero-image cup-strar">
+            <img src="{{url_for('static',filename='/images/well_done.svg')}}" alt="" class="wow fadeInRight" data-wow-delay=".2s"
+              style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInRight; max-width: 80%; ">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+{{super()}}}
+<script>
+  function close_window() {
+      window.close();
+    }
+</script>
+{% endblock %}
