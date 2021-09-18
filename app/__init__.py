@@ -1,6 +1,5 @@
 
 from flask.app import Flask
-from flask_bootstrap import Bootstrap
 from .config import Config
 from .auth import auth
 from flask_login import LoginManager
@@ -8,6 +7,7 @@ from flask_mail import Mail
 from .models import UserModel
 from flask_socketio import SocketIO
 from flaskext.mysql import MySQL
+from flask_bootstrap import Bootstrap
 
 
 mysql_init = MySQL()

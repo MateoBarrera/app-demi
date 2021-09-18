@@ -1,7 +1,6 @@
 import unittest, os, datetime as Datetime, secrets
 from datetime import datetime
 from flask import Flask, request, current_app, Response, make_response, render_template, redirect, session, url_for, flash
-from flask_bootstrap import Bootstrap
 from app import create_app
 from app.forms import TodoForms, DeleteTodoForm, UpdateTodo, TerapiaForm, ConclusionesForm, CuestionarioForm, ContactoForm, SignupEstForm, SignupForm
 #from app.firestore_service import get_users, get_todos, put_todo, delete_todo, update_todo
