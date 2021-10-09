@@ -3,7 +3,7 @@ class Config:
 
     ##DATA BASE##
 
-    MYSQL_DATABASE_HOST = 'Laptop-Mateo'
+    MYSQL_DATABASE_HOST = '181.54.0.118'
     MYSQL_DATABASE_USER = 'heroku_root'
     MYSQL_DATABASE_PASSWORD = 'Flask_APP/54'
     MYSQL_DATABASE_DB = 'webapp'
