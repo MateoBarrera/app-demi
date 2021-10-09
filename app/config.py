@@ -2,12 +2,11 @@ class Config:
     SECRET_KEY = 'SUPER SECRET'
 
     ##DATA BASE##
-    ##nota
 
-    MYSQL_DATABASE_HOST = 'demiapp.mysql.pythonanywhere-services.com'
-    MYSQL_DATABASE_USER = 'demiapp'
+    MYSQL_DATABASE_HOST = 'Laptop-Mateo'
+    MYSQL_DATABASE_USER = 'heroku_root'
     MYSQL_DATABASE_PASSWORD = 'Flask_APP/54'
-    MYSQL_DATABASE_DB = 'demiapp$webapp'
+    MYSQL_DATABASE_DB = 'webapp'
 
 
     ##MAIL CONFIG##
