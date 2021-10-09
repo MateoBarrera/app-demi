@@ -2,6 +2,7 @@ class Config:
     SECRET_KEY = 'SUPER SECRET'
 
     ##DATA BASE##
+    ##nota
 
     MYSQL_DATABASE_HOST = 'demiapp.mysql.pythonanywhere-services.com'
     MYSQL_DATABASE_USER = 'demiapp'
