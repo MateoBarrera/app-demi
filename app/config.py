@@ -3,10 +3,10 @@ class Config:
 
     ##DATA BASE##
 
-    MYSQL_DATABASE_HOST = 'us-cdbr-east-04.cleardb.com'
-    MYSQL_DATABASE_USER = 'bb4fdaf9abd9ce'
-    MYSQL_DATABASE_PASSWORD = '71d75014'
-    MYSQL_DATABASE_DB = 'heroku_5b11018c27ee489'
+    MYSQL_DATABASE_HOST = 'demiapp.mysql.pythonanywhere-services.com'
+    MYSQL_DATABASE_USER = 'demiapp'
+    MYSQL_DATABASE_PASSWORD = 'Flask_APP/54'
+    MYSQL_DATABASE_DB = 'demiapp$webapp'
 
 
     ##MAIL CONFIG##
