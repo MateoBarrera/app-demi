@@ -3,10 +3,10 @@ class Config:
 
     ##DATA BASE##
 
-    MYSQL_DATABASE_HOST = '181.54.0.118'
-    MYSQL_DATABASE_USER = 'heroku_root'
-    MYSQL_DATABASE_PASSWORD = 'Flask_APP/54'
-    MYSQL_DATABASE_DB = 'webapp'
+    MYSQL_DATABASE_HOST = 'remotemysql.com'
+    MYSQL_DATABASE_USER = '1qw8baA61M'
+    MYSQL_DATABASE_PASSWORD = 'RYuijFrH34'
+    MYSQL_DATABASE_DB = '1qw8baA61M'
 
 
     ##MAIL CONFIG##
