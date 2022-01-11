@@ -283,4 +283,5 @@ def test():
     return render_template('virtual/admin_session.html', **context)
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', debug=True)
+    app.run(debug=True)
+    #socketio.run(app, host='0.0.0.0', debug=True)

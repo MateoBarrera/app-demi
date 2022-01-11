@@ -7,16 +7,15 @@ from .models import UserModel
 from flask_socketio import SocketIO
 from flaskext.mysql import MySQL
 from flask_bootstrap import Bootstrap
-import eventlet
-eventlet.monkey_patch()
+
 
 
 
 mysql_init = MySQL()
 
 mail = Mail()
-socketio = SocketIO(async_mode='eventlet')
-#socketio = SocketIO()
+#socketio = SocketIO(async_mode='eventlet')
+socketio = SocketIO()
 
 
 login_manager = LoginManager()
