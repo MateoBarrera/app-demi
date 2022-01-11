@@ -20,6 +20,10 @@ from app.models import UserData, SessionData
 
 from flask_socketio import join_room, leave_room
 
+
+
+
+
 @socketio.on('virtual_status', namespace='/admin-info')
 def on_virtual_status(data):
     emit('virtual_status', data['info'], room=data['admin_id'])
