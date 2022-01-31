@@ -1,4 +1,4 @@
-from flask import request, render_template, redirect, make_response, url_for, session, Response, current_app as app
+from flask import request, render_template, redirect, make_response, url_for, session, Response, flash, current_app as app
 from . import script
 from flask_login import login_required, login_user, logout_user
 from PIL import Image
@@ -14,6 +14,7 @@ from app.webcam_web import frames, endframes
 from app.forms import CuestionarioForm, ConclusionesForm
 from .. import socketio
 import operator
+import time
 
 
 from app.models import UserData, SessionData
@@ -108,6 +109,11 @@ def evaluacion():
     session['virtual'] = request.args.get('virtual', 'False')
     session['admin_id'] = None
 
+    requestUrl = request.url
+    print(requestUrl)
+    url_backup = requestUrl
+    session['url_backup'] = url_backup
+
     if session['virtual']=='True':
         session['stage'] = request.args.get('stage', 'False')
         print("stage "+ session['stage'])
@@ -153,37 +159,47 @@ def ventana_espera():
 @script.route('/final-evaluacion/<ev_est>/<virtual>', methods=['GET', 'POST'])
 def final_evaluacion(ev_est, virtual):
     if session['stage'] == 'inicial':
-        labels_list = app.session_object['{}'.format(
+        try:
+            labels_list = app.session_object['{}'.format(
             session['session_token'])].response_labels['inicial']
-        print(labels_list)
-        count_dict = {i: labels_list.count(i) for i in labels_list}
-        print("Conteos {}".format(count_dict))
-        app.session_object['{}'.format(
-            session['session_token'])].conteo_inicial = count_dict
-        app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr'] = max(
-            count_dict.items(), key=operator.itemgetter(1))[0]
-        app.session_object['{}'.format(
-            session['session_token'])].evaluacion['ev_ini_est'] = ev_est
-        #print("MAX {}".format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
-        session['stage'] = 'final'
-        response = make_response(redirect(url_for('script.ventana_espera')))
+            print(labels_list)
+            count_dict = {i: labels_list.count(i) for i in labels_list}
+            print("Conteos {}".format(count_dict))
+            app.session_object['{}'.format(
+                session['session_token'])].conteo_inicial = count_dict
+            app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr'] = max(
+                count_dict.items(), key=operator.itemgetter(1))[0]
+            app.session_object['{}'.format(
+                session['session_token'])].evaluacion['ev_ini_est'] = ev_est
+            #print("MAX {}".format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
+            session['stage'] = 'final'
+            response = make_response(redirect(url_for('script.ventana_espera')))
+        except:
+            response = make_response(redirect(url_for('script.error')))
+            return response
+            
+            
 
     else:
-        labels_list = app.session_object['{}'.format(
+        try:
+            labels_list = app.session_object['{}'.format(
             session['session_token'])].response_labels['final']
-        count_dict = {i: labels_list.count(i) for i in labels_list}
-        app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_herr'] = max(
-            count_dict.items(), key=operator.itemgetter(1))[0]
+            count_dict = {i: labels_list.count(i) for i in labels_list}
+            app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_herr'] = max(
+                count_dict.items(), key=operator.itemgetter(1))[0]
 
-        app.session_object['{}'.format(
-            session['session_token'])].evaluacion['ev_fin_est'] = ev_est
-        app.session_object['{}'.format(
-            session['session_token'])].conteo_final = count_dict
-        print("MAX {}".format(app.session_object['{}'.format(
-            session['session_token'])].evaluacion['ev_fin_herr']))
-        print("Conteos {}".format(count_dict))
+            app.session_object['{}'.format(
+                session['session_token'])].evaluacion['ev_fin_est'] = ev_est
+            app.session_object['{}'.format(
+                session['session_token'])].conteo_final = count_dict
+            print("MAX {}".format(app.session_object['{}'.format(
+                session['session_token'])].evaluacion['ev_fin_herr']))
+            print("Conteos {}".format(count_dict))
 
-        response = make_response(redirect(url_for('script.cuestionario')))
+            response = make_response(redirect(url_for('script.cuestionario')))
+        except:
+            response = make_response(redirect(url_for('script.error')))
+            return response
 
     if virtual == 'True':
         return render_template('virtual/close_tab.html')
@@ -302,3 +318,9 @@ def panel_virtual():
         return make_response(redirect(url_for('script.cuestionario')))
 
     return render_template('virtual/admin_session.html', **context)
+
+@script.route('/internal-error', methods=['GET', 'POST'])
+def error():
+    flash('Ups! el reconocimiento fallo, intentando nuevamente', 'error')
+    response = make_response(redirect(session['url_backup']))
+    return response
