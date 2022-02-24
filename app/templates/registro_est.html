@@ -22,14 +22,14 @@ Registrarse
       </div>
       <div class="col-lg-5">
         <div class="content-wrapper">
-          <div class="section-title mb-40">
-            <h3 class="mb-60">Registrar Estudiante</h3>
+          <div class="section-title mb-20">
+            <h3 class="mb-20">Registrar Estudiante</h3>
             <div class="contact-form-wrapper">
               <form action="{{ url_for('registro_est', terapia=redirect_terapia) }}" method="POST" enctype="multipart/form-data">
                 <fieldset>
-                  <div class="single-input">
+                  <div class="single-input mb-1">
                     {{ estudiante_form.csrf_token() }}
-                    <label for="name s">
+                    <label for="name s" class="m-0 ">
                       <h6>{{estudiante_form.nombre.label()}} </h6>
                     </label>
                     {% if estudiante_form.nombre.errors %}
@@ -39,12 +39,12 @@ Registrarse
                     {% endfor %}
                     {% else %}
                     {{estudiante_form.nombre(title="Nombre completo del estudiante.")}}
-                    <small id="AyudaNombre" class="form-text text-muted">Ingrese nombre y apellidos.</small>
+                    <small id="AyudaNombre" class="form-text text-muted text-end">Ingrese nombre y apellidos.</small>
                     {% endif %}
                   </div>
                 </fieldset>
                 <fieldset>
-                  <div class="single-input">
+                  <div class="single-input mb-1">
                     <label for="name s">
                       <h6>{{estudiante_form.identificacion.label()}} </h6>
                     </label>
@@ -62,7 +62,7 @@ Registrarse
                   </div>
                 </fieldset>
                 <fieldset>
-                  <div class="single-input">
+                  <div class="single-input mb-1">
                     <label for="name s">
                       <h6>{{estudiante_form.nacimiento.label()}}</h6>
                     </label>
@@ -77,7 +77,7 @@ Registrarse
                   </div>
                 </fieldset>
                 <fieldset>
-                  <div class="select-input ">
+                  <div class="single-input mb-1">
                     <label for="grado s">
                       <h6>{{estudiante_form.grado.label()}}</h6>
                     </label>
@@ -92,7 +92,7 @@ Registrarse
                   </div>
                 </fieldset>
                 <fieldset>
-                  <div class="single-input">
+                  <div class="single-input mb-1">
                     <label for="institucion s">
                       <h6>{{estudiante_form.institucion.label()}}</h6>
                     </label>
@@ -107,23 +107,25 @@ Registrarse
                   </div>
                 </fieldset>
                 <fieldset>
-                  <div class="select-input">
-                    <label for="grado s">
-                      <h6>{{estudiante_form.imagen.label()}}</h6>
+                  <div class="select-input mb-1 row">
+                    <h6>{{estudiante_form.imagen.label(class_="custom-file-upload")}}</h6>
+                    <label class="button w-50 radius-10 d-flex justify-content-center" for="imagen">
+                      <i class="fa fa-cloud-upload mr-2"></i><small>Seleccionar</small> 
                     </label>
+                    <p id="fileName">Ningún archivo seleccionado<small id="Ayuda" class="form-text text-muted"> Admite archivos .jpg</small></p>
                     {% if estudiante_form.imagen.errors %}
-                    {{estudiante_form.imagen(class_="text-danger border-danger", accept_="image/gif, image/jpeg")}}
+                    {{estudiante_form.imagen(class_="text-danger border-danger", accept_="image/jpg")}}
                     {% for error in estudiante_form.imagen.errors %}
                     <small id="AyudaImagen" class="error-input">{{error}}</small>
                     {% endfor %}
                     {% else %}
-                    {{estudiante_form.imagen(class_="upload-form w-100", title="Foto de perfil en formato .JPG")}}
-                    <small id="Ayuda" class="form-text text-muted">Admite formatos .jpg o .png</small>
+                    {{estudiante_form.imagen(class_="w-100", title="Foto de perfil en formato .JPG")}}
+                    
                     {% endif %}
                   </div>
                 </fieldset>
                 <fieldset>
-                  <div class="single-input">
+                  <div class="single-input mb-1">
                     <label for="institucion s">
                       <h6>{{estudiante_form.anotaciones.label()}}</h6>
                     </label>
@@ -162,4 +164,16 @@ Registrarse
   </div>
 </section>
 
+{% endblock %}
+{% block scripts%}
+{{super()}}
+<script>
+  $(document).ready(function () {
+    $('input[type="file"]').change(function (e) {
+      var label = document.getElementById("fileName");
+      var fileName = e.target.files[0].name;
+      label.textContent = fileName;
+    });
+  });
+</script>
 {% endblock %}

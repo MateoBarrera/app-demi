@@ -1,5 +1,8 @@
+from cv2 import imwrite
 from flask_login import UserMixin
 from flask import current_app as app
+import numpy as np
+import cv2
 
 
 class UserData:
@@ -10,9 +13,14 @@ class UserData:
         self.contraseña = user_login['contraseña']
         if est:
             self.id_table = user_data['idestudiantes']
-            self.nombre = user_data['nombre']
+            self.nombre = user_data['estudiante']
             self.identificacion = user_data['identificacion']
-            self.imagen = user_data['imagen']
+            if user_data['imagen'] is not None:
+                nparr = np.fromstring(user_data['imagen'], np.uint8)
+                self.imagen = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                imwrite('app/static/images/userImage.jpg', self.imagen)
+            else:
+                self.imagen = None
             self.fecha_nac = user_data['fecha_nacimiento']
             self.grado = user_data['grado']
             self.institucion = user_data['institucion']
@@ -22,7 +30,12 @@ class UserData:
             self.id_table = user_data['idusuarios']
             self.nombre = user_data['nombre']
             self.identificacion = user_data['identificacion']
-            self.imagen = user_data['imagen']
+            if user_data['imagen'] is not None:
+                nparr = np.fromstring(user_data['imagen'], np.uint8)
+                self.imagen = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                imwrite('app/static/images/userImage.jpg', self.imagen)
+            else:
+                self.imagen = None
             self.fecha_nac = None
             self.grado = None
             self.institucion = None
@@ -62,8 +75,10 @@ class SessionData():
         self.id_usuario = None
         self.id_estudiante = None
         self.nombre = None
+        self.identificacion = None
         self.institucion = None
         self.grado = None
+        self.est_image = None
         self.docente = None
         self.fecha = None
         self.evaluacion = {

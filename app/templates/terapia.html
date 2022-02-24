@@ -12,53 +12,54 @@ Iniciar Terapia
 
 {% block content %}
 
-<section id="iniciar_terapia" class="contact-section contact-style-6">
+<section id="iniciar_terapia" class="contact-section contact-style-6 mt-0">
   <div class="container justify-content-center">
     <div class="row">
     <div class="col-lg-5">
       <div class="content-wrapper">
-        <div class="section-title mb-40">
+        <div class="section-title mb-25">
           {% if rol != 'est' %}
-            <h2 >Bienvenido</h2>
-            <h3 class="mb-60">{{ data.nombre | capitalize }}</h3>
+            <h3 >Bienvenido</h3>
+            <h4 class="mb-20">{{ data.nombre | capitalize }}</h4>
           {% else %}
-            <h3 class="mb-60">Información del estudiante</h3>
+            <h5 class="mb-60">Información del estudiante</h5>
           {% endif %}
           <div class="contact-form-wrapper">
             {% if rol == 'inv/doc' %}
             <form autocomplete="off" action="{{ url_for('iniciar_terapia') }}" method="POST">
               <fieldset>
-                <h4>Información de la sesión</4>
-                <div class="select-input">
+                <h5 class="mb-2">Información de la sesión</h5>
+                <div class="select-input mb-1">
                   {{ terapia_form.csrf_token() }}
-                  <label for="name s">
-                    <h6>{{ terapia_form.nombre_form.label() }}</h6>
+                  <label class="mb-0" for="name s">
+                    <p class="text-muted">Nombre del estudiante</p>
                   </label>
-                  {{ terapia_form.nombre_form(class_="d-flex justify-content-end") }}
+                  {{ terapia_form.nombre_form(class_="d-flex justify-content-end")}}
+                  {{ terapia_form.identificacion_form(class_="d-flex justify-content-end")}}
                   <select name="nombre_select" onchange="set_values()" id="nombre"></select>
                 </div>
               </fieldset>
               <fieldset>
-                <div class="single-input">
-                  <label for="institucion s">
-                    <h6>Institución Educativa</h6>
+                <div class="single-input mb-1">
+                  <label class="mb-0" for="institucion s">
+                    <p class="text-muted">Institución Educativa</p>
                   </label>
                   <input name="text_inst" type="text" readonly id="institucion" class="form-input">
                 </div>
               </fieldset>
               <fieldset>
-                <div class="single-input">
-                  <label for="grado s">
-                    <h6>Grado Escolar</h6>
+                <div class="single-input mb-1">
+                  <label class="mb-0" for="grado s">
+                    <p class="text-muted">Grado Escolar</p>
                   </label>
                   <input name="text_grado" type="text" readonly id="grado" class="form-input">
                 </div>
               </fieldset>
               <fieldset>
-                <div class="select-input">
-                  <h4 class="mt-20">Evaluación Inicial</4>
-                  <label for="grado s">
-                    <h6>{{terapia_form.emocion_percibida.label()}}</h6>
+                <div class="select-input mb-1">
+                  <h5 class="mt-10">Evaluación Inicial</h5>
+                  <label class="mb-0" for="grado s">
+                    <h6>{{terapia_form.emocion_percibida.label(class_="mb-0")}}</h6>
                   </label>
                   {{terapia_form.emocion_percibida()}}
                   {% for error in terapia_form.emocion_percibida.errors %}
@@ -67,8 +68,8 @@ Iniciar Terapia
                 </div>
               </fieldset>
               <fieldset>
-                <div class="single-input">
-                  <label for="grado s">
+                <div class="single-input mb-1">
+                  <label class="mb-0" for="grado s">
                     <h6>Tipo de sesión</h6>
                   </label>
                 </div>
@@ -85,8 +86,8 @@ Iniciar Terapia
                 </div>
               </fieldset>
               <fieldset>
-                <div class="mt-50">
-                  {{terapia_form.iniciar(class_="form-button button radius-10 w-100")}}
+                <div class="mt-10 wow fadeInUp form-button">
+                  {{terapia_form.iniciar(class_=" button radius-10 w-100")}}
                   {% for error in terapia_form.errors %}
                   <span style="color: red;">El error es {{ error }}</span>
                   {% endfor %}
@@ -101,7 +102,6 @@ Iniciar Terapia
                     <h6>Grado Escolar</h6>
                   </label>
                   <input type="text" readonly id="grado_est" class="form-input text-center" value="{{data.grado}}">
-                  
                 </div>
               </fieldset>
               <fieldset>
@@ -109,7 +109,7 @@ Iniciar Terapia
                   <label for="institucion s">
                     <h6>Institución Educativa</h6>
                   </label>
-                  <input type="text" readonly id="institucion_est" class="form-input text-center" value="{{data.institucion|upper }}">
+                  <input type="text" readonly id="institucion_est" class="form-input text-center" value="{{data.institucion|capitalize }}">
                 </div>
               </fieldset>
               <fieldset>
@@ -134,9 +134,9 @@ Iniciar Terapia
   </div>
   {% if rol == 'inv/doc' %}
   <div class="container">
-    <div class="row" style="margin-top: 100px;">
+    <div class="row mt-10">
       <div class="col-md-12">
-          <div class="section-title mb-60 ">
+          <div class="section-title mb-30 ">
             <h6 class="text-center mb-15 wow fadeInUp" data-wow-delay=".2s">¿Estudiante nuevo?</h6>
             <div class="text-center form-button wow fadeInUp">
               <a href="{{url_for('registro_est',terapia=True)}}"><button type="button" class="button radius-10">Registrar</button></a>
@@ -162,14 +162,13 @@ Iniciar Terapia
  <script type="text/javascript">
       window.onload = function () {
       /* alert("Page is loaded"); */
-      console.log("AQUI VAA")
       var x = document.getElementById("nombre");
       var option = document.createElement("option");
       option.text = "";
       x.add(option);
       {% for student in students %}
       var option = document.createElement("option");
-      option.text = "{{ student['estudiante']| upper }}";
+      option.text = "{{ student['estudiante']| capitalize }}";
       x.add(option);
       {% endfor %}
     }
@@ -178,29 +177,26 @@ Iniciar Terapia
 
 
   function set_values() {
-    var index = document.getElementById("nombre");
-    var name_std = index.options[index.selectedIndex].text;
-
-    console.log("input")
-    console.log(name_std)
+    var index = document.getElementById("nombre").selectedIndex;
+    var nombre = "";
     var inst = "";
     var grado = "";
+    var identificacion = "";
+    var i = 1;
     {% for student in students %}
-
-      console.log("{{student['estudiante']|upper}}")
-      if ("{{student['estudiante']|upper}}" == name_std) {
-        console.log("si hay")
+      if (index == i) {
+        var nombre = "{{student['estudiante']}}"
         var inst = "{{student['institucion']}}";
         var grado = "{{student['grado']}}";
+        var identificacion = "{{student['identificacion']}}"
       }
+      i+=1;
     {% endfor %}
-  console.log(inst)
-  console.log(grado)
-  console.log("fin")
-  document.getElementById("nombre_form").value = name_std;
+  document.getElementById("nombre_form").value = nombre;
+  console.log(nombre)
   document.getElementById("institucion").value = inst;
   document.getElementById("grado").value = grado;
-
+  document.getElementById("identificacion_form").value = identificacion;    
   }
 
 </script>

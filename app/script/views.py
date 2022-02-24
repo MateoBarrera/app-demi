@@ -305,7 +305,9 @@ def panel_virtual():
     key = '{}'.format(session['session_token'])
     student_data = app.session_object[key]
     requestUrl = request.url
+    requestUrl = requestUrl.replace("http","https")
     requestUrl = requestUrl.split("panel-virtual")
+
     url_1 = requestUrl[0]+f"evaluacion?virtual=True&stage=inicial&id='{key}'"
     url_2 = requestUrl[0]+f"evaluacion?virtual=True&stage=final&id='{key}'"
     context = {
@@ -313,6 +315,7 @@ def panel_virtual():
         'url_inicial':url_1,
         'url_final': url_2,
         'key':key,
+        'student_image': student_data.est_image
     }
     if request.method == 'POST':
         return make_response(redirect(url_for('script.cuestionario')))

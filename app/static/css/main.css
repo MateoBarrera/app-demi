@@ -174,6 +174,11 @@
 	
 }
 
+input[type=file] {
+    display:none;
+}
+
+
 
 /* CLIENT-SPECIFIC STYLES */
 /*

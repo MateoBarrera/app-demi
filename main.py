@@ -1,6 +1,10 @@
-#Comentario para git
-import unittest, os, datetime as Datetime, secrets
+# Comentario para git
+import unittest
+import os
+import datetime as Datetime
+import secrets
 from datetime import datetime
+import cv2
 from flask import Flask, request, current_app, Response, make_response, render_template, redirect, session, url_for, flash
 from app import create_app
 from app.forms import TodoForms, DeleteTodoForm, UpdateTodo, TerapiaForm, ConclusionesForm, CuestionarioForm, ContactoForm, SignupEstForm, SignupForm
@@ -93,7 +97,10 @@ def inicio():
     if current_user.is_authenticated:
         user_ip = session.get('user_ip')
         username = current_user.id
-        img = url_for('static', filename='/images/user.jpg')
+        if current_user.imagen is None:
+            img = url_for('static', filename='/images/avatar.jpg')
+        else:
+            img = url_for('static', filename='/images/userImage.jpg')
         context = {
             'user_ip': user_ip,
             'username': username,
@@ -137,7 +144,7 @@ def iniciar_terapia():
     students = app.mysql_object.get_all_students()
     terapia_form = TerapiaForm()
     context = {
-        'students':students,
+        'students': students,
         'rol': current_user.rol,
         'data': current_user,
         'user_ip': user_ip,
@@ -149,27 +156,36 @@ def iniciar_terapia():
         session['session_token'] = secrets.token_urlsafe(16)
         session['stage'] = 'inicial'
 
-
         key = '{}'.format(session['session_token'])
         print("token")
         print(session['session_token'])
         app.session_object[key] = SessionData()
-        app.session_object[key].fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        app.session_object[key].fecha = datetime.now().strftime(
+            '%Y-%m-%d %H:%M:%S')
         app.session_object[key].evaluacion['ev_ini_doc'] = dict(terapia_form.emocion_percibida.
-        choices).get(
+                                                                choices).get(
             terapia_form.emocion_percibida.data)
-        app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
-        app.session_object[key].id_estudiante = app.mysql_object.get_student(terapia_form.nombre_form.data)[0]
+        app.session_object[key].id_usuario = app.mysql_object.get_user(
+            session['username'])[0]['idlogin']
+        app.session_object[key].id_estudiante = app.mysql_object.get_student(
+            terapia_form.identificacion_form.data)[0]
         app.session_object[key].nombre = terapia_form.nombre_form.data
+        app.session_object[key].identificacion = terapia_form.identificacion_form.data
         app.session_object[key].institucion = request.form['text_inst']
         app.session_object[key].grado = request.form['text_grado']
         app.session_object[key].docente = current_user.nombre
-        
+        if app.mysql_object.get_student_image(app.session_object[key].id_estudiante):
+            app.session_object[key].est_image = url_for(
+                'static', filename='/images/estImage.jpg')
+        else:
+            app.session_object[key].est_image = url_for(
+                'static', filename='/images/avatar.jpg')
+
         if terapia_form.virtual.data:
             return redirect(url_for('script.panel_virtual'))
         else:
             return redirect(url_for('script.ventana_carga'))
-        
+
     return render_template('terapia.html', **context)
 
 
@@ -181,48 +197,40 @@ def registro_est(terapia):
     estudiante_form = SignupEstForm()
     context = {
         'estudiante_form': estudiante_form,
-        'val_est':val_est,
-        'redirect_terapia':terapia,
+        'val_est': val_est,
+        'redirect_terapia': terapia,
     }
-    if request.method == 'POST':
-        uploaded_file = request.files['imagen']
-        if uploaded_file.filename != '':
-            uploaded_file.save(uploaded_file.filename)
-            print("archivito ok")
-        else:
-            print("no file")
-    """ if estudiante_form.validate_on_submit():           
+
+    if estudiante_form.validate_on_submit():
         identificacion = estudiante_form.identificacion.data
         user = app.mysql_object.get_user(identificacion)
-        print("busqueda por id {}".format(user))
         if not user:
             password = estudiante_form.identificacion.data
             password_hash = generate_password_hash(password)
-            user_new = app.mysql_object.set_student(identificacion, password_hash)
+            user_new = app.mysql_object.set_student(
+                identificacion, password_hash)
             print(user_new)
             if user_new:
                 nombre = estudiante_form.nombre.data
                 nacimiento = estudiante_form.nacimiento.data
                 grado = estudiante_form.grado.data
                 institucion = estudiante_form.institucion.data
-                if False:
-                    imagen = 0
-                    filename = secure_filename(imagen.filename)
-                    imagen.save(os.path.join(app.instance_path, 'photos', filename))
-
-                anotaciones = estudiante_form.anotaciones.data
-
+                uploaded_file = request.files['imagen']
+                imagen = None
+                if uploaded_file.filename != '':
+                    uploaded_file.save('userImage.jpg')
+                    imagen = cv2.imread('userImage.jpg')
+                anotacion = estudiante_form.anotaciones.data
                 user_new = user_new[0]
                 app.mysql_object.set_student_data(
-                    user_new['idlogin'], nombre, identificacion,nacimiento,grado,institucion, None)
+                    user_new['idlogin'], nombre, identificacion, nacimiento, grado, institucion, anotacion, imagen)
                 if terapia:
                     return redirect(url_for('iniciar_terapia'))
                 else:
                     return redirect(url_for('inicio'))
         else:
             context['val_est'] = False
-    """
-    
+
     return render_template('registro_est.html', **context)
 
 
@@ -253,10 +261,11 @@ def consulta():
     now = datetime.now()
     for item in all_sessions:
 
-        aux_day=item['fecha'].split(" ", 1)
-        item['fecha']="{}".format(aux_day[0])
+        aux_day = item['fecha'].split(" ", 1)
+        item['fecha'] = "{}".format(aux_day[0])
         item['hora'] = "{}".format(aux_day[1])
-        events.append({'todo':'Sesión {}'.format(item['idsesiones']), 'date':item['fecha'], 'hora_1':item['hora']})
+        events.append({'todo': 'Sesión {}'.format(
+            item['idsesiones']), 'date': item['fecha'], 'hora_1': item['hora']})
         if now-datetime.strptime(item['fecha'], '%Y-%m-%d') < Datetime.timedelta(days=5):
             recent_sessions.append(item)
     print(events)
@@ -270,7 +279,7 @@ def consulta():
         'all_users': all_users,
         'all_students': all_students,
         'all_sessions': all_sessions,
-        'recent_sessions':recent_sessions
+        'recent_sessions': recent_sessions
     }
 
     return render_template('consulta.html', **context)
@@ -282,6 +291,7 @@ def test():
 
     }
     return render_template('virtual/admin_session.html', **context)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -301,17 +301,18 @@ a {
 
 .upload-form {
 	justify-content: flex-end;
-	background-color:#2f80ed;
-	color: #2f80ed;
-	width: 100%;
-}
-.upload-form input {
-	justify-content: flex-end;
-	background-color:#2f80ed;
+	background-color: #2f80ed;
 	color: #2f80ed;
 	width: 100%;
 }
 
-.radio-cuestionario input{
+.file-upload-button {
+	justify-content: flex-end;
+	background-color: #2f80ed;
+	color: #2f80ed;
+	width: 100%;
+}
+
+.radio-cuestionario input {
 	visibility: hidden;
 }

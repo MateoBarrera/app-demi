@@ -32,15 +32,14 @@ class UploadForm(FlaskForm):
 class SignupEstForm(FlaskForm):
     nombre = StringField('Nombre estudiante *', validators=[
                          InputRequired(), Regexp("^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$", message="Escriba nombre y apellidos, omita caracteres especiales."), Length(min=4, max=45)])
-    identificacion = StringField('Numero identificación *', validators=[
+    identificacion = StringField('Cedula de identidad *', validators=[
         InputRequired(), Regexp("^[0-9]{8,20}?$", message="Numero de identificación sin puntos."), Length(min=4, max=45)])
     imagen = FileField('Imagen', validators=[Optional(),
-                                             FileAllowed(['jpg', 'png'], 'Requiere .jpg o .png')])
+                                             FileAllowed(['jpg'], 'Requiere .jpg')])
     nacimiento = DateField('Fecha Nacimiento *',
                            validators=[DataRequired()])
     institucion = StringField('Institución Educativa *', validators=[DataRequired()])
-    grado = SelectField("Grado Escolar *", choices=[('-1', ' '), ('1', '1°'), ('2', '2°'), ('3', '3°'), ('4', '4°'), ('5', '5°'), (
-        '6', '6°'), ('7', '7°'), ('8', '8°'), ('9', '9°'), ('10', '10°'), ('11', '11°')], validators=[DataRequired()])
+    grado = StringField("Grado Escolar *", validators=[DataRequired()])
     anotaciones = TextAreaField("Anotaciones")
     terminos = BooleanField(
         "Política de tratamiento de datos personales *",validators=[DataRequired()])
@@ -83,7 +82,10 @@ class ContactoForm(FlaskForm):
 
 
 class TerapiaForm(FlaskForm):
-    nombre_form = HiddenField('Nombre del estudiante', validators=[DataRequired()])
+    nombre_form = HiddenField('Nombre del estudiante',
+                                      validators=[DataRequired()])
+    identificacion_form = HiddenField('Identificacion del estudiante',
+                              validators=[DataRequired()])
     emocion_percibida = SelectField("Emoción percibida", choices=[('-1', ' '), ('a', 'Felicidad'), (
         'b', 'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutro')], validators=[DataRequired()])
     virtual = BooleanField("¿Terapia presencial o remota?")

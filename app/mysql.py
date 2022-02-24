@@ -1,5 +1,11 @@
 import json
 import base64
+from traceback import print_tb
+from unittest import result
+import cv2
+import numpy as np
+
+
 class MySQL_connector():
     def __init__(self, mysql_init):
         super().__init__()
@@ -24,7 +30,7 @@ class MySQL_connector():
         else:
             sql = f"SELECT * FROM estudiantes WHERE idlogin = '{(user_id)}';"
             est = True
-        
+
         try:
             conn = self.mysql_init.connect()
             cursor = conn.cursor()
@@ -40,10 +46,10 @@ class MySQL_connector():
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
         sql = "INSERT INTO login (usuario, contraseña, rol) VALUES (%s, %s, %s);"
-        val = (usuario,contraseña, rol)
+        val = (usuario, contraseña, rol)
         cursor.execute(sql, val)
         conn.commit()
-        
+
         sql = f"SELECT * FROM login WHERE usuario = '{usuario}';"
         cursor.execute(sql)
         columns = [col[0] for col in cursor.description]
@@ -70,16 +76,20 @@ class MySQL_connector():
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
         sql = "INSERT INTO usuarios (nombre, identificacion, cargo, imagen, idlogin) VALUES (%s, %s, %s, %s, %s);"
-        val = (nombre, identificacion,cargo, imagen, idlogin)
+        val = (nombre, identificacion, cargo, imagen, idlogin)
         cursor.execute(sql, val)
         conn.commit()
         conn.close()
 
-    def set_student_data(self, id_login, nombre, identificacion, nacimiento, grado, institucion, imagen=None):
+    def set_student_data(self, id_login, nombre, identificacion, nacimiento, grado, institucion, anotacion, imagen=None):
+        if imagen is not None:
+            is_success, im_buf_arr = cv2.imencode(".jpg", imagen)
+            byte_im = im_buf_arr.tostring()
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = "INSERT INTO estudiantes (nombre, identificacion, fecha_nacimiento, grado, institucion, imagen, idlogin) VALUES (%s, %s, %s, %s, %s ,%s ,%s);"
-        val = (nombre, identificacion, nacimiento, grado, institucion, imagen, id_login)
+        sql = "INSERT INTO estudiantes (estudiante, identificacion, fecha_nacimiento, grado, institucion, imagen, idlogin, anotacion) VALUES (%s, %s, %s, %s, %s ,%s ,%s, %s);"
+        val = (nombre, identificacion, nacimiento,
+               grado, institucion, byte_im, id_login, anotacion)
         cursor.execute(sql, val)
         conn.commit()
         conn.close()
@@ -87,7 +97,7 @@ class MySQL_connector():
     def get_student(self, student):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = f"SELECT idestudiantes  FROM estudiantes WHERE estudiante= '{(student)}';"
+        sql = f"SELECT idestudiantes  FROM estudiantes WHERE identificacion = '{(student)}';"
         cursor.execute(sql)
         result = cursor.fetchall()
         conn.close()
@@ -107,13 +117,27 @@ class MySQL_connector():
     def get_all_students(self):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = f"SELECT estudiante, fecha_nacimiento, institucion, grado  FROM estudiantes;"
+        sql = f"SELECT estudiante, fecha_nacimiento, institucion, identificacion, grado  FROM estudiantes;"
         cursor.execute(sql)
-        user_login = dict()
         columns = [col[0] for col in cursor.description]
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
         conn.close()
         return rows
+    
+    def get_student_image(self, id_student):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT imagen  FROM estudiantes WHERE idestudiantes = '{id_student}';"
+        cursor.execute(sql)
+        result = cursor.fetchone()
+        conn.close()
+        if result[0] is not None:
+            nparr = np.fromstring(result[0], np.uint8)
+            imagen = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+            cv2.imwrite('app/static/images/estImage.jpg', imagen)
+            return True
+        else:
+            return False
 
     def get_all_session_info(self):
         conn = self.mysql_init.connect()
@@ -140,13 +164,13 @@ class MySQL_connector():
         result = cursor.fetchone()
         conn.close()
         return result[0]
-    
+
     def save_session(self, session: object):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
         conteo_inicial = json.dumps(session.conteo_inicial)
         conteo_final = json.dumps(session.conteo_final)
- 
+
         sql = "UPDATE sesion SET ev_ini_doc = %s, ev_ini_est = %s, ev_ini_herr = %s, conteo_inicial = %s, ev_fin_doc = %s, ev_fin_est = %s, ev_fin_herr = %s, conteo_final = %s, observaciones = %s WHERE idsesiones = %s;"
         val = (session.evaluacion['ev_ini_doc'], session.evaluacion['ev_ini_est'], session.evaluacion['ev_ini_herr'], conteo_inicial,
                session.evaluacion['ev_fin_doc'], session.evaluacion['ev_fin_est'], session.evaluacion['ev_fin_herr'], conteo_final, session.observaciones, session.id_session)
@@ -161,17 +185,16 @@ class MySQL_connector():
         print(len(val))
         sql = f"Insert INTO reconocimiento (idsesiones, etapa, raw_imagen, imagen, p_enojo, p_felicidad, p_tristeza, p_sorpresa, p_neutral) VALUES ('{session.id_session}', {1}, %s, %s, %s, %s, %s, %s, %s)"
         cursor.executemany(sql, val)
-        
+
         conn.commit()
         conn.close()
 
-    def get_session(self,idsesion):
+    def get_session(self, idsesion):
         pass
         """ for byte_im in byte_im_array:
             nparr = np.fromstring(byte_im[0], np.uint8)
             img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             registro.append(img_np) """
-
 
     def listar_db(self):
         '''
@@ -194,5 +217,3 @@ class MySQL_connector():
             return False, err
         else:
             return resultado
-
-
