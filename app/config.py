@@ -17,9 +17,9 @@ class Config:
 
     # LOCAL HOST#3
     """     MYSQL_DATABASE_HOST = 'localhost'
-        MYSQL_DATABASE_USER = 'root'
-        MYSQL_DATABASE_PASSWORD = 'Flask_APP/54'
-        MYSQL_DATABASE_DB = 'webapp' """
+    MYSQL_DATABASE_USER = 'root'
+    MYSQL_DATABASE_PASSWORD = 'Flask_APP/54'
+    MYSQL_DATABASE_DB = 'webapp' """
 
     ##MAIL CONFIG##
     MAIL_SERVER = 'smtp.googlemail.com'

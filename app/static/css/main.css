@@ -178,6 +178,9 @@ input[type=file] {
     display:none;
 }
 
+.justified-text {
+	text-align: justify;
+}
 
 
 /* CLIENT-SPECIFIC STYLES */
