@@ -147,7 +147,7 @@ Conclusiones
                 <i class="fas fa-chart-area me-1"></i>
                 <h6>Valores de predicción por Reconocimiento <br> Evaluación Inicial</h6>
               </div>
-              <div class="card-body"><canvas id="myPieChart_3" width="100%" height="40"></canvas></div>
+              <div class="card-body"><canvas id="myPieChart_3" width="100%" height="55"></canvas></div>
             </div>
           </div>
           <div class="col-xl-6">
@@ -156,7 +156,7 @@ Conclusiones
                 <i class="fas fa-chart-area me-1"></i>
                 <h6>Valores de predicción por Reconocimiento <br> Evaluación Final </h6>
               </div>
-              <div class="card-body"><canvas id="myPieChart_4" width="100%" height="40"></canvas></div>
+              <div class="card-body"><canvas id="myPieChart_4" width="100%" height="55"></canvas></div>
             </div>
           </div>
         </div>
@@ -177,10 +177,18 @@ Conclusiones
   // Pie Chart Example
     var ctx = document.getElementById("myPieChart_1");
     var myPieChart = new Chart(ctx, {
-      type: 'bar',
+      type: 'pie',
+      options: {
+        responsive: true,
+        legend: {
+          position: 'right',
+          align: "middle"
+        }
+      },
       data: {
         labels: ["Feliz", "Triste", "Enojado", "Sorprendido","Neutro","No se reconoce"],
         datasets: [{
+          label: 'Reconocimiento',
           data: ["{{conteo_inicial['Felicidad']}}", "{{conteo_inicial['Tristeza']}}", "{{conteo_inicial['Enojo']}}", "{{conteo_inicial['Sorpresa']}}", "{{conteo_inicial['Neutral']}}","{{conteo_inicial['No se reconoce']}}"],
           backgroundColor: ['#28a745','#007bff', '#dc3545', '#ffc107', '#767676'],
         }],
@@ -190,7 +198,14 @@ Conclusiones
   // Pie Chart Example
     var ctx = document.getElementById("myPieChart_2");
     var myPieChart = new Chart(ctx, {
-      type: 'doughnut',
+      type: 'pie',
+      options: {
+        responsive: true,
+        legend: {
+          position: 'right',
+          align: "middle"
+      }
+      },
       data: {
         labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
         datasets: [{
@@ -210,11 +225,24 @@ Conclusiones
         scales: {
           xAxes: [{
             stacked: true,
+            scaleLabel: {
+              display: true,
+              labelString: 'Frame'
+            }
           }],
           yAxes: [{
             stacked: true
           }]
         },
+        title: {
+          display: true,
+          position: 'bottom',
+          text: 'Representa el porcentaje de la emoción reconocida para cada una de las imágenes capturadas.'
+        },    
+        legend: {
+          position: 'right',
+          align: "middle"
+        }    
       },
       
       data: {
@@ -245,6 +273,7 @@ Conclusiones
             data: {{preds_inicial['4']}},
             backgroundColor: '#767676',
           }],
+          xAxisID: 'xAxis' ,
       },
     });
 
@@ -257,12 +286,19 @@ Conclusiones
           scales: {
             xAxes: [{
               stacked: true,
+              scaleLabel: {
+                display: true,
+                labelString: 'Frame'
+              }
             }],
             yAxes: [{
-              min: 0,
-              max: 2,
               stacked: true,
             }]
+          },
+          title: {
+            display: true,
+            position: 'bottom',
+            text: 'Representa el porcentaje de la emoción reconocida para cada una de las imágenes capturadas.'
           },
         },
 

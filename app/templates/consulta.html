@@ -9,9 +9,11 @@ Consulta
 {% block head %}
 {{ super() }}
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css"/>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <link rel="stylesheet" href="{{url_for('static',filename='css/styles.css')}}">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block navbar %}
@@ -20,7 +22,7 @@ Consulta
 
 {% block content %}
 
-<body id="body-pd">
+<body id="body-pd" onload="loadTable({{all_users|safe}})">
   
   <!--Container Main start-->
   <!--Container Main end-->
@@ -77,24 +79,28 @@ Consulta
         </div>
       </div>
       <div class="row">
-      <div class="col-lg-6 ">
-        <h5 class="mb-30">Detalles</h5>
-          <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-table me-1"></i>
-              Información
-            </div>
-            <div class="card-body">
-              <div class="table-responsive-sm info-table" id="table_content">   
-              </div>
-            </div>
-          </div>
-      </div>
       <div class="col-lg-6">
         <div class="content-wrapper">
           <div class="section-title mb-40">
             <h5 class="mb-20">Agenda</h5>
             <div class="w-100" id="AgendaJS"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="content-wrapper">
+          <div class="section-title mb-40">
+            <h5 class="mb-50">Detalles</h5>
+            <div class="card mt-5">
+              <div class="card-header">
+                <i class="fas fa-table me-2"></i>
+                Información
+              </div>
+              <div class="card-body">
+                <div class="table-responsive-sm info-table" id="table_content">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -131,8 +137,8 @@ Consulta
           <div class="d-flex align-items-start py-3 border-bottom"> <img
               src="https://images.pexels.com/photos/1037995/pexels-photo-1037995.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
               class="img-profile" alt="">
-            <div class="pl-sm-4 pl-2" id="img-section"> <b>Profile Photo</b>
-              <p>Accepted file type .png. Less than 1MB</p> <button class="btn button border"><b>Upload</b></button>
+            <div class="pl-sm-4 pl-2" id="img-section"> <b>Foto de perfil</b>
+              <p>Acepta archivos tipo .jpg <br> Menor a 1MB</p> <button class="btn button border"><b>Actualizar</b></button>
             </div>
           </div>
           <div class="row">
@@ -273,16 +279,14 @@ Consulta
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
 <script src="{{url_for('static',filename='js/scripts.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 
 
 
 <script>
     let agendaEl = document.getElementById('AgendaJS');
-    let agenda = new FullCalendar.Calendar(agendaEl, { headerToolbar: {
-            right: 'dayGridMonth,timeGridWeek,timeGridDay',
-            left: 'prev,next',
-            center: 'title',
-          },
+    let agenda = new FullCalendar.Calendar(agendaEl,{ 
+          locale: 'es',
           initialView: 'dayGridMonth',
         events:
           [
@@ -295,11 +299,24 @@ Consulta
               
             },
             {% endfor %}
-      ], allDay: false,
-
+          ], 
+          /* allDay: false, */
     });
-
     agenda.render();
+    agenda.setOption('locale', 'es');
+    agenda.setOption('headerToolbar', {
+        locale: 'es',
+        right: /* 'dayGridMonth,timeGridWeek,timeGridDay' */'',
+        left: 'prev,next',
+        center: 'title',
+      })
+/* 
+          headerToolbar: {
+            locale: 'es',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                left: 'prev,next',
+                  center: 'title',
+          }, */
 
     var cal2GoTo = function (date) {
       console.log('cal2go '+date)
@@ -363,9 +380,12 @@ Consulta
       el.appendChild(table);
       const datatablesSimple = document.getElementById('table_info');
       if (datatablesSimple) {
-        new simpleDatatables.DataTable(datatablesSimple,);
+        let tables = new DataTable(datatablesSimple, {language: {
+          url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+        }});
       }
     }
+
     
 
 </script>

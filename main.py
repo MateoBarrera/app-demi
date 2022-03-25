@@ -247,6 +247,7 @@ def correo():
 
 
 @app.route('/consulta', methods=['GET', 'POST'])
+@login_required
 def consulta():
     contacto_form = ContactoForm()
     user_ip = session.get('user_ip')

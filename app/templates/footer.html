@@ -8,7 +8,7 @@
               <a href="#0"> <img src="{{url_for('static',filename='/images/op8.png')}}" alt="WebAPP icon" style="max-width: 180px;"> </a>
             </div>
             <div class="logo">
-              <a href="#0"> <img class="w-100" src="{{url_for('static',filename='/images/LogosInicio.png')}}" alt="WebAPP icon"> </a>
+              <a href="#0"> <img class="w-75" src="{{url_for('static',filename='/images/LogosInicio.png')}}" alt="WebAPP icon"> </a>
             </div>
           </div>
         </div>
@@ -17,10 +17,9 @@
           <div class="footer-widget wow fadeInUp" data-wow-delay=".4s">
             <h6>Servicios</h6>
             <ul class="links">
-              <li> <a href="#0">Registrar Estudiante</a> </li>
-              <li> <a href="#0">Iniciar Clase</a> </li>
-              <li> <a href="#0">Contacto</a> </li>
-              <li> <a href="#0">Consultar</a> </li>
+              <li> <a href="{{url_for('registro_est',terapia=False)}}">Registrar Estudiante</a> </li>
+              <li> <a href="{{url_for('iniciar_terapia')}}">Iniciar Clase</a> </li>
+              <li> <a href="{{url_for('consulta')}}">Consultar </a> </li>
             </ul>
           </div>
         </div>
