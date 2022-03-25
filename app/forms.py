@@ -33,7 +33,7 @@ class SignupEstForm(FlaskForm):
     nombre = StringField('Nombre estudiante *', validators=[
                          InputRequired(), Regexp("^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$", message="Escriba nombre y apellidos, omita caracteres especiales."), Length(min=4, max=45)])
     identificacion = StringField('Cedula de identidad *', validators=[
-        InputRequired(), Regexp("^[0-9]{8,20}?$", message="Numero de identificación sin puntos."), Length(min=4, max=45)])
+        InputRequired(), Regexp("^[0-9]{8,12}?$", message="Numero de identificación sin puntos."), Length(min=8, max=45)])
     imagen = FileField('Imagen', validators=[Optional(),
                                              FileAllowed(['jpg'], 'Requiere .jpg')])
     nacimiento = DateField('Fecha Nacimiento *',
