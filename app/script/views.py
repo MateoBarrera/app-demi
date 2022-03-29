@@ -21,12 +21,9 @@ from app.models import UserData, SessionData
 
 from flask_socketio import join_room, leave_room
 
-
-
-
-
 @socketio.on('virtual_status', namespace='/admin-info')
 def on_virtual_status(data):
+    session['admin_room'] = data['admin_id']
     emit('virtual_status', data['info'], room=data['admin_id'])
 
 @socketio.on('join')
@@ -60,12 +57,18 @@ def image(data_image):
     cv2_img_raw, cv2_img_response, response_label, preds = frames(cv2_img)
 
     # base64 encode
-    #retval, buffer = cv2.imencode('.jpg', cv2_img_response)
+    retval, buffer = cv2.imencode('.jpg', cv2_img_response)
 
-    #b = base64.b64encode(buffer)
-    #b = b.decode()
-    #image_data = "data:image/jpeg;base64," + b
-    #emit('response_back', image_data)
+    b = base64.b64encode(buffer)
+    b = b.decode()
+    image_data = "data:image/jpeg;base64," + b
+
+    if session['admin_room']:
+        print('########################Enviando Imagen')
+        emit('admin_image', image_data,
+             room=session['admin_room'], namespace='/admin-info')
+        emit('admin_label', response_label,
+             room=session['admin_room'], namespace='/admin-info')
 
     is_success, im_buf_arr = cv2.imencode(".jpg", cv2_img_response)
     byte_im = im_buf_arr.tostring()

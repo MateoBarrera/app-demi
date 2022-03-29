@@ -182,6 +182,12 @@ input[type=file] {
 	text-align: justify;
 }
 
+.image-student img{
+	min-width: 100%;
+  min-height: 100%;
+	object-fit: cover;
+}
+
 
 /* CLIENT-SPECIFIC STYLES */
 /*

@@ -24,7 +24,7 @@ Panel de Control
     <div class="contact-section contact-style-6" style="background-color: white;">
       <div class="contact-form-wrapper m-auto p-auto">
         <div class="row">
-          <div class="col-sm-5 col-md-5">
+          <div class="col-md-12 col-lg-6 order-first">
             <div class="card id-student mb-3 p-4 shadow-lg mb-40 radius-30">
             <div class="row g-0 align-items-center justify-content-center">
               <div class="col-auto">
@@ -34,7 +34,7 @@ Panel de Control
               </div>
             </div>
             <div class="row text-uppercase">
-              <div class="col-md-7">
+              <div class="col-md-6">
                 <div class="row mt-20 p-2 justify-content-between">
                   <h6>Nombre: </h6> 
                   <div class="d-flex justify-content-end">
@@ -53,16 +53,16 @@ Panel de Control
                   <h7 class="text-muted fs-1">{{student.grado}}</h7>
                   </div>
                 </div>
+                <div class="row p-2">
+                  <h6>Docente a cargo: </h6>
+                  <div class="d-flex justify-content-end pr-3">
+                    <h7 class="text-muted fs-1">{{student.docente}}</h7>
+                  </div>
+                </div>
               </div>
-              <div class="col-md-5 iconify order-sm-first order-md-last p-4">
-                <img src="{{student_image}}"
+              <div class="col-md-6 iconify order-sm-first order-md-last p-4 image-student">
+                <img id="image_student" src="{{student_image}}"
                   class="rounded float-center img-thumbnail" alt="...">
-              </div>
-            </div>
-            <div class="row p-2 pb-0 justify-content-center text-uppercase">
-              <h6>Docente a cargo: </h6>
-              <div class="d-flex justify-content-end pr-3">
-                <h7 class="text-muted fs-1">{{student.docente}}</h7>
               </div>
             </div>
             </div>
@@ -72,7 +72,7 @@ Panel de Control
                   class="bx bx-info-circle justified-text"></i></button>
             </div>
           </div>
-          <div class="col-sm-5 col-md-7">
+          <div class="col-md-12 col-lg-6">
             <div class="row">
               <div class="col text-center mb-20">
                 <h5>Sesión virtual</h5>
@@ -122,6 +122,14 @@ Panel de Control
                       <h6 class="text-muted mb-4">Estado</h6>
                       <button id="btn-info-final" type="button" class="btn btn-labeled btn-secondary" disabled>
                         Sin iniciar</button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-7">
+                      <h6 class="text-muted justified-text">Emoción reconocida</h6>
+                    </div>
+                    <div class="col-5">
+                      <h6 id="admin_emotion" class="fw-light">No se reconoce</h6>
                     </div>
                   </div>
                 </div>
@@ -197,6 +205,7 @@ Panel de Control
   $(document).ready(function () {
 
     var socket_admin= io('/admin-info')
+    var finish = false;
 
     socket_admin.on('connect', function () {
       console.log("Connected...!", socket_admin.connected)
@@ -221,9 +230,11 @@ Panel de Control
       if (messages[1]=="1") {
         btn.classList.add('btn-primary');
         btn.innerHTML = 'En proceso'
+        finish = false;
       } else if (messages[1]=="2") {
         btn.classList.add('btn-success');
         btn.innerHTML = 'Finalizado'
+        finish = true;
       } else{
         btn.classList.remove('btn-success');
         btn.classList.remove('btn-primary');
@@ -242,8 +253,20 @@ Panel de Control
       socket_admin.emit('virtual_status', { 'admin_id': recipient, 'info': message_to_send });
     });
 
+    socket_admin.on('admin_image', function(image){
+      const image_id = document.getElementById('image_student');
+      if(!finish) {        
+        console.log('recibiendo..')
+        image_id.src = image;
+      }
+      else {
+        image_id.src = '{{student_image}}';
+      }        
+    });
 
-
+    socket_admin.on('admin_label', function (msg) {
+      document.getElementById('admin_emotion').innerHTML = msg;
+    });
   });
    
 </script>
