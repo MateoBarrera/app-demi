@@ -21,6 +21,18 @@ from app.models import UserData, SessionData
 
 from flask_socketio import join_room, leave_room
 
+
+import secure
+
+secure_headers = secure.Secure()
+
+
+@script.after_request
+def set_secure_headers(response):
+    secure_headers.framework.flask(response)
+    return response
+
+
 @socketio.on('virtual_status', namespace='/admin-info')
 def on_virtual_status(data):
     session['admin_room'] = data['admin_id']

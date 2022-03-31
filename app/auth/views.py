@@ -6,6 +6,15 @@ from app.models import UserData, UserModel, SessionData
 from flask_login import login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms.validators import ValidationError
+import secure
+
+secure_headers = secure.Secure()
+
+
+@auth.after_request
+def set_secure_headers(response):
+    secure_headers.framework.flask(response)
+    return response
 
 
 @auth.route('/login', methods=['GET', 'POST'])
