@@ -7,6 +7,7 @@ from .models import UserModel
 from flask_socketio import SocketIO
 from flaskext.mysql import MySQL
 from flask_bootstrap import Bootstrap
+from flask_talisman import Talisman
 
 
 
@@ -36,6 +37,7 @@ def create_app():
   mail = Mail(app)
   app.register_blueprint(auth)
   app.register_blueprint(script)
+  Talisman(app)
   socketio.init_app(app)
   mysql_init.init_app(app)
   return app, socketio, mysql_init
