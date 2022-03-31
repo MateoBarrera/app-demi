@@ -15,13 +15,8 @@ from app.forms import CuestionarioForm, ConclusionesForm
 from .. import socketio
 import operator
 import time
-
-
 from app.models import UserData, SessionData
-
 from flask_socketio import join_room, leave_room
-
-
 import secure
 
 secure_headers = secure.Secure()
