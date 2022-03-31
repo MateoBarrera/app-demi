@@ -17,6 +17,11 @@ from werkzeug.utils import secure_filename
 
 
 from app.models import UserData, SessionData
+import secure
+
+secure_headers = secure.Secure()
+
+
 
 
 app, socketio, mysql_init = create_app()
@@ -24,6 +29,11 @@ app, socketio, mysql_init = create_app()
 app.mysql_object = MySQL_connector(mysql_init)
 app.session_object = dict()
 
+
+@app.after_request
+def set_secure_headers(response):
+    secure_headers.flask(response)
+    return response
 
 @app.cli.command()
 def test():
