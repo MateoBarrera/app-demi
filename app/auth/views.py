@@ -1,7 +1,6 @@
 from flask import render_template, redirect, flash, url_for, session, current_app as app
 from . import auth
 from app.forms import LoginForm, SignupForm, SignupEstForm
-#from app.firestore_service import get_user, user_put
 from app.models import UserData, UserModel, SessionData
 from flask_login import login_required, login_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,12 +9,10 @@ import secure
 
 secure_headers = secure.Secure()
 
-
 @auth.after_request
 def set_secure_headers(response):
     secure_headers.framework.flask(response)
     return response
-
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -49,7 +46,6 @@ def login():
             context['val_name'] = False
     print(context['val_name'], context['val_cont'])
     return render_template('auth/login.html', **context)
-
 
 @auth.route('signup', methods=['GET', 'POST'])
 def signup():
@@ -86,7 +82,6 @@ def signup():
             context['val_name'] = False
 
     return render_template('auth/signup.html', **context)
-
 
 @auth.route('logout')
 @login_required

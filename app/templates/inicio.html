@@ -1,41 +1,38 @@
-<!-- DONE 13-mayo -->
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
-
-
 {% block title %}
 {{ super() }}
 Inicio
 {% endblock %}
-
 {% block navbar %}
 {% include 'navbar_1.html' %}
 {% endblock %}
-
 {% block content %}
-
 <section id="inicio" class="hero-section-wrapper-2">
 <div class="hero-section hero-style-2">
   <div class="container">
     <div class="row align-items-end">
-      <div class=" col-lg-6">
-        <div class="hero-content-wrapper">
-          <h2 class="wow fadeInUp mid-image text-primary" data-wow-delay=".2s">DEMI</h2>
-          <p class="mb-50 wow fadeInUp justified-text" data-wow-delay=".6s">Herramienta de apoyo para reconocimiento de emociones de personas con Síndrome de Down en actividades virtuales y presenciales.</p>
-          <div class="buttons">
-            <a href="{{url_for('iniciar_terapia')}}" class="button button-lg btn-block radius-10 wow fadeInUp" data-wow-delay=".7s">Iniciar</a>
+      <div class="col-lg-5 order-last order-lg-first">
+        <div class="hero-content-wrapper pt-0 pt-lg-5">
+          <div class="pt-lg-5">
+            <div class="pt-lg-5">
+              <h2 class="wow fadeInUp text-primary pt-lg-5" data-wow-delay=".2s">DEMI</h2>
+              <p class="mb-50 wow fadeInUp justified-text" data-wow-delay=".6s">Herramienta de apoyo para reconocimiento de emociones de personas con Síndrome de Down en actividades virtuales y presenciales.</p>
+              <div class="d-flex justify-content-center">
+                <a href="{{url_for('iniciar_terapia')}}" class="button button-lg btn-block radius-10 wow fadeInUp" data-wow-delay=".7s">Iniciar</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-5 m-auto p-auto">
-        <div class="hero-image cup-end mid-image">
+      <div class="col-lg-5 p-auto m-auto mt-5 mt-lg-auto">
+        <div class="hero-image cup-end mid-image mt-5 mt-lg-auto">
           <img src="{{url_for('static',filename='/images/informed_decision.svg')}}" alt="" class="wow fadeInRight" data-wow-delay=".2s">
         </div>
       </div>
     </div>
   </div>
 </div>
-
 </section>
 
 <section id="servicios" class="feature-section feature-style-2">
@@ -43,21 +40,21 @@ Inicio
     <div class="row">
       <div class="col-lg-12">
         <div class="row">
-          <div class="col-xl-7 col-lg-10 col-md-9"></div>
+          <div class="col"></div>
             <div class="section-title mb-60">
               <h3 class="text-center mb-15 wow fadeInUp" data-wow-delay=".2s">Servicios</h3>
             </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-12 col-md-6">
             <div class="single-feature wow fadeInUp" data-wow-delay=".2s">
               <div class="content">
                 <a class="mb-25 service" href="{{url_for('registro_est',terapia=False)}}">
                   <div class="icon">
                   <img src="{{url_for('static',filename='/images/Icon_editar.svg')}}" alt="Registrar estudiante" style="max-width: 55px;">
                 </div><h5 class="mb-25 effect-underline">Registrar estudiante</h5></a>
-                <p class="justified-text col-6">Cargar la información esencial para la identificación del estudiante</p>
+                <p class="justified-text col-12 col-lg-6">Cargar la información esencial para la identificación del estudiante.</p>
               </div>
             </div>
           </div>
@@ -70,7 +67,7 @@ Inicio
                   </div>
                   <h5 class="mb-25">Iniciar</h5>
                 </a>               
-                <p class="justified-text col-6">Inicia una nueva terapia de inmediato.</p>
+                <p class="justified-text col-12 col-lg-6">Inicia una nueva terapia de inmediato.</p>
               </div>
             </div>
           </div>
@@ -83,7 +80,7 @@ Inicio
                   </div>
                   <h5 class="mb-25">Contacto</h5>
                 </a>
-                <p class="justified-text col-6">Comunicate mediante correo electrónico para obtener mayor información.</p>
+                <p class="justified-text col-12 col-lg-6">Comunicate mediante correo electrónico para obtener mayor información.</p>
               </div>
             </div>
           </div>
@@ -96,7 +93,7 @@ Inicio
                   </div>
                   <h5 class="mb-25">Consulta</h5>
                 </a>
-                <p class="justified-text col-6">Navega por la información recopilada a lo largo de las sesiones de terapia.</p>
+                <p class="justified-text col-12 col-lg-6">Navega por la información recopilada a lo largo de las sesiones de terapia.</p>
               </div>
             </div>
           </div>

@@ -95,6 +95,6 @@
     cu.start(); */
 
 	//WOW activate
-    //new WOW().init();
+    new WOW().init();
 
 })();

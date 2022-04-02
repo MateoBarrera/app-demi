@@ -21,12 +21,10 @@ import secure
 
 secure_headers = secure.Secure()
 
-
 @script.after_request
 def set_secure_headers(response):
     secure_headers.framework.flask(response)
     return response
-
 
 @socketio.on('virtual_status', namespace='/admin-info')
 def on_virtual_status(data):
@@ -49,11 +47,9 @@ def on_leave(data):
     leave_room(room)
     send(username + ' has left the room.', to=room)
 
-
 @socketio.on('connect')
 def test_connect():
     app.logger.info("Client connected")
-
 
 @socketio.on('image_ev')
 def image(data_image):
@@ -93,7 +89,6 @@ def image(data_image):
 
     emit('response_label', response_label)
 
-
 @script.route('/socket', methods=['GET', 'POST'])
 def receiber():
     context = {
@@ -101,7 +96,6 @@ def receiber():
     }
     print("#################OSSOCJE")
     return render_template('sockect_hard.html', **context)
-
 
 @script.route('/ventana-carga', methods=['GET', 'POST'])
 def ventana_carga():
@@ -112,7 +106,6 @@ def ventana_carga():
         'etapa': "Evaluación inicial",
     }
     return render_template('ventana_carga.html', **context)
-
 
 @script.route('/evaluacion', methods=['GET', 'POST'])
 def evaluacion():
@@ -142,7 +135,6 @@ def evaluacion():
             'virtual': session['virtual'],
             'admin_id':session['admin_id'],
             'stage': session['stage'],
-            
         }
         return render_template('evaluacion.html', **context)
     elif session['stage'] == 'final':
@@ -157,14 +149,12 @@ def evaluacion():
     else:
         return make_response(redirect(url_for('iniciar_terapia')))
 
-
 @script.route('/ventana-espera', methods=['GET', 'POST'])
 def ventana_espera():
     context = {
         'etapa': "Evaluación final",
     }
     return render_template('ventana_carga.html', **context)
-
 
 @script.route('/final-evaluacion/<ev_est>/<virtual>', methods=['GET', 'POST'])
 def final_evaluacion(ev_est, virtual):
@@ -187,9 +177,6 @@ def final_evaluacion(ev_est, virtual):
         except:
             response = make_response(redirect(url_for('script.error')))
             return response
-            
-            
-
     else:
         try:
             labels_list = app.session_object['{}'.format(
@@ -197,7 +184,6 @@ def final_evaluacion(ev_est, virtual):
             count_dict = {i: labels_list.count(i) for i in labels_list}
             app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_herr'] = max(
                 count_dict.items(), key=operator.itemgetter(1))[0]
-
             app.session_object['{}'.format(
                 session['session_token'])].evaluacion['ev_fin_est'] = ev_est
             app.session_object['{}'.format(
@@ -205,7 +191,6 @@ def final_evaluacion(ev_est, virtual):
             print("MAX {}".format(app.session_object['{}'.format(
                 session['session_token'])].evaluacion['ev_fin_herr']))
             print("Conteos {}".format(count_dict))
-
             response = make_response(redirect(url_for('script.cuestionario')))
         except:
             response = make_response(redirect(url_for('script.error')))
@@ -215,12 +200,10 @@ def final_evaluacion(ev_est, virtual):
         return render_template('virtual/close_tab.html')
     return response
 
-
 @script.route('/cuestionario', methods=['GET', 'POST'])
 def cuestionario():
     cuestionario_form = CuestionarioForm()
     context = {
-
         'etapa': "Evaluación inicial",
         'mensaje': "¿Como te sientes hoy?",
         'cuestionario_form': cuestionario_form
@@ -229,7 +212,6 @@ def cuestionario():
         return redirect(url_for('script.conclusion'))
 
     return render_template('cuestionario.html', **context)
-
 
 @script.route('/conclusion', methods=['GET', 'POST'])
 def conclusion():
@@ -293,7 +275,6 @@ def conclusion():
 
     return render_template('conclusion.html', **context)
 
-
 @script.route('/conclusion/guardando', methods=['GET', 'POST'])
 def guardar():
     app.session_object['{}'.format(session['session_token'])].id_session = app.mysql_object.create_session(
@@ -303,12 +284,10 @@ def guardar():
     print(session_data)
     return redirect(url_for('inicio'))
 
-
 @script.route('/index_r')
 def endwc():
     response = make_response(redirect('/inicio'))
     return response  # , Response=(endframes()))
-
 
 @script.route('/panel-virtual', methods=['GET', 'POST'])
 def panel_virtual():

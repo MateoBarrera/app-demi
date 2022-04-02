@@ -1,103 +1,94 @@
-{% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
-
-{% block title %}
+{% extends 'base.html' %} 
+{% import 'bootstrap/wtf.html' as wtf %} 
+{% block title %} 
 {{ super() }}
-Registrarse
-{% endblock %}
-
-{% block navbar %}
-{% include 'navbar_2.html' %}
-{% endblock %}
-
+Registrarse 
+{% endblock %} 
+{% block navbar %} 
+{% include 'navbar_2.html' %} 
+{% endblock %} 
 {% block content %}
 
 <section id="signup" class="contact-section contact-style-6 bg-white">
-  <div class="container justify-content-center">
-    <div class="row">
-      <div class="col-lg-5 m-5 mid-image">
-        <div class="hero-image cup-strar">
-          <img src="{{url_for('static',filename='/images/Online.svg')}}" alt="Registrase" >
-        </div>
-      </div>
-      <div class="col-lg-5">
-        <div class="content-wrapper">
-          <div class="section-title mb-40">
-            <h3 class="mb-60">Registrarse</h3>
-            <div class="contact-form-wrapper">
-              <form action="{{ url_for('auth.signup') }}" method="POST">
-                <fieldset>
-                  <div class="single-input">
-                    {{ signup_form.csrf_token() }}
-                    <label for="name s">
-                      <h6>{{signup_form.nombre.label()}}</h6>
-                    </label>
-                    {{signup_form.nombre()}}
-                    <small id="emailHelp" class="form-text text-muted">Este sera tu usuario dentro WebAPP.</small>
-                    {% if signup_form.nombre.errors %}
-                    {% for error in signup_form.nombre.errors %}
-                    <div class="error-input">{{error}}</div>
-                    {% endfor %}
-                    {% endif %}
-                    {% if not val_name %}
-                    <div class="error-input">El usuario ya se encuentra registrado</div>
-                    {% endif %}
-                  </div>
-                </fieldset>
-                <fieldset>
-                  <div class="single-input">
-                    <label for="name s">
-                      <h6>{{signup_form.contraseña.label()}}</h6>
-                    </label>
-                    {{signup_form.contraseña()}}
-                    <small id="emailHelp" class="form-text text-muted"></small>
-                    {% if signup_form.contraseña.errors %}
-                    {% for error in signup_form.contraseña.errors %}
-                    <div class="error-input">{{error}}</div>
-                    {% endfor %}
-                    {% endif %}
-                  </div>
-                </fieldset>
-                <fieldset>
-                  <div class="single-input">
-                    <label for="name s">
-                      <h6>{{signup_form.contraseña_conf.label()}}</h6>
-                    </label>
-                    {{signup_form.contraseña_conf()}}
-                    {% if signup_form.contraseña_conf.errors %}
-                    {% for error in signup_form.contraseña_conf.errors %}
-                    <div class="error-input">{{error}}</div>
-                    {% endfor %}
-                    {% endif %}
-                  </div>
-                </fieldset>
-                <fieldset>
-                  <div class="select-input ">
-                    <label for="grado s">
-                      <h6>{{signup_form.cargo.label()}}</h6>
-                    </label>
-                    {{signup_form.cargo()}}
-                  </div>
-                </fieldset>
-                <div class="text-center">
-                  <p>{{signup_form.terminos(class_="form-check-input")}} Política de <a href="#terminos y condiciones">tratamiento
-                      de datos personales</a>*</p>
-                </div>
-                <fieldset>
-                    <div class="mt-10">
-                      {{signup_form.iniciar(class_="form-button button radius-10 w-100")}}
-                    </div>
-                </fieldset>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+	<div class="container justify-content-center">
+		<div class="row">
+			<div class="col-md-5 m-5 mid-image order-last order-md-first">
+				<div class="hero-image cup-strar d-flex p-5 p-md-1">
+					<img src="{{url_for('static',filename='/images/Online.svg')}}" alt="Registrase" />
+				</div>
+			</div>
+			<div class="col-md-5">
+				<div class="content-wrapper">
+					<div class="section-title">
+						<h3 class="mb-30">Registrarse</h3>
+						<div class="contact-form-wrapper">
+							<form action="{{ url_for('auth.signup') }}" method="POST">
+								<fieldset>
+									<div class="single-input">
+										{{ signup_form.csrf_token() }}
+										<label for="name s">
+											<h6>{{signup_form.nombre.label()}}</h6>
+										</label>
+										{{signup_form.nombre()}}
+										<small id="emailHelp" class="form-text text-muted"
+											>Este sera tu usuario dentro WebAPP.</small>
+										{% if signup_form.nombre.errors %} {% for error in signup_form.nombre.errors %}
+										<div class="error-input">{{error}}</div>
+										{% endfor %} {% endif %} {% if not val_name %}
+										<div class="error-input">El usuario ya se encuentra registrado</div>
+										{% endif %}
+									</div>
+								</fieldset>
+								<fieldset>
+									<div class="single-input">
+										<label for="name s">
+											<h6>{{signup_form.contraseña.label()}}</h6>
+										</label>
+										{{signup_form.contraseña()}}
+										<small id="emailHelp" class="form-text text-muted"></small>
+										{% if signup_form.contraseña.errors %} {% for error in
+										signup_form.contraseña.errors %}
+										<div class="error-input">{{error}}</div>
+										{% endfor %} {% endif %}
+									</div>
+								</fieldset>
+								<fieldset>
+									<div class="single-input">
+										<label for="name s">
+											<h6>{{signup_form.contraseña_conf.label()}}</h6>
+										</label>
+										{{signup_form.contraseña_conf()}} {% if signup_form.contraseña_conf.errors %} {%
+										for error in signup_form.contraseña_conf.errors %}
+										<div class="error-input">{{error}}</div>
+										{% endfor %} {% endif %}
+									</div>
+								</fieldset>
+								<fieldset>
+									<div class="select-input">
+										<label for="grado s">
+											<h6>{{signup_form.cargo.label()}}</h6>
+										</label>
+										{{signup_form.cargo()}}
+									</div>
+								</fieldset>
+								<div class="text-center">
+									<p>
+										{{signup_form.terminos(class_="form-check-input")}} Política de
+										<a href="#terminos y condiciones">tratamiento de datos personales</a>*
+									</p>
+								</div>
+								<fieldset>
+									<div class="mt-10">
+										{{signup_form.iniciar(class_="form-button button radius-10 w-100")}}
+									</div>
+								</fieldset>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 
 {% endblock %}
-
-
-

@@ -1,4 +1,3 @@
-# Comentario para git
 import unittest
 import os
 import datetime as Datetime
@@ -8,27 +7,18 @@ import cv2
 from flask import Flask, request, current_app, Response, make_response, render_template, redirect, session, url_for, flash
 from app import create_app
 from app.forms import TodoForms, DeleteTodoForm, UpdateTodo, TerapiaForm, ConclusionesForm, CuestionarioForm, ContactoForm, SignupEstForm, SignupForm
-#from app.firestore_service import get_users, get_todos, put_todo, delete_todo, update_todo
 from flask_login import login_required, current_user
 from app.email import send_email
 from app.mysql import MySQL_connector
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
-
-
 from app.models import UserData, SessionData
 import secure
 
 secure_headers = secure.Secure()
-
-
-
-
 app, socketio, mysql_init = create_app()
-
 app.mysql_object = MySQL_connector(mysql_init)
 app.session_object = dict()
-
 
 @app.after_request
 def set_secure_headers(response):
@@ -40,11 +30,9 @@ def test():
     tests = unittest.TestLoader().discover('test')
     unittest.TextTestRunner().run(tests)
 
-
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error/404.html', error=error)
-
 
 @app.route('/')
 def index():
@@ -53,8 +41,7 @@ def index():
     session['user_ip'] = user_ip
     return response
 
-
-@app.route('/hello', methods=['GET', 'POST'])
+""" @app.route('/hello', methods=['GET', 'POST'])
 @login_required
 def hello():
     user_ip = session.get('user_ip')
@@ -83,20 +70,17 @@ def hello():
 
     return render_template('hello.html', **context)
 
-
 @app.route('/todos/delete/<todo_id>', methods=['POST'])
 def delete(todo_id):
     user_id = current_user.id
     delete_todo(user_id, todo_id)
     return redirect(url_for('hello'))
 
-
 @app.route('/todos/update/<todo_id>/<int:done>', methods=['POST'])
-def update(todo_id, done):
+def update(todo_id, done): 
     user_id = current_user.id
     update_todo(user_id, todo_id, done)
-    return redirect(url_for('hello'))
-
+    return redirect(url_for('hello'))"""
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
@@ -143,7 +127,6 @@ def inicio():
             return redirect(url_for('inicio'))
 
     return render_template('inicio.html', **context)
-
 
 @app.route('/iniciar-terapia', methods=['GET', 'POST'])
 @login_required
@@ -198,7 +181,6 @@ def iniciar_terapia():
 
     return render_template('terapia.html', **context)
 
-
 @app.route('/registro-estudiante/<terapia>', methods=['GET', 'POST'])
 @login_required
 def registro_est(terapia):
@@ -243,7 +225,6 @@ def registro_est(terapia):
 
     return render_template('registro_est.html', **context)
 
-
 @app.route('/correo', methods=['GET', 'POST'])
 def correo():
     contacto_context = {
@@ -254,7 +235,6 @@ def correo():
         'mensaje': "contacto_form.mensaje.data contacto_form.mensaje.data contacto_form.mensaje.data contacto_form.mensaje.data",
     }
     return render_template('correo_contato.html', **contacto_context)
-
 
 @app.route('/consulta', methods=['GET', 'POST'])
 @login_required
@@ -295,14 +275,12 @@ def consulta():
 
     return render_template('consulta.html', **context)
 
-
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     context = {
 
     }
     return render_template('virtual/admin_session.html', **context)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
