@@ -395,7 +395,7 @@ Consulta
       var table_handler = $('#table_info').DataTable();
       $('#table_info tbody').on('click', 'tr', function () {
         console.log("Se esta ejecutando.....")
-        var data = table_handler.row(this).data();
+        var data = table_handler.row(this).data(); 
         var data = table_handler.column().header();
         alert( 'You clicked on '+$(data).html()+'\'s row' );
     } );
