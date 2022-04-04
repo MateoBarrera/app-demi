@@ -87,7 +87,7 @@ class TerapiaForm(FlaskForm):
     identificacion_form = HiddenField('Identificacion del estudiante',
                               validators=[DataRequired()])
     emocion_percibida = SelectField("Emoción percibida", choices=[('-1', ' '), ('a', 'Felicidad'), (
-        'b', 'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutro')], validators=[DataRequired()])
+        'b', 'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutral')], validators=[DataRequired()])
     virtual = BooleanField("¿Terapia presencial o remota?")
     iniciar = SubmitField(label='Iniciar')
 
@@ -105,6 +105,6 @@ class CuestionarioForm(FlaskForm):
 
 class ConclusionesForm(FlaskForm):
     emocion_percibida = SelectField("Emoción percibida", choices=[('-1',' '), ('a','Felicidad'), ('b',
-        'Tristeza'), ('c','Enojo'), ('d','Sorpresa'), ('e','Neutro')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
+        'Tristeza'), ('c','Enojo'), ('d','Sorpresa'), ('e','Neutral')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
     observacion = TextAreaField("Observaciones")
     iniciar = SubmitField('Finalizar')

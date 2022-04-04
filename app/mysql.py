@@ -142,10 +142,37 @@ class MySQL_connector():
     def get_all_session_info(self):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = f"SELECT sesion.idsesiones,usuarios.nombre,estudiantes.estudiante,sesion.fecha FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;"
+        sql = f"SELECT sesion.idsesiones, usuarios.nombre,estudiantes.estudiante, sesion.fecha FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;"
         cursor.execute(sql)
         user_login = dict()
         columns = [col[0] for col in cursor.description]
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        conn.close()
+        return rows
+
+    def get_all_session_ev(self):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT sesion.idsesiones, sesion.ev_ini_doc, sesion.ev_ini_est, sesion.ev_ini_herr_pred, sesion.ev_fin_doc, sesion.ev_fin_est, sesion.ev_fin_herr_pred, sesion.observaciones FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;"
+
+        """         sql = f"SELECT sesion.idsesiones, sesion.ev_ini_doc, sesion.ev_ini_est, sesion.ev_ini_herr_pred, sesion.ev_fin_doc, sesion.ev_fin_est, sesion.ev_fin_herr_pred, sesion.observaciones FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;" """
+        cursor.execute(sql)
+        user_login = dict()
+        #columns = [col[0] for col in cursor.description]
+        columns = ['Sesión', 'Inicial Docente', 'Inicial Estudiante', 'Inicial Herramienta','Final Docente', 'Final Estudiante', 'Final Herramienta', 'Observaciones']
+        #print("###############################################")
+        #print(columns)
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        conn.close()
+        return rows
+
+    def get_all_session_prob(self):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT sesion.idsesiones, sesion.conteo_inicial, sesion.conteo_final FROM sesion;"
+        cursor.execute(sql)
+        user_login = dict()
+        columns = ['Sesión', 'conteo_inicial', 'conteo_final']
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
         conn.close()
         return rows
@@ -171,18 +198,16 @@ class MySQL_connector():
         conteo_inicial = json.dumps(session.conteo_inicial)
         conteo_final = json.dumps(session.conteo_final)
 
-        sql = "UPDATE sesion SET ev_ini_doc = %s, ev_ini_est = %s, ev_ini_herr = %s, conteo_inicial = %s, ev_fin_doc = %s, ev_fin_est = %s, ev_fin_herr = %s, conteo_final = %s, observaciones = %s WHERE idsesiones = %s;"
+        sql = "UPDATE sesion SET ev_ini_doc = %s, ev_ini_est = %s, ev_ini_herr = %s, conteo_inicial = %s, ev_fin_doc = %s, ev_fin_est = %s, ev_fin_herr = %s, conteo_final = %s, observaciones = %s, ev_ini_herr_pred = '0', ev_fin_herr_pred = '0'  WHERE idsesiones = %s;"
         val = (session.evaluacion['ev_ini_doc'], session.evaluacion['ev_ini_est'], session.evaluacion['ev_ini_herr'], conteo_inicial,
                session.evaluacion['ev_fin_doc'], session.evaluacion['ev_fin_est'], session.evaluacion['ev_fin_herr'], conteo_final, session.observaciones, session.id_session)
         cursor.execute(sql, val)
 
         val = session.images['inicial']
-        print(len(val))
         sql = f"Insert INTO reconocimiento (idsesiones, etapa, raw_imagen, imagen, p_enojo, p_felicidad, p_tristeza, p_sorpresa, p_neutral) VALUES ('{session.id_session}', {0}, %s, %s, %s, %s, %s, %s, %s)"
         cursor.executemany(sql, val)
 
         val = session.images['final']
-        print(len(val))
         sql = f"Insert INTO reconocimiento (idsesiones, etapa, raw_imagen, imagen, p_enojo, p_felicidad, p_tristeza, p_sorpresa, p_neutral) VALUES ('{session.id_session}', {1}, %s, %s, %s, %s, %s, %s, %s)"
         cursor.executemany(sql, val)
 

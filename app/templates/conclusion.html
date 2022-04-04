@@ -123,8 +123,8 @@ Conclusiones
           <div class="row align-items-center justify-content-center text-center mb-40">
             <div class="col-xl-6">
               <div class="card mb-4">
-                <div class="card-header">
-                  <i class="fas fa-chart-area me-1"></i>
+                <div class="card-header d-flex align-content-center">
+                  <i class="fa-solid fa-chart-pie m-1"></i>
                   <h6>Reconocimiento Evaluación Inicial</h6>
                 </div>
                 <div class="card-body"><canvas id="myPieChart_1" width="100%" height="40"></canvas></div>
@@ -132,8 +132,8 @@ Conclusiones
             </div>
             <div class="col-xl-6">
               <div class="card mb-4">
-                <div class="card-header">
-                  <i class="fas fa-chart-area me-1"></i>
+                <div class="card-header d-flex align-content-center">
+                  <i class="fa-solid fa-chart-pie m-1"></i>
                   <h6>Reconocimiento Evaluación Final</h6>
                 </div>
                 <div class="card-body"><canvas id="myPieChart_2" width="100%" height="40"></canvas></div>
@@ -143,8 +143,8 @@ Conclusiones
         <div class="row align-items-center justify-content-center text-center mb-40">
           <div class="col-xl-6">
             <div class="card mb-4">
-              <div class="card-header">
-                <i class="fas fa-chart-area me-1"></i>
+              <div class="card-header d-flex align-content-center">
+                <i class="fas fa-chart-area m-1"></i>
                 <h6>Valores de predicción por Reconocimiento <br> Evaluación Inicial</h6>
               </div>
               <div class="card-body"><canvas id="myPieChart_3" width="100%" height="55"></canvas></div>
@@ -152,8 +152,8 @@ Conclusiones
           </div>
           <div class="col-xl-6">
             <div class="card mb-4">
-              <div class="card-header">
-                <i class="fas fa-chart-area me-1"></i>
+              <div class="card-header d-flex align-content-center">
+                <i class="fas fa-chart-area m-1"></i>
                 <h6>Valores de predicción por Reconocimiento <br> Evaluación Final </h6>
               </div>
               <div class="card-body"><canvas id="myPieChart_4" width="100%" height="55"></canvas></div>
@@ -186,10 +186,10 @@ Conclusiones
         }
       },
       data: {
-        labels: ["Feliz", "Triste", "Enojado", "Sorprendido","Neutro","No se reconoce"],
+        labels: ["Felicidad", "Tristeza", "Enojo", "Sorpresa","Neutral"],
         datasets: [{
           label: 'Reconocimiento',
-          data: ["{{conteo_inicial['Felicidad']}}", "{{conteo_inicial['Tristeza']}}", "{{conteo_inicial['Enojo']}}", "{{conteo_inicial['Sorpresa']}}", "{{conteo_inicial['Neutral']}}","{{conteo_inicial['No se reconoce']}}"],
+          data: ["{{conteo_inicial['Felicidad']}}", "{{conteo_inicial['Tristeza']}}", "{{conteo_inicial['Enojo']}}", "{{conteo_inicial['Sorpresa']}}", "{{conteo_inicial['Neutral']}}"],
           backgroundColor: ['#28a745','#007bff', '#dc3545', '#ffc107', '#767676'],
         }],
       },
@@ -207,10 +207,10 @@ Conclusiones
       }
       },
       data: {
-        labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
+        labels: ["Felicidad", "Tristeza", "Enojo", "Sorpresa", "Neutral"],
         datasets: [{
           label:'Reconocimiento',
-          data: ["{{conteo_final['Felicidad']}}", "{{conteo_final['Tristeza']}}", "{{conteo_final['Enojo']}}", "{{conteo_final['Sorpresa']}}", "{{conteo_final['Neutral']}}", "{{conteo_final['No se reconoce']}}"],
+          data: ["{{conteo_final['Felicidad']}}", "{{conteo_final['Tristeza']}}", "{{conteo_final['Enojo']}}", "{{conteo_final['Sorpresa']}}", "{{conteo_final['Neutral']}}"],
           backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
         }],
       },

@@ -49,6 +49,7 @@ function ActiveSection(sectionId) {
       
 };
 
+try {
 var ctx = document.getElementById("myAreaChart");
 var myLineChart = new Chart(ctx, {
   type: 'line',
@@ -111,6 +112,9 @@ var myPieChart = new Chart(ctx, {
     }],
   },
 });
+} catch (error){
+  
+}
 
 window.addEventListener('DOMContentLoaded', event => {
     // Simple-DataTables

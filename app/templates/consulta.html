@@ -56,11 +56,11 @@ Consulta
         <div class="col-xl-3 col-md-6">
           <div class="card bg-success text-white mb-4">
             <div class="card-title">
-              <div class="text-white iconify">{{all_sessions|length}}<i class="bx bx-bar-chart-alt-2"></i></div><br>
+              <div class="text-white iconify">{{all_sessions_info|length}}<i class="bx bx-bar-chart-alt-2"></i></div><br>
               <p class="pl-15 text-aling-center font-weight-bold">Sesiones almacenadas</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_sessions|safe}})">Ver resumen</a>
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_sessions_info|safe}})">Ver resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
@@ -82,7 +82,7 @@ Consulta
       <div class="col-lg-8">
         <div class="content-wrapper">
           <div class="section-title mb-40">
-            <div class="card mt-5 cards-conclution">
+            <div class="card cards-conclution">
               <div class="card-header d-flex align-content-center">
                 <i class="fa-solid fa-square-poll-horizontal m-1"></i>
                 <h6>Resumen</h6>
@@ -98,12 +98,12 @@ Consulta
       <div class="col-lg-4">
         <div class="content-wrapper">
           <div class="section-title mb-40">
-            <div class="card mt-5 cards-conclution">
+            <div class="card cards-conclution">
               <div class="card-header d-flex align-content-center">
                 <i class="fa-solid fa-calendar-days m-1"></i>
                 <h6>Calendario</h6>
               </div>
-              <div class="card-body">
+              <div class="card-body align-self-stretch">
                 <div class="w-100" id="AgendaJS"></div>
               </div>
             </div>
@@ -112,22 +112,33 @@ Consulta
       </div>
       </div>
       <div class="row">
-        <div class="col-xl-6">
+        <div class="col-12">
           <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-chart-area me-1"></i>
-              Gráfico de Area
+            <div class="card-header d-flex align-content-center">
+              <i class="fa-solid fa-file-invoice m-1"></i>
+              <h6>Información de evaluaciones</h6>
             </div>
-            <div class="card-body"><canvas id="myAreaChart" width="100%" height="40"></canvas></div>
+            <div class="card-body">
+              <div class="table-responsive-sm info-table" id="table_content_2">
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-xl-6">
+        <div class="col-12">
           <div class="card mb-4">
-            <div class="card-header">
-              <i class="fas fa-chart-bar me-1"></i>
-              Gráfico Circular
+            <div class="card-header d-flex align-content-center">
+              <i class="fa-solid fa-chart-pie m-1"></i>
+              <h6>Gráficos de evaluaciones</h6>
             </div>
-            <div class="card-body"><canvas id="myPieChart" width="100%" height="40"></canvas></div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12 col-md-6" id="div-chart-1">
+                </div>
+                <div class="col-12 col-md-6" id="div-chart-2">
+                </div>
+              </div>
+
+            </div>
           </div>
         </div>
       </div>
@@ -288,8 +299,8 @@ Consulta
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 
 
-
-<script>
+<!-- Calendar script -->
+<script type="text/javascript">
     let agendaEl = document.getElementById('AgendaJS');
     let agenda = new FullCalendar.Calendar(agendaEl,{ 
           locale: 'es',
@@ -309,6 +320,7 @@ Consulta
           /* allDay: false, */
     });
     agenda.render();
+    agenda.setOption('height', '100%');
     agenda.setOption('locale', 'es');
     agenda.setOption('headerToolbar', {
         locale: 'es',
@@ -330,7 +342,8 @@ Consulta
       }
 </script>
 
-<script>
+<!-- Table Resumen script -->
+<script type="text/javascript">
   var _table_ = document.createElement('table'),
       _tr_ = document.createElement('tr'),
       _th_ = document.createElement('th'),
@@ -338,79 +351,211 @@ Consulta
       _thead_ = document.createElement('thead'),
       _tbody_ = document.createElement('tbody');
 
-    function  loadTable(arr){
-    
-      var table = _table_.cloneNode(false);
-      var tbody = _tbody_.cloneNode(false),
-        columns = addAllColumnHeaders(arr, table);
-      for (var i = 0, maxi = arr.length; i < maxi; ++i) {
-        var tr = _tr_.cloneNode(false);
-        for (var j = 0, maxj = columns.length; j < maxj; ++j) {
-          var th = _th_.cloneNode(false);
-          cellValue = arr[i][columns[j]];
-          th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
-          /* console.log("Click" + th.textContent) */
-          tr.appendChild(th);
-        }   
-        tbody.appendChild(tr);
-      }
-      table.appendChild(tbody);
-      
-      table.id = "table_info"
-      table.classList.add("table");
-      table.classList.add("table-hover");
-      table.classList.add("text-secondary");
-
-      function addAllColumnHeaders(arr, table) {
-        var columnSet = [],
-          thead = _thead_.cloneNode(false);
-          tr = _tr_.cloneNode(false);
-        for (var i = 0, l = arr.length; i < l; i++) {
-          for (var key in arr[i]) {
-            if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
-              columnSet.push(key);
-              var th = _th_.cloneNode(false);
-              th.appendChild(document.createTextNode(key));
-              tr.appendChild(th);
-            }
+  function addAllColumnHeaders(arr, table) {
+      var columnSet = [],
+        thead = _thead_.cloneNode(false);
+      tr = _tr_.cloneNode(false);
+      for (var i = 0, l = arr.length; i < l; i++) {
+        for (var key in arr[i]) {
+          if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
+            columnSet.push(key);
+            var th = _th_.cloneNode(false);
+            th.appendChild(document.createTextNode(key));
+            tr.appendChild(th);
           }
         }
-        thead.appendChild(tr);
-        thead.classList.add("text-primary");
-        table.appendChild(thead);
-        return columnSet;
+      }
+      thead.appendChild(tr);
+      thead.classList.add("text-primary");
+      table.appendChild(thead);
+      return columnSet;
+    }
+
+  function  loadTable(arr){    
+    var table = _table_.cloneNode(false);
+    var tbody = _tbody_.cloneNode(false),
+      columns = addAllColumnHeaders(arr, table);
+    console.log(columns)
+    for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+      var tr = _tr_.cloneNode(false);
+      for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+        var th = _th_.cloneNode(false);
+        cellValue = arr[i][columns[j]];
+        th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+        /* console.log("Click" + th.textContent) */
+        tr.appendChild(th);
+      }   
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    
+    table.id = "table_info"; 
+    table.classList.add("table");
+    table.classList.add("table-hover");
+    table.classList.add("text-secondary");
+    table.classList.add("h-100");
+
+    var el = document.getElementById("table_content");
+    el.innerHTML= "";
+    el.appendChild(table);
+    const datatablesSimple = document.getElementById('table_info');
+    if (datatablesSimple) {
+      let tables = new DataTable(datatablesSimple, {
+      language: {
+        url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+      }, responsive:true, pageLength: 5,
+        });
+    }
+
+    var table_handler = $('#table_info').DataTable();
+    $('#table_info tbody').on('click', 'tr', function () {
+      var data = table_handler.row(this).data(); 
+      var column_name = $(table_handler.column().header()).html();
+      if (column_name =='idsesiones'){
+        console.log('You clicked on ' + column_name + '\'s row');
+        loadSesions(data[0]);
+
+      } else if (column_name=='estudiante'){
+        alert('Seleccionaste al estudiante '+ data[0] +', próximamente se permitirá la búsqueda detallada por estudiantes :)')
       }
 
-      var el = document.getElementById("table_content");
-      el.innerHTML= "";
-      el.appendChild(table);
-      const datatablesSimple = document.getElementById('table_info');
-      if (datatablesSimple) {
-        let tables = new DataTable(datatablesSimple, {
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-        }, responsive:true});
-      }
+  } );
 
-      var table_handler = $('#table_info').DataTable();
-      $('#table_info tbody').on('click', 'tr', function () {
-        console.log("Se esta ejecutando.....")
-        var data = table_handler.row(this).data(); 
-        var data = table_handler.column().header();
-        alert( 'You clicked on '+$(data).html()+'\'s row' );
-    } );
 /* selección de cada celda tr pasa a ser td */
 /*     var table = $('#example').DataTable();
-    
-    $('#example tbody').on( 'click', 'td', function () {
-        var idx = table.cell( this ).index().column;
-        var title = table.column( idx ).header();
-    
-        alert( 'Column title clicked on: '+$(title).html() );
-    } ); */
+  
+  $('#example tbody').on( 'click', 'td', function () {
+      var idx = table.cell( this ).index().column;
+      var title = table.column( idx ).header();
+  
+      alert( 'Column title clicked on: '+$(title).html() );
+  } ); */
 
+  }
+
+  function loadSesions(session){
+    var all_sessions = {{ all_sessions|safe}};
+    var arr = all_sessions.filter(arr=> (arr.Sesión==session));
+    var table = _table_.cloneNode(false);
+    var tbody = _tbody_.cloneNode(false),
+      columns = addAllColumnHeaders(all_sessions, table);
+    console.log(arr)
+    var tr = _tr_.cloneNode(false);
+    for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+      var th = _th_.cloneNode(false);
+      cellValue = arr[0][columns[j]];
+      console.log(cellValue)
+      th.appendChild(document.createTextNode(arr[0][columns[j]] || ''));
+      /* console.log("Click" + th.textContent) */
+      tr.appendChild(th);
     }
+    tbody.appendChild(tr);
+    table.appendChild(tbody);
+    table.id = "table_session";
+    table.classList.add("table");
+    table.classList.add("table-hover");
+    table.classList.add("text-secondary");
+    table.classList.add("h-100");
+
+    var el = document.getElementById("table_content_2");
+    el.innerHTML = "";
+    el.appendChild(table);
+    const datatablesSimple = document.getElementById('table_session');
+    if (datatablesSimple) {
+      let tables = new DataTable(datatablesSimple, {
+        language: {
+          url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+        }, responsive: true,
+        bPaginate: false,
+        bFilter: false,
+        bInfo: false,
+
+      });
+    }
+    var props = {{props|safe}};
+    props = props.filter(props=> (props.Sesión == session));
+    console.log(props)
+    loadGraphs(props[0]);
+  }
 </script>
+
+<!-- Gráfica de evaluaciones  -->
+<script type="text/javascript">
+  // Pie Chart Example
+  function loadGraphs(props){
+    var _canvas_ = document.createElement('canvas');
+    var canvas = _canvas_.cloneNode(false);
+    canvas.id = "chart-1";
+    canvas.width = "100%";    
+    canvas.height = "250";
+    var conteo_inicial = JSON.parse(props.conteo_inicial)
+    var el = document.getElementById("div-chart-1");
+    el.innerHTML = "";
+    el.appendChild(canvas);
+
+    var ctx = document.getElementById("chart-1");
+    var myPieChart = new Chart(ctx, {
+      type: 'pie',
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: 'Reconocimiento Evaluación Inicial'
+        },
+        legend: {
+          position: 'right',
+          align: "middle"
+        }
+      },
+      data: {
+        labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
+        datasets: [{
+          label: 'Reconocimiento',
+          data: [conteo_inicial.Felicidad, conteo_inicial.Tristeza, conteo_inicial.Enojo, conteo_inicial.Sorpresa, conteo_inicial.Neutral],
+          backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
+        }],
+      },
+    });
+
+    var canvas = _canvas_.cloneNode(false);
+    canvas.id = "chart-2";
+    canvas.width = "100%";
+    canvas.height = "250";
+    var conteo_final = JSON.parse(props.conteo_final)
+    var al = document.getElementById("div-chart-2");
+    al.innerHTML = "";
+    al.appendChild(canvas);
+
+    var ctx = document.getElementById("chart-2");
+    var myPieChart = new Chart(ctx, {
+      type: 'pie',
+      options: {
+        responsive: true,
+        title: {
+          display: true,
+          text: 'Reconocimiento Evaluación Final'
+        },
+        legend: {
+          position: 'right',
+          align: "middle"
+        }
+      },
+      data: {
+        labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
+        datasets: [{
+          label: 'Reconocimiento',
+          data: [conteo_final.Felicidad, conteo_final.Tristeza, conteo_final.Enojo, conteo_final.Sorpresa, conteo_final.Neutral],
+          backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
+        }],
+      },
+    });
+
+
+  }
+</script>
+
+
+<!-- [conteo_inicial.Felicidad, conteo_inicial.Tristeza, conteo_inicial.Enojo, conteo_inicial.Sorpresa, conteo_inicial.Neutral,0] -->
 
 {% endblock %}
 

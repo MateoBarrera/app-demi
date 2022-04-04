@@ -247,10 +247,14 @@ def consulta():
     all_users = app.mysql_object.get_all_users()
 
     all_students = app.mysql_object.get_all_students()
-    all_sessions = app.mysql_object.get_all_session_info()
+    all_sessions_info = app.mysql_object.get_all_session_info()
+
+    all_sessions = app.mysql_object.get_all_session_ev()
+    props = app.mysql_object.get_all_session_prob()
+
     recent_sessions = list()
     now = datetime.now()
-    for item in all_sessions:
+    for item in all_sessions_info:
 
         aux_day = item['fecha'].split(" ", 1)
         item['fecha'] = "{}".format(aux_day[0])
@@ -259,8 +263,9 @@ def consulta():
             item['idsesiones']), 'date': item['fecha'], 'hora_1': item['hora']})
         if now-datetime.strptime(item['fecha'], '%Y-%m-%d') < Datetime.timedelta(days=5):
             recent_sessions.append(item)
-    print(events)
 
+
+    print("Print All type"+str(type(all_sessions)))
     context = {
         'contacto_form': contacto_form,
         'student_data': student_data,
@@ -269,7 +274,9 @@ def consulta():
         'events': events,
         'all_users': all_users,
         'all_students': all_students,
-        'all_sessions': all_sessions,
+        'all_sessions_info': all_sessions_info,
+        'all_sessions':all_sessions,
+        'props':props,
         'recent_sessions': recent_sessions
     }
 

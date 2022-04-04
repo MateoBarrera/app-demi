@@ -235,8 +235,8 @@ def conclusion():
         preds_inicial['2'].append(preds[4])
         preds_inicial['3'].append(preds[5])
         preds_inicial['4'].append(preds[6])
-    print("#####Preds desde images###############")
-    print(preds_inicial)
+    #print("#####Preds desde images###############")
+    #print(preds_inicial)
     conteo_final = app.session_object[key].conteo_final
     preds_final = {
         '0': list(),
@@ -251,8 +251,8 @@ def conclusion():
         preds_final['2'].append(preds[4])
         preds_final['3'].append(preds[5])
         preds_final['4'].append(preds[6])
-    print("#####Preds Final desde images###############")
-    print(preds_final)
+    #print("#####Preds Final desde images###############")
+    #print(preds_final)
     conclusiones_form = ConclusionesForm()
     context = {
         'ev_ini_doc': ev_ini_doc,
@@ -272,6 +272,10 @@ def conclusion():
         app.session_object['{}'.format(
             session['session_token'])].observaciones = conclusiones_form.observacion.data
         return redirect(url_for('script.guardar'))
+    
+    session_data = app.session_object['{}'.format(session['session_token'])]
+    print("##################################SESION DATA###########################")
+    print(session_data.evaluacion)
 
     return render_template('conclusion.html', **context)
 
@@ -280,8 +284,9 @@ def guardar():
     app.session_object['{}'.format(session['session_token'])].id_session = app.mysql_object.create_session(
         app.session_object['{}'.format(session['session_token'])])
     session_data = app.session_object['{}'.format(session['session_token'])]
-    app.mysql_object.save_session(session_data)
+    print("##################################SESION DATA###########################")
     print(session_data)
+    app.mysql_object.save_session(session_data)
     return redirect(url_for('inicio'))
 
 @script.route('/index_r')
