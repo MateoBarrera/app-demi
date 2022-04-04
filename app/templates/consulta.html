@@ -33,10 +33,10 @@ Consulta
           <div class="card bg-primary text-white mb-4">
             <div class="card-title">
               <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Docentes e investigadores registrados</p>            
+              <p class="pl-15 text-aling-center font-weight-bold">Docentes registrados</p>            
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_users|safe}})">Ver Detalles</a>
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_users|safe}})">Ver resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
@@ -45,10 +45,10 @@ Consulta
           <div class="card bg-warning text-white mb-4">
             <div class="card-title">
               <div class="text-white iconify">{{all_students|length}}<i class="bx bx-face"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Estudiante registrados</p>
+              <p class="pl-15 text-aling-center font-weight-bold">Estudiantes registrados</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_students|safe}})">Ver Detalles</a>
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_students|safe}})">Ver resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
@@ -60,7 +60,7 @@ Consulta
               <p class="pl-15 text-aling-center font-weight-bold">Sesiones almacenadas</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_sessions|safe}})">Ver Detalles</a>
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_sessions|safe}})">Ver resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
@@ -69,36 +69,42 @@ Consulta
           <div class="card bg-danger text-white mb-4">
             <div class="card-title">
               <div class="text-white iconify">{{recent_sessions|length}}<i class="bx bx-calendar-check"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Sesiones realizadas la ultima semana</p>
+              <p class="pl-15 text-aling-center font-weight-bold">Sesiones la ultima semana</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{recent_sessions|safe}})" >Ver Detalles</a>
+              <a class="small text-white stretched-link" href="#" onclick="loadTable({{recent_sessions|safe}})" >Ver resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-8">
         <div class="content-wrapper">
           <div class="section-title mb-40">
-            <h5 class="mb-20">Agenda</h5>
-            <div class="w-100" id="AgendaJS"></div>
+            <div class="card mt-5 cards-conclution">
+              <div class="card-header d-flex align-content-center">
+                <i class="fa-solid fa-square-poll-horizontal m-1"></i>
+                <h6>Resumen</h6>
+              </div>
+              <div class="card-body align-self-stretch">
+                <div class="table-responsive-sm info-table" id="table_content">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-6">
+      <div class="col-lg-4">
         <div class="content-wrapper">
           <div class="section-title mb-40">
-            <h5 class="mb-50">Detalles</h5>
-            <div class="card mt-5">
-              <div class="card-header">
-                <i class="fas fa-table me-2"></i>
-                Información
+            <div class="card mt-5 cards-conclution">
+              <div class="card-header d-flex align-content-center">
+                <i class="fa-solid fa-calendar-days m-1"></i>
+                <h6>Calendario</h6>
               </div>
               <div class="card-body">
-                <div class="table-responsive-sm info-table" id="table_content">
-                </div>
+                <div class="w-100" id="AgendaJS"></div>
               </div>
             </div>
           </div>
@@ -343,7 +349,7 @@ Consulta
           var th = _th_.cloneNode(false);
           cellValue = arr[i][columns[j]];
           th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
-          console.log("Click" + th.textContent)
+          /* console.log("Click" + th.textContent) */
           tr.appendChild(th);
         }   
         tbody.appendChild(tr);
@@ -380,14 +386,30 @@ Consulta
       el.appendChild(table);
       const datatablesSimple = document.getElementById('table_info');
       if (datatablesSimple) {
-        let tables = new DataTable(datatablesSimple, {language: {
+        let tables = new DataTable(datatablesSimple, {
+        language: {
           url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-        }});
+        }, responsive:true});
       }
-    }
 
+      var table_handler = $('#table_info').DataTable();
+      $('#table_info tbody').on('click', 'tr', function () {
+        console.log("Se esta ejecutando.....")
+        var data = table_handler.row(this).data();
+        var data = table_handler.column().header();
+        alert( 'You clicked on '+$(data).html()+'\'s row' );
+    } );
+/* selección de cada celda tr pasa a ser td */
+/*     var table = $('#example').DataTable();
     
+    $('#example tbody').on( 'click', 'td', function () {
+        var idx = table.cell( this ).index().column;
+        var title = table.column( idx ).header();
+    
+        alert( 'Column title clicked on: '+$(title).html() );
+    } ); */
 
+    }
 </script>
 
 {% endblock %}

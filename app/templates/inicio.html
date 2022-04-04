@@ -46,59 +46,67 @@ Inicio
         </div>
       </div>
     </div>
-    <div class="row">
-        <div class="col-12 col-md-6">
-          <div class="single-feature wow fadeInUp w-100" data-wow-delay=".2s">
-            <div class="content">
-              <a class="mb-25 service" href="{{url_for('registro_est',terapia=False)}}">
+    <div class="row d-flex justify-content-center">
+      <div class="col-10 col-md-6">
+        <div class="single-feature wow fadeInUp w-100" data-wow-delay=".2s">
+          <div class="content">
+            <a class="mb-25 service text-center text-md-left" href="{{url_for('registro_est',terapia=False)}}">
+              <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
                 <img src="{{url_for('static',filename='/images/Icon_editar.svg')}}" alt="Registrar estudiante" style="max-width: 55px;">
                 </div>
-                <h5 class="mb-25 effect-underline">Registrar estudiante</h5>
-              </a>
-              <p class="justified-text col-12 col-lg-6">Cargar la información esencial para la identificación del estudiante.</p>
-            </div>
+              </div>
+              <h5 class="mb-25 effect-underline">Registrar estudiante</h5>
+            </a>
+            <p class="justified-text col-12 col-lg-6">Cargar la información esencial para la identificación del estudiante en la herramienta.</p>
           </div>
         </div>
-        <div class="col-12 col-md-6">
-          <div class="single-feature wow fadeInUp w-100" data-wow-delay=".4s">
-            <div class="content">
-              <a class="mb-25 service" href="{{url_for('iniciar_terapia')}}">
+      </div>
+      <div class="col-10 col-md-6">
+        <div class="single-feature wow fadeInUp w-100" data-wow-delay=".4s">
+          <div class="content">
+            <a class="mb-25 service text-center text-md-left" href="{{url_for('iniciar_terapia')}}">
+              <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
-                  <img src="{{url_for('static',filename='/images/Icon_mas.svg')}}" alt="Iniciar terapia" style="max-width: 55px;">
-                </div>
-                <h5 class="mb-25">Iniciar</h5>
-              </a>               
-              <p class="justified-text col-12 col-lg-6">Inicia una nueva terapia de inmediato.</p>
-            </div>
+                <img src="{{url_for('static',filename='/images/Icon_mas.svg')}}" alt="Iniciar terapia" style="max-width: 55px;">
+              </div>
+              </div>
+              <h5 class="mb-25">Iniciar</h5>
+            </a>               
+            <p class="justified-text col-12 col-lg-6">Inicia una nueva terapia presencial o virtual de inmediato.</p>
           </div>
         </div>
-        <div class="col-12 col-md-6">
-          <div class="single-feature wow fadeInUp w-100" data-wow-delay=".6s">
-            <div class="content">
-              <a class="mb-25 service" href="#contacto">
+      </div>
+      <div class="col-10 col-md-6">
+        <div class="single-feature wow fadeInUp w-100" data-wow-delay=".6s">
+          <div class="content">
+            <a class="mb-25 service text-center text-md-left" href="#contacto">
+              <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
                   <img src="{{url_for('static',filename='/images/Icon_email.svg')}}" alt="Contacto" style="max-width: 55px;">
                 </div>
-                <h5 class="mb-25">Contacto</h5>
-              </a>
-              <p class="justified-text col-12 col-lg-6">Comunicate mediante correo electrónico para obtener mayor información.</p>
-            </div>
+              </div>
+              <h5 class="mb-25">Contacto</h5>
+            </a>
+            <p class="justified-text col-12 col-lg-6">Comunicate mediante correo electrónico para obtener mayor información respecto de las funcionalidades de la herramienta y del proyecto.</p>
           </div>
         </div>
-        <div class="col-12 col-md-6">
-          <div class="single-feature wow fadeInUp w-100" data-wow-delay=".8s">
-            <div class="content">
-              <a class="mb-25 service" href="{{url_for('consulta')}}">
+      </div>
+      <div class="col-10 col-md-6">
+        <div class="single-feature wow fadeInUp w-100" data-wow-delay=".8s">
+          <div class="content">
+            <a class="mb-25 service text-center text-md-left" href="{{url_for('consulta')}}">
+              <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
                   <img src="{{url_for('static',filename='/images/Icon_buscar.svg')}}" alt="Consultar" style="max-width: 55px;">
                 </div>
-                <h5 class="mb-25">Consulta</h5>
-              </a>
-              <p class="justified-text col-12 col-lg-6">Navega por la información recopilada a lo largo de las sesiones de terapia.</p>
-            </div>
+              </div>
+              <h5 class="mb-25">Consulta</h5>
+            </a>
+            <p class="justified-text col-12 col-lg-6">Navega por la información recopilada a lo largo de las sesiones previas almacenadas por la herramienta.</p>
           </div>
         </div>
+      </div>
     </div>
   </div>
   <div class="feature-img wow fadeInLeft" data-wow-delay=".2s">
@@ -189,7 +197,7 @@ Inicio
         <div class="left-wrapper">
           <div class="section-title mb-40">
             <h3 class="mb-15">Contacto</h3>
-            <p>Solicita mayor información sobre el funcionamiento de la herramienta o acerca del proyecto directamente </p>
+            <p class="justified-text">Solicita mayor información sobre el funcionamiento de la herramienta o acerca del proyecto directamente con el investigador a cargo.</p>
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-6">

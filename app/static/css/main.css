@@ -188,7 +188,9 @@ input[type=file] {
 	object-fit: cover;
 }
 
-
+.cards-conclution{
+	height: 28rem;
+}
 /* CLIENT-SPECIFIC STYLES */
 /*
 body{
