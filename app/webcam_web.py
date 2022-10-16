@@ -11,7 +11,7 @@ detection_model_path = 'app/lib/files/face.xml'
 emotion_model_path = 'app/lib/files/trained.hdf5'
 face_detection = cv2.CascadeClassifier(detection_model_path)
 emotion_classifier = load_model(emotion_model_path, compile=False)
-EMOTIONS = ["Enojo", "Felicidad", "Tristeza", "Sorpresa", "Neutral"]
+EMOTIONS = ['Enojo', 'Felicidad', 'Tristeza', 'Sorpresa', 'Neutral']
 
 
 def frames(frame):

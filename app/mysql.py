@@ -82,6 +82,7 @@ class MySQL_connector():
         conn.close()
 
     def set_student_data(self, id_login, nombre, identificacion, nacimiento, grado, institucion, anotacion, imagen=None):
+        byte_im = None
         if imagen is not None:
             is_success, im_buf_arr = cv2.imencode(".jpg", imagen)
             byte_im = im_buf_arr.tostring()
@@ -174,6 +175,11 @@ class MySQL_connector():
         user_login = dict()
         columns = ['Sesión', 'conteo_inicial', 'conteo_final']
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
+        print(rows)
+        for row in rows:
+            row['conteo_inicial'] = eval(row['conteo_inicial'])
+            row['conteo_final'] = eval(row['conteo_final'])
         conn.close()
         return rows
 
@@ -195,8 +201,8 @@ class MySQL_connector():
     def save_session(self, session: object):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        conteo_inicial = json.dumps(session.conteo_inicial)
-        conteo_final = json.dumps(session.conteo_final)
+        conteo_inicial = str(session.conteo_inicial)
+        conteo_final = str(session.conteo_final)
 
         sql = "UPDATE sesion SET ev_ini_doc = %s, ev_ini_est = %s, ev_ini_herr = %s, conteo_inicial = %s, ev_fin_doc = %s, ev_fin_est = %s, ev_fin_herr = %s, conteo_final = %s, observaciones = %s, ev_ini_herr_pred = '0', ev_fin_herr_pred = '0'  WHERE idsesiones = %s;"
         val = (session.evaluacion['ev_ini_doc'], session.evaluacion['ev_ini_est'], session.evaluacion['ev_ini_herr'], conteo_inicial,

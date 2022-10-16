@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block title %}
 {{ super() }}
@@ -309,12 +308,12 @@ Consulta
           [
             
             {% for event in events %}
-            {
-              title: '{{event.todo}}',
-              start: '{{event.date}}',
-              end: '{{event.hora_1}}'
-              
-            },
+              {
+                title: '{{event.todo}}',
+                start: '{{event.date}}',
+                end: '{{event.hora_1}}'
+                
+              },
             {% endfor %}
           ], 
           /* allDay: false, */
@@ -413,6 +412,7 @@ Consulta
       var column_name = $(table_handler.column().header()).html();
       if (column_name =='idsesiones'){
         console.log('You clicked on ' + column_name + '\'s row');
+        console.log(data[0])
         loadSesions(data[0]);
 
       } else if (column_name=='estudiante'){
@@ -434,7 +434,9 @@ Consulta
   }
 
   function loadSesions(session){
-    var all_sessions = {{ all_sessions|safe}};
+    console.log("si entra al menos");
+    var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
+    console.log(all_sessions)
     var arr = all_sessions.filter(arr=> (arr.Sesión==session));
     var table = _table_.cloneNode(false);
     var tbody = _tbody_.cloneNode(false),
@@ -471,8 +473,10 @@ Consulta
         bInfo: false,
 
       });
-    }
-    var props = {{props|safe}};
+    };
+    console.log("AAAAAAAAAAAAAA")
+    var props = JSON.parse('{{props| tojson |safe}}');
+    console.log(props)
     props = props.filter(props=> (props.Sesión == session));
     console.log(props)
     loadGraphs(props[0]);
@@ -488,7 +492,7 @@ Consulta
     canvas.id = "chart-1";
     canvas.width = "100%";    
     canvas.height = "250";
-    var conteo_inicial = JSON.parse(props.conteo_inicial)
+    var conteo_inicial = props['conteo_inicial'];
     var el = document.getElementById("div-chart-1");
     el.innerHTML = "";
     el.appendChild(canvas);
@@ -521,7 +525,7 @@ Consulta
     canvas.id = "chart-2";
     canvas.width = "100%";
     canvas.height = "250";
-    var conteo_final = JSON.parse(props.conteo_final)
+    var conteo_final = props['conteo_final'];
     var al = document.getElementById("div-chart-2");
     al.innerHTML = "";
     al.appendChild(canvas);

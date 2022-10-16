@@ -207,15 +207,15 @@ def registro_est(terapia):
                 nacimiento = estudiante_form.nacimiento.data
                 grado = estudiante_form.grado.data
                 institucion = estudiante_form.institucion.data
-                uploaded_file = request.files['imagen']
+                """                 uploaded_file = request.files['imagen']
                 imagen = None
                 if uploaded_file.filename != '':
                     uploaded_file.save('userImage.jpg')
-                    imagen = cv2.imread('userImage.jpg')
+                    imagen = cv2.imread('userImage.jpg') """
                 anotacion = estudiante_form.anotaciones.data
                 user_new = user_new[0]
                 app.mysql_object.set_student_data(
-                    user_new['idlogin'], nombre, identificacion, nacimiento, grado, institucion, anotacion, imagen)
+                    user_new['idlogin'], nombre, identificacion, nacimiento, grado, institucion, anotacion, imagen=None)
                 if terapia:
                     return redirect(url_for('iniciar_terapia'))
                 else:
@@ -256,9 +256,9 @@ def consulta():
     now = datetime.now()
     for item in all_sessions_info:
 
-        aux_day = item['fecha'].split(" ", 1)
-        item['fecha'] = "{}".format(aux_day[0])
-        item['hora'] = "{}".format(aux_day[1])
+        aux_day = item['fecha'].split(' ', 1)
+        item['fecha'] = '{}'.format(aux_day[0])
+        item['hora'] = '{}'.format(aux_day[1])
         events.append({'todo': 'Sesión {}'.format(
             item['idsesiones']), 'date': item['fecha'], 'hora_1': item['hora']})
         if now-datetime.strptime(item['fecha'], '%Y-%m-%d') < Datetime.timedelta(days=5):
@@ -280,6 +280,8 @@ def consulta():
         'recent_sessions': recent_sessions
     }
 
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+    print(all_sessions)
     return render_template('consulta.html', **context)
 
 @app.route('/test', methods=['GET', 'POST'])
@@ -290,5 +292,5 @@ def test():
     return render_template('virtual/admin_session.html', **context)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
     #socketio.run(app, host='0.0.0.0', debug=True)

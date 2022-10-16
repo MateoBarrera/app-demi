@@ -33,7 +33,7 @@ def on_virtual_status(data):
 
 @socketio.on('join')
 def on_join(data):
-    print("DATA")
+    print('DATA')
     print(data)
     username = data['username']
     room = data['room']
@@ -49,13 +49,13 @@ def on_leave(data):
 
 @socketio.on('connect')
 def test_connect():
-    app.logger.info("Client connected")
+    app.logger.info('Client connected')
 
 @socketio.on('image_ev')
 def image(data_image):
-    print("Recibiendo solicitud")
-    image = base64.b64decode(data_image.replace("data:image/jpeg;base64,", ""))
-    image = imread(image, pilmode="RGB")
+    print('Recibiendo solicitud')
+    image = base64.b64decode(data_image.replace('data:image/jpeg;base64,', ''))
+    image = imread(image, pilmode='RGB')
     cv2_img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     cv2_img_raw, cv2_img_response, response_label, preds = frames(cv2_img)
 
@@ -64,7 +64,7 @@ def image(data_image):
 
     b = base64.b64encode(buffer)
     b = b.decode()
-    image_data = "data:image/jpeg;base64," + b
+    image_data = 'data:image/jpeg;base64,' + b
 
     if session['admin_room']:
         print('########################Enviando Imagen')
@@ -103,7 +103,7 @@ def ventana_carga():
     print("Respuesta: {}".format(param))
     print("Respuesta format: {}".format(type(param)))
     context = {
-        'etapa': "Evaluación inicial",
+        'etapa': 'Evaluación inicial',
     }
     return render_template('ventana_carga.html', **context)
 
@@ -130,8 +130,8 @@ def evaluacion():
 
     if session['stage'] == 'inicial':
         context = {
-            'etapa': "Evaluación inicial",
-            'mensaje': "¿Como te sientes hoy?",
+            'etapa': 'Evaluación inicial',
+            'mensaje': '¿Como te sientes hoy?',
             'virtual': session['virtual'],
             'admin_id':session['admin_id'],
             'stage': session['stage'],
@@ -139,8 +139,8 @@ def evaluacion():
         return render_template('evaluacion.html', **context)
     elif session['stage'] == 'final':
         context = {
-            'etapa': "Evaluación final",
-            'mensaje': "¿Como te sientes ahora?",
+            'etapa': 'Evaluación final',
+            'mensaje': '¿Como te sientes ahora?',
             'virtual': session['virtual'],
             'admin_id': session['admin_id'],
             'stage': session['stage'],
@@ -152,7 +152,7 @@ def evaluacion():
 @script.route('/ventana-espera', methods=['GET', 'POST'])
 def ventana_espera():
     context = {
-        'etapa': "Evaluación final",
+        'etapa': 'Evaluación final',
     }
     return render_template('ventana_carga.html', **context)
 
@@ -164,14 +164,14 @@ def final_evaluacion(ev_est, virtual):
             session['session_token'])].response_labels['inicial']
             print(labels_list)
             count_dict = {i: labels_list.count(i) for i in labels_list}
-            print("Conteos {}".format(count_dict))
+            print('Conteos {}'.format(count_dict))
             app.session_object['{}'.format(
                 session['session_token'])].conteo_inicial = count_dict
             app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr'] = max(
                 count_dict.items(), key=operator.itemgetter(1))[0]
             app.session_object['{}'.format(
                 session['session_token'])].evaluacion['ev_ini_est'] = ev_est
-            #print("MAX {}".format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
+            #print('MAX {}'.format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
             session['stage'] = 'final'
             response = make_response(redirect(url_for('script.ventana_espera')))
         except:
@@ -188,9 +188,9 @@ def final_evaluacion(ev_est, virtual):
                 session['session_token'])].evaluacion['ev_fin_est'] = ev_est
             app.session_object['{}'.format(
                 session['session_token'])].conteo_final = count_dict
-            print("MAX {}".format(app.session_object['{}'.format(
+            print('MAX {}'.format(app.session_object['{}'.format(
                 session['session_token'])].evaluacion['ev_fin_herr']))
-            print("Conteos {}".format(count_dict))
+            print('Conteos {}'.format(count_dict))
             response = make_response(redirect(url_for('script.cuestionario')))
         except:
             response = make_response(redirect(url_for('script.error')))
@@ -204,8 +204,8 @@ def final_evaluacion(ev_est, virtual):
 def cuestionario():
     cuestionario_form = CuestionarioForm()
     context = {
-        'etapa': "Evaluación inicial",
-        'mensaje': "¿Como te sientes hoy?",
+        'etapa': 'Evaluación inicial',
+        'mensaje': '¿Como te sientes hoy?',
         'cuestionario_form': cuestionario_form
     }
     if cuestionario_form.validate_on_submit():
@@ -235,7 +235,7 @@ def conclusion():
         preds_inicial['2'].append(preds[4])
         preds_inicial['3'].append(preds[5])
         preds_inicial['4'].append(preds[6])
-    #print("#####Preds desde images###############")
+    #print('#####Preds desde images###############')
     #print(preds_inicial)
     conteo_final = app.session_object[key].conteo_final
     preds_final = {
@@ -251,7 +251,7 @@ def conclusion():
         preds_final['2'].append(preds[4])
         preds_final['3'].append(preds[5])
         preds_final['4'].append(preds[6])
-    #print("#####Preds Final desde images###############")
+    #print('#####Preds Final desde images###############')
     #print(preds_final)
     conclusiones_form = ConclusionesForm()
     context = {
