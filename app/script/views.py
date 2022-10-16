@@ -1,7 +1,6 @@
 from flask import request, render_template, redirect, make_response, url_for, session, Response, flash, current_app as app
 from . import script
 from flask_login import login_required, login_user, logout_user
-from PIL import Image
 from imageio import imread
 from flask_socketio import SocketIO, emit, send
 from io import StringIO, BytesIO
