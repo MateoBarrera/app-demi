@@ -154,7 +154,7 @@ class MySQL_connector():
     def get_all_session_ev(self):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = f"SELECT sesion.idsesiones, sesion.ev_ini_doc, sesion.ev_ini_est, sesion.ev_ini_herr_pred, sesion.ev_fin_doc, sesion.ev_fin_est, sesion.ev_fin_herr_pred, sesion.observaciones FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;"
+        sql = f"SELECT sesion.idsesiones, sesion.ev_ini_doc, sesion.ev_ini_est, sesion.ev_ini_herr, sesion.ev_fin_doc, sesion.ev_fin_est, sesion.ev_fin_herr, sesion.observaciones FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;"
 
         """         sql = f"SELECT sesion.idsesiones, sesion.ev_ini_doc, sesion.ev_ini_est, sesion.ev_ini_herr_pred, sesion.ev_fin_doc, sesion.ev_fin_est, sesion.ev_fin_herr_pred, sesion.observaciones FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;" """
         cursor.execute(sql)
@@ -186,12 +186,13 @@ class MySQL_connector():
     def create_session(self, session):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
+        sql = f"SELECT idusuarios FROM usuarios WHERE (idlogin ='{session.id_usuario}');"
+        cursor.execute(sql)
+        result = cursor.fetchone()
         sql = "INSERT INTO sesion (fecha, idusuarios, idestudiantes) VALUES (%s, %s, %s);"
-        val = (session.fecha, session.id_usuario, session.id_estudiante)
-        print(val)
+        val = (session.fecha, result[0], session.id_estudiante)
         cursor.execute(sql, val)
         conn.commit()
-
         sql = f"SELECT idsesiones FROM sesion WHERE (fecha = '{session.fecha}');"
         cursor.execute(sql)
         result = cursor.fetchone()

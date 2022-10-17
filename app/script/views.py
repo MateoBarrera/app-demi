@@ -280,9 +280,9 @@ def conclusion():
 
 @script.route('/conclusion/guardando', methods=['GET', 'POST'])
 def guardar():
-    app.session_object['{}'.format(session['session_token'])].id_session = app.mysql_object.create_session(
+    session_data = app.session_object['{}'.format(session['session_token'])]#.id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
+    session_data.id_session = app.mysql_object.create_session(
         app.session_object['{}'.format(session['session_token'])])
-    session_data = app.session_object['{}'.format(session['session_token'])]
     print("##################################SESION DATA###########################")
     print(session_data)
     app.mysql_object.save_session(session_data)
