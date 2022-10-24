@@ -39,6 +39,7 @@ def login():
                 user_model = UserModel(user_class)
                 login_user(user_model)
                 session['username'] = username
+                session['prev_session'] = False
                 return redirect(url_for('inicio'))
             else:
                 context['val_cont'] = False

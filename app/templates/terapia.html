@@ -10,7 +10,6 @@ Iniciar Terapia
 {% endblock %}
 
 {% block content %}
-
 <section id="iniciar_terapia" class="contact-section contact-style-6 mt-0">
   <div class="container justify-content-center">
     <div class="row">
@@ -145,10 +144,33 @@ Iniciar Terapia
     </div>
   </div>
   {% endif %}
+  {% if prev_session %}
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+      Launch demo modal
+    </button>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Hay una sesión en progreso</h5>
+          </div>
+          <div class="modal-body">
+            ¿Desea reanudar la sesión previamente iniciada?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary radius-10">Reanudar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% endblock %}
 </section>
-
-{% endblock %}
-
 {% block scripts%}
 {{super()}}
 
@@ -165,39 +187,36 @@ Iniciar Terapia
       var option = document.createElement("option");
       option.text = "";
       x.add(option);
-      {% for student in students %}
-      var option = document.createElement("option");
-      option.text = "{{ student['estudiante']| capitalize }}";
-      x.add(option);
-      {% endfor %}
+      let students = JSON.parse('{{students| tojson | safe}}');
+      students.forEach(element => {
+        var option = document.createElement("option");
+        option.text = element['estudiante'].charAt(0).toUpperCase()+ element['estudiante'].slice(1);
+        x.add(option);
+      });
     }
     
-  
-
-
   function set_values() {
     var index = document.getElementById("nombre").selectedIndex;
     var nombre = "";
     var inst = "";
     var grado = "";
     var identificacion = "";
-    var i = 1;
-    {% for student in students %}
+    var i = 0;
+    let students = JSON.parse('{{students| tojson | safe}}');
+    students.forEach(element => {      
+      i += 1;
       if (index == i) {
-        var nombre = "{{student['estudiante']}}"
-        var inst = "{{student['institucion']}}";
-        var grado = "{{student['grado']}}";
-        var identificacion = "{{student['identificacion']}}"
+        nombre = element['estudiante'];
+        inst = element['institucion'];
+        grado = element['grado'];
+        identificacion = element['identificacion'];
       }
-      i+=1;
-    {% endfor %}
-  document.getElementById("nombre_form").value = nombre;
-  console.log(nombre)
-  document.getElementById("institucion").value = inst;
-  document.getElementById("grado").value = grado;
-  document.getElementById("identificacion_form").value = identificacion;    
+    });
+  document.getElementById('nombre_form').value = nombre;
+  document.getElementById('institucion').value = inst;
+  document.getElementById('grado').value = grado;
+  document.getElementById('identificacion_form').value = identificacion;    
   }
-
 </script>
 
 

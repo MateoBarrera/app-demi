@@ -14,6 +14,7 @@ from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
 from app.models import UserData, SessionData
 import secure
+from werkzeug.security import generate_password_hash, check_password_hash
 
 secure_headers = secure.Secure()
 app, socketio, mysql_init = create_app()
@@ -112,11 +113,11 @@ def inicio():
             'username': "anonymous",
             'anonymous': True
         }
-    print("Anonymous {}".format(context['anonymous']))
+    print("Anonymous: {}".format(context['anonymous']))
 
     if request.method == 'POST':
         if contacto_form.validate() == False:
-            print('All fields are required.')
+            flash('All fields are required.')
         else:
             email = contacto_form.correo.data
             contacto_context = {
@@ -135,49 +136,56 @@ def inicio():
 @app.route('/iniciar-terapia', methods=['GET', 'POST'])
 @login_required
 def iniciar_terapia():
-
-    user_ip = session.get('user_ip')
-    username = current_user.id
+    user = current_user
     students = app.mysql_object.get_all_students()
     terapia_form = TerapiaForm()
     context = {
         'students': students,
-        'rol': current_user.rol,
-        'data': current_user,
-        'user_ip': user_ip,
-        'username': username,
+        'rol': user.rol,
+        'data': user,
+        'username': user.id,
         'terapia_form': terapia_form,
     }
     # Terapia presencial
-    if terapia_form.validate_on_submit() and (current_user.rol == 'inv/doc'):
-        session['session_token'] = secrets.token_urlsafe(16)
-        session['stage'] = 'inicial'
+    if session['prev_session']:
+        flash('Existe una sesión previa en curso')
+        prev_session_data = app.session_object[session['session_token']]
+        context['prev_session'] = session['prev_session']
+        context['prev_session_data'] = prev_session_data
 
-        key = '{}'.format(session['session_token'])
-        print("token")
-        print(session['session_token'])
-        app.session_object[key] = SessionData()
-        app.session_object[key].fecha = datetime.now().strftime(
-            '%Y-%m-%d %H:%M:%S')
-        app.session_object[key].evaluacion['ev_ini_doc'] = dict(terapia_form.emocion_percibida.
-                                                                choices).get(
-            terapia_form.emocion_percibida.data)
-        app.session_object[key].id_usuario = app.mysql_object.get_user(
-            session['username'])[0]['idlogin']
-        app.session_object[key].id_estudiante = app.mysql_object.get_student(
-            terapia_form.identificacion_form.data)[0]
-        app.session_object[key].nombre = terapia_form.nombre_form.data
-        app.session_object[key].identificacion = terapia_form.identificacion_form.data
-        app.session_object[key].institucion = request.form['text_inst']
-        app.session_object[key].grado = request.form['text_grado']
-        app.session_object[key].docente = current_user.nombre
-        if app.mysql_object.get_student_image(app.session_object[key].id_estudiante):
-            app.session_object[key].est_image = url_for(
-                'static', filename='/images/estImage.jpg')
-        else:
-            app.session_object[key].est_image = url_for(
-                'static', filename='/images/avatar.jpg')
+    if terapia_form.validate_on_submit() and (user.rol == 'inv/doc'):
+        #Capturando la información
+        estudiante = terapia_form.nombre_form.data
+        emocion = dict(terapia_form.emocion_percibida.choices).get(terapia_form.emocion_percibida.data)
+        identificacion = terapia_form.identificacion_form.data
 
+        if not session['prev_session']:
+            session['session_token'] = secrets.token_urlsafe(6)
+            session['stage'] = 'inicial'
+
+            key = '{}'.format(session['session_token'])
+            print("token")
+            print(session['session_token'])
+            app.session_object[key] = SessionData()
+            app.session_object[key].fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            app.session_object[key].evaluacion['ev_ini_doc'] = emocion
+            app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
+            app.session_object[key].id_estudiante = app.mysql_object.get_student(identificacion)[0]
+            app.session_object[key].nombre = estudiante
+            app.session_object[key].identificacion = identificacion
+            app.session_object[key].institucion = request.form['text_inst']
+            app.session_object[key].grado = request.form['text_grado']
+            app.session_object[key].docente = user.nombre
+
+            if app.mysql_object.get_student_image(app.session_object[key].id_estudiante):
+                app.session_object[key].est_image = url_for(
+                    'static', filename='/images/estImage.jpg')
+            else:
+                app.session_object[key].est_image = url_for(
+                    'static', filename='/images/avatar.jpg')
+
+            session['prev_session'] = True
+        
         if terapia_form.virtual.data:
             return redirect(url_for('script.panel_virtual'))
         else:
@@ -296,5 +304,5 @@ def test():
     return render_template('virtual/admin_session.html', **context)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
     #socketio.run(app, host='0.0.0.0', debug=True)
