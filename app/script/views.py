@@ -150,9 +150,14 @@ def evaluacion():
 
 @script.route('/ventana-espera', methods=['GET', 'POST'])
 def ventana_espera():
-    context = {
-        'etapa': 'Evaluación final',
-    }
+    if session['stage'] == 'inicial':
+        context = {
+            'etapa': 'Evaluación inicial'
+        }
+    else:
+        context = {
+            'etapa': 'Evaluación final',
+        }
     return render_template('ventana_carga.html', **context)
 
 @script.route('/final-evaluacion/<ev_est>/<virtual>', methods=['GET', 'POST'])
@@ -172,6 +177,9 @@ def final_evaluacion(ev_est, virtual):
                 session['session_token'])].evaluacion['ev_ini_est'] = ev_est
             #print('MAX {}'.format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
             session['stage'] = 'final'
+            app.session_object['{}'.format(
+                session['session_token'])].stage = 'final'
+            print("HA GUARDADOOOOOOOOOOOOOOO")
             response = make_response(redirect(url_for('script.ventana_espera')))
         except:
             response = make_response(redirect(url_for('script.error')))

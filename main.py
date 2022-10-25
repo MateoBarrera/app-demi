@@ -148,10 +148,18 @@ def iniciar_terapia():
     }
     # Terapia presencial
     if session['prev_session']:
-        flash('Existe una sesión previa en curso')
-        prev_session_data = app.session_object[session['session_token']]
-        context['prev_session'] = session['prev_session']
-        context['prev_session_data'] = prev_session_data
+        print("Prev session exixts")
+        try:
+            context['prev_session'] = session['prev_session']
+            prev_session_data = app.session_object['{}'.format(
+                session['session_token'])]
+            print("ACAASIODVUASDO")
+            print(prev_session_data)
+            context['prev_session_data'] = prev_session_data
+            flash('Existe una sesión previa en curso')            
+        except KeyError as e:
+            print(e)
+            session['prev_session'] = False
 
     if terapia_form.validate_on_submit() and (user.rol == 'inv/doc'):
         #Capturando la información
@@ -163,33 +171,31 @@ def iniciar_terapia():
             session['session_token'] = secrets.token_urlsafe(6)
             session['stage'] = 'inicial'
 
-            key = '{}'.format(session['session_token'])
-            print("token")
-            print(session['session_token'])
-            app.session_object[key] = SessionData()
-            app.session_object[key].fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            app.session_object[key].evaluacion['ev_ini_doc'] = emocion
-            app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
-            app.session_object[key].id_estudiante = app.mysql_object.get_student(identificacion)[0]
-            app.session_object[key].nombre = estudiante
-            app.session_object[key].identificacion = identificacion
-            app.session_object[key].institucion = request.form['text_inst']
-            app.session_object[key].grado = request.form['text_grado']
-            app.session_object[key].docente = user.nombre
+        key = '{}'.format(session['session_token'])
+        app.session_object[key] = SessionData()
+        app.session_object[key].fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        app.session_object[key].evaluacion['ev_ini_doc'] = emocion
+        app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
+        app.session_object[key].id_estudiante = app.mysql_object.get_student(identificacion)[0]
+        app.session_object[key].nombre = estudiante
+        app.session_object[key].identificacion = identificacion
+        app.session_object[key].institucion = request.form['text_inst']
+        app.session_object[key].grado = request.form['text_grado']
+        app.session_object[key].docente = user.nombre
 
-            if app.mysql_object.get_student_image(app.session_object[key].id_estudiante):
-                app.session_object[key].est_image = url_for(
-                    'static', filename='/images/estImage.jpg')
-            else:
-                app.session_object[key].est_image = url_for(
-                    'static', filename='/images/avatar.jpg')
+        if app.mysql_object.get_student_image(app.session_object[key].id_estudiante):
+            app.session_object[key].est_image = url_for(
+                'static', filename='/images/estImage.jpg')
+        else:
+            app.session_object[key].est_image = url_for(
+                'static', filename='/images/avatar.jpg')
 
-            session['prev_session'] = True
-        
+        session['prev_session'] = True
+    
         if terapia_form.virtual.data:
             return redirect(url_for('script.panel_virtual'))
         else:
-            return redirect(url_for('script.ventana_carga'))
+            return redirect(url_for('script.ventana_espera'))
 
     return render_template('terapia.html', **context)
 

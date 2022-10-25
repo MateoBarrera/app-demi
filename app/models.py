@@ -72,7 +72,7 @@ class SessionData():
         self.id_sesion = None
         self.id_usuario = None
         self.id_estudiante = None
-        self.session_token = None
+        self.stage = 'inicial'
         self.nombre = None
         self.identificacion = None
         self.institucion = None

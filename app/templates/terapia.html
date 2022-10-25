@@ -146,23 +146,29 @@ Iniciar Terapia
   {% endif %}
   {% if prev_session %}
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<!--     <button id="input-prevSession" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#prevSession">
       Launch demo modal
-    </button>
+    </button> -->
     
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="prevSession" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content radius-10 px-4">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Hay una sesión en progreso</h5>
+            <h5 class="modal-title h5 text-primary" id="prevSessionLabel">Sesión en progreso...</h5>
+            <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
           </div>
           <div class="modal-body">
-            ¿Desea reanudar la sesión previamente iniciada?
+            <p class="fs-5 pb-3">Existe una sesión iniciada con la siguiente información</p>
+            <div class="d-flex justify-content-between"><span class="h6">Estudiante:</span><span>{{prev_session_data.nombre | capitalize}}</span></div>
+            <div class="d-flex justify-content-between"><span class="h6">Fecha:</span>{{prev_session_data.fecha[:10]}}</div>
+            <div class="d-flex justify-content-between"><span class="h6">Hora:</span>{{prev_session_data.fecha[11:]}}</div>
+            <div class="d-flex justify-content-between"><span class="h6">Etapa:</span>{{prev_session_data.stage | capitalize}}</div>
           </div>
           <div class="modal-footer">
+            <div class="col-12 py-2"><p class="fs-5">¿Desea reanudar la sesión en progreso?</p></div><br>
             <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
-            <button type="button" class="btn btn-primary radius-10">Reanudar</button>
+            <a href="{{url_for('script.ventana_espera')}}" type="button" class="btn btn-primary radius-10">Reanudar</a>
           </div>
         </div>
       </div>
@@ -219,7 +225,14 @@ Iniciar Terapia
   }
 </script>
 
-
+{% if prev_session %}
+<script>
+  var myModal = new bootstrap.Modal(document.getElementById("prevSession"), {});
+  document.onreadystatechange = function () {
+    myModal.show();
+  };
+</script>
+{% endif %}
 
 {% endblock %}
 {%block footer%}
