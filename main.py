@@ -136,6 +136,7 @@ def inicio():
 @app.route('/iniciar-terapia', methods=['GET', 'POST'])
 @login_required
 def iniciar_terapia():
+    #Inicializar el contexto de la vista con el modelo de usuario
     user = current_user
     students = app.mysql_object.get_all_students()
     terapia_form = TerapiaForm()
@@ -145,24 +146,21 @@ def iniciar_terapia():
         'data': user,
         'username': user.id,
         'terapia_form': terapia_form,
-    }
-    # Terapia presencial
-    if session['prev_session']:
-        print("Prev session exixts")
-        try:
+    }  
+    #Check de sesiones previas
+    try:
+        if session['prev_session']:
             context['prev_session'] = session['prev_session']
             prev_session_data = app.session_object['{}'.format(
                 session['session_token'])]
-            print("ACAASIODVUASDO")
-            print(prev_session_data)
             context['prev_session_data'] = prev_session_data
             flash('Existe una sesión previa en curso')            
-        except KeyError as e:
-            print(e)
-            session['prev_session'] = False
-
+    except KeyError as e:
+        print(e)
+        session['prev_session'] = False
+        
+    #Gestión de los post en el formulario de iniciar terapia, reanudar o iniciar de cero
     if terapia_form.validate_on_submit() and (user.rol == 'inv/doc'):
-        #Capturando la información
         estudiante = terapia_form.nombre_form.data
         emocion = dict(terapia_form.emocion_percibida.choices).get(terapia_form.emocion_percibida.data)
         identificacion = terapia_form.identificacion_form.data

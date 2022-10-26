@@ -3,8 +3,6 @@ from . import script
 from flask_login import login_required, login_user, logout_user
 from imageio import imread
 from flask_socketio import SocketIO, emit, send
-from io import StringIO, BytesIO
-import json
 import numpy as np
 import base64
 import cv2
@@ -13,8 +11,6 @@ from app.webcam_web import frames, endframes
 from app.forms import CuestionarioForm, ConclusionesForm
 from .. import socketio
 import operator
-import time
-from app.models import UserData, SessionData
 from flask_socketio import join_room, leave_room
 import secure
 
@@ -52,7 +48,7 @@ def test_connect():
 
 @socketio.on('image_ev')
 def image(data_image):
-    print('Recibiendo solicitud')
+    #print('Recibiendo solicitud')
     image = base64.b64decode(data_image.replace('data:image/jpeg;base64,', ''))
     image = imread(image, pilmode='RGB')
     cv2_img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
@@ -84,7 +80,7 @@ def image(data_image):
         app.session_object['{}'.format(
             session['session_token'])].response_labels[session['stage']].append(response_label)
     except:
-        pass
+        response_label = 'Sin datos de cámara'
 
     emit('response_label', response_label)
 
@@ -118,14 +114,8 @@ def evaluacion():
 
     if session['virtual']=='True':
         session['stage'] = request.args.get('stage', 'False')
-        print("stage "+ session['stage'])
         session['session_token'] = ('{}'.format(request.args.get('id', 'False'))).replace("'","")
-        print("virtual")
-        print(session['session_token'])
         session['admin_id'] = request.args.get('admin_id', 'False')
-        ###TEMPORAL###
-        #app.session_object[session['session_token']] = SessionData()
-    print(session['session_token'])
 
     if session['stage'] == 'inicial':
         context = {
@@ -162,41 +152,32 @@ def ventana_espera():
 
 @script.route('/final-evaluacion/<ev_est>/<virtual>', methods=['GET', 'POST'])
 def final_evaluacion(ev_est, virtual):
+    key = '{}'.format(session['session_token'])
     if session['stage'] == 'inicial':
         try:
-            labels_list = app.session_object['{}'.format(
-            session['session_token'])].response_labels['inicial']
-            print(labels_list)
+            labels_list = app.session_object[key].response_labels['inicial']
             count_dict = {i: labels_list.count(i) for i in labels_list}
             print('Conteos {}'.format(count_dict))
-            app.session_object['{}'.format(
-                session['session_token'])].conteo_inicial = count_dict
-            app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr'] = max(
+            app.session_object[key].conteo_inicial = count_dict
+            app.session_object[key].evaluacion['ev_ini_herr'] = max(
                 count_dict.items(), key=operator.itemgetter(1))[0]
-            app.session_object['{}'.format(
-                session['session_token'])].evaluacion['ev_ini_est'] = ev_est
+            app.session_object[key].evaluacion['ev_ini_est'] = ev_est
             #print('MAX {}'.format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
             session['stage'] = 'final'
-            app.session_object['{}'.format(
-                session['session_token'])].stage = 'final'
-            print("HA GUARDADOOOOOOOOOOOOOOO")
+            app.session_object[key].stage = 'final'
             response = make_response(redirect(url_for('script.ventana_espera')))
         except:
             response = make_response(redirect(url_for('script.error')))
             return response
     else:
         try:
-            labels_list = app.session_object['{}'.format(
-            session['session_token'])].response_labels['final']
+            labels_list = app.session_object[key].response_labels['final']
             count_dict = {i: labels_list.count(i) for i in labels_list}
-            app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_herr'] = max(
+            app.session_object[key].evaluacion['ev_fin_herr'] = max(
                 count_dict.items(), key=operator.itemgetter(1))[0]
-            app.session_object['{}'.format(
-                session['session_token'])].evaluacion['ev_fin_est'] = ev_est
-            app.session_object['{}'.format(
-                session['session_token'])].conteo_final = count_dict
-            print('MAX {}'.format(app.session_object['{}'.format(
-                session['session_token'])].evaluacion['ev_fin_herr']))
+            app.session_object[key].evaluacion['ev_fin_est'] = ev_est
+            app.session_object[key].conteo_final = count_dict
+            #print('MAX {}'.format(app.session_object[key].evaluacion['ev_fin_herr']))
             print('Conteos {}'.format(count_dict))
             response = make_response(redirect(url_for('script.cuestionario')))
         except:
@@ -281,19 +262,24 @@ def conclusion():
         return redirect(url_for('script.guardar'))
     
     session_data = app.session_object['{}'.format(session['session_token'])]
-    print("##################################SESION DATA###########################")
+    print("####################### SESION DATA #######################")
     print(session_data.evaluacion)
 
     return render_template('conclusion.html', **context)
 
 @script.route('/conclusion/guardando', methods=['GET', 'POST'])
 def guardar():
-    session_data = app.session_object['{}'.format(session['session_token'])]#.id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
+    key = '{}'.format(session['session_token'])
+    session_data = app.session_object[key]#.id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
     session_data.id_session = app.mysql_object.create_session(
-        app.session_object['{}'.format(session['session_token'])])
-    print("##################################SESION DATA###########################")
+        app.session_object[key])
+    print("####################### SAVE DATA #########################")
     print(session_data)
     app.mysql_object.save_session(session_data)
+    app.session_object.pop(key)
+    session.pop('session_token')
+    session.pop('stage')
+    session['prev_session'] = False
     return redirect(url_for('inicio'))
 
 @script.route('/index_r')
