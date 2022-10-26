@@ -1,4 +1,4 @@
-/*!
+/*
  * Bootstrap v5.0.0-alpha2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
  * Copyright 2011-2020 Twitter, Inc.
@@ -4780,6 +4780,7 @@ fieldset:disabled .btn {
 	height: 100%;
 	overflow: hidden;
 	outline: 0;
+	background-color: rgba(0,0,0,0.5);
 }
 .modal-dialog {
 	position: relative;
@@ -4829,7 +4830,7 @@ fieldset:disabled .btn {
 	border-radius: 0.3rem;
 	outline: 0;
 }
-.modal-backdrop {
+/* .modal-backdrop {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -4843,7 +4844,7 @@ fieldset:disabled .btn {
 }
 .modal-backdrop.show {
 	opacity: 0.5;
-}
+} */
 .modal-header {
 	display: flex;
 	flex-shrink: 0;
@@ -9015,4 +9016,49 @@ fieldset:disabled .btn {
 		display: none !important;
 	}
 }
-/*# sourceMappingURL=bootstrap.min.css.map */
+.icon-modal{
+    height: 2.25rem;
+}
+
+.fs-1 {
+    font-size: calc(1.375rem + 1.5vw) !important;
+}
+
+.fs-2 {
+    font-size: calc(1.325rem + 0.9vw) !important;
+}
+
+.fs-3 {
+    font-size: calc(1.3rem + 0.6vw) !important;
+}
+
+.fs-4 {
+    font-size: calc(1.275rem + 0.3vw) !important;
+}
+
+.fs-5 {
+    font-size: 1.25rem !important;
+}
+
+.fs-6 {
+    font-size: 1rem !important;
+}
+
+@media (min-width: 1200px) {
+    .fs-1 {
+        font-size: 2.5rem !important;
+    }
+
+    .fs-2 {
+        font-size: 2rem !important;
+    }
+
+    .fs-3 {
+        font-size: 1.75rem !important;
+    }
+
+    .fs-4 {
+        font-size: 1.5rem !important;
+    }
+}
+

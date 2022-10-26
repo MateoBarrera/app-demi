@@ -7,7 +7,6 @@ import cv2
 
 class UserData:
     def __init__(self, user_login, user_data, est):
-
         self.id = user_login['idlogin']
         self.usuario = user_login['usuario']
         self.contraseña = user_login['contraseña']
@@ -41,7 +40,6 @@ class UserData:
             self.institucion = None
             self.cargo = user_data['cargo']
             self.rol = 'inv/doc'
-
 class UserModel(UserMixin):
     def __init__(self, user_data):
         self.id = user_data.usuario
@@ -74,6 +72,7 @@ class SessionData():
         self.id_sesion = None
         self.id_usuario = None
         self.id_estudiante = None
+        self.stage = 'inicial'
         self.nombre = None
         self.identificacion = None
         self.institucion = None

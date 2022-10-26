@@ -15,17 +15,18 @@
 
 
     window.onscroll = function () {
+    try{
         var header_navbar = document.querySelector(".hero-section-wrapper-2 .header");
         var sticky = header_navbar.offsetTop;
-
         if (window.pageYOffset > sticky) {
             header_navbar.classList.add("sticky");
         } else {
             header_navbar.classList.remove("sticky");
         }
+    }catch(error){
 
+    }
     };
-
       // header-5  toggler-icon
       let navbarToggler2 = document.querySelector(".header-2 .navbar-toggler");
       var navbarCollapse2 = document.querySelector(".header-2 .navbar-collapse");
@@ -36,9 +37,16 @@
               navbarCollapse2.classList.remove('show')
           })
       );
-      navbarToggler2.addEventListener('click', function() {
-          navbarToggler2.classList.toggle("active");
-      })
+
+      try {
+		    navbarToggler2.addEventListener("click", function () {
+			navbarToggler2.classList.toggle("active")
+			})
+		} catch (error) {
+            console.log(error)
+				// expected output: ReferenceError: nonExistentFunction is not defined
+				// Note - error messages will vary depending on browser
+		}
 
     // section menu active
 	function onScroll(event) {
@@ -95,6 +103,6 @@
     cu.start(); */
 
 	//WOW activate
-    //new WOW().init();
+    new WOW().init();
 
 })();

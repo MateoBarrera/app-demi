@@ -6,8 +6,11 @@
   <nav class="nav">
     <div> 
       <a href="{{url_for('inicio')}}" class="nav_logo"> <i class='bx bx-layer nav_logo-icon'></i> 
-        <span class="nav_logo-name">WebAPP</span> 
+        <span class="nav_logo-name">DEMI</span> 
       </a>
+<!--       <a class="nav_logo" href="{{url_for('inicio')}}">
+        <img class="nav_logo-icon w-100 bg-white radius-10" alt="shortcut icon" src="{{ url_for('static', filename='images/op8.png') }}">
+      </a> -->
       
       <div class="nav_list"> 
         <a class="nav_link active" href="#" onclick="ActiveSection('vista-general')">
@@ -25,7 +28,7 @@
           </i>
           <span class="nav_name">Calendario</span>
         </a>
-        <div class="nav_menu">
+<!--         <div class="nav_menu">
           <span>Consulta</span>
         </div>
         <a href="#collapseLayouts_1" class="nav_link collapsed" data-toggle="collapse" aria-expanded="false"
@@ -40,7 +43,7 @@
                 alt=""></i><span class="nav_name">Terapias</span></a>
           <a class="nav_link" href="#" onclick="ActiveSection('busqueda2')"><i class='nav_icon'><img src="{{url_for('static',filename='/images/arrow.svg')}}"
                 alt=""></i><span class="nav_name">Terapias</span></a>
-        </div>
+        </div> -->
       </div>
     </div> 
 
@@ -54,8 +57,6 @@
         <i class='bx bx-log-out nav_icon'></i>
         <span class="nav_name">Cerrar sesión</span>
       </a>
-    </div>
-    
-    
+    </div>  
   </nav>
 </div>

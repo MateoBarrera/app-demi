@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block title %}
 {{ super() }}
@@ -11,7 +10,6 @@ Iniciar Terapia
 {% endblock %}
 
 {% block content %}
-
 <section id="iniciar_terapia" class="contact-section contact-style-6 mt-0">
   <div class="container justify-content-center">
     <div class="row">
@@ -146,10 +144,39 @@ Iniciar Terapia
     </div>
   </div>
   {% endif %}
+  {% if prev_session %}
+    <!-- Button trigger modal -->
+<!--     <button id="input-prevSession" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#prevSession">
+      Launch demo modal
+    </button> -->
+    
+    <!-- Modal -->
+    <div class="modal fade" id="prevSession" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content radius-10 px-4">
+          <div class="modal-header">
+            <h5 class="modal-title h5 text-primary" id="prevSessionLabel">Sesión en progreso...</h5>
+            <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
+          </div>
+          <div class="modal-body">
+            <p class="fs-5 pb-3">Existe una sesión iniciada con la siguiente información</p>
+            <div class="d-flex justify-content-between"><span class="h6">Estudiante:</span><span>{{prev_session_data.nombre | capitalize}}</span></div>
+            <div class="d-flex justify-content-between"><span class="h6">Fecha:</span>{{prev_session_data.fecha[:10]}}</div>
+            <div class="d-flex justify-content-between"><span class="h6">Hora:</span>{{prev_session_data.fecha[11:]}}</div>
+            <div class="d-flex justify-content-between"><span class="h6">Etapa:</span>Evaluación {{prev_session_data.stage | capitalize}}</div>
+          </div>
+          <div class="modal-footer">
+            <div class="col-12 py-2"><p class="fs-5">¿Desea reanudar la sesión en progreso?</p></div><br>
+            <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
+            <a href="{{url_for('script.ventana_espera')}}" type="button" class="btn btn-primary radius-10">Reanudar</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+  {% endblock %}
 </section>
-
-{% endblock %}
-
 {% block scripts%}
 {{super()}}
 
@@ -166,42 +193,46 @@ Iniciar Terapia
       var option = document.createElement("option");
       option.text = "";
       x.add(option);
-      {% for student in students %}
-      var option = document.createElement("option");
-      option.text = "{{ student['estudiante']| capitalize }}";
-      x.add(option);
-      {% endfor %}
+      let students = JSON.parse('{{students| tojson | safe}}');
+      students.forEach(element => {
+        var option = document.createElement("option");
+        option.text = element['estudiante'].charAt(0).toUpperCase()+ element['estudiante'].slice(1);
+        x.add(option);
+      });
     }
     
-  
-
-
   function set_values() {
     var index = document.getElementById("nombre").selectedIndex;
     var nombre = "";
     var inst = "";
     var grado = "";
     var identificacion = "";
-    var i = 1;
-    {% for student in students %}
+    var i = 0;
+    let students = JSON.parse('{{students| tojson | safe}}');
+    students.forEach(element => {      
+      i += 1;
       if (index == i) {
-        var nombre = "{{student['estudiante']}}"
-        var inst = "{{student['institucion']}}";
-        var grado = "{{student['grado']}}";
-        var identificacion = "{{student['identificacion']}}"
+        nombre = element['estudiante'];
+        inst = element['institucion'];
+        grado = element['grado'];
+        identificacion = element['identificacion'];
       }
-      i+=1;
-    {% endfor %}
-  document.getElementById("nombre_form").value = nombre;
-  console.log(nombre)
-  document.getElementById("institucion").value = inst;
-  document.getElementById("grado").value = grado;
-  document.getElementById("identificacion_form").value = identificacion;    
+    });
+  document.getElementById('nombre_form').value = nombre;
+  document.getElementById('institucion').value = inst;
+  document.getElementById('grado').value = grado;
+  document.getElementById('identificacion_form').value = identificacion;    
   }
-
 </script>
 
-
+{% if prev_session %}
+<script>
+  var myModal = new bootstrap.Modal(document.getElementById("prevSession"), {});
+  document.onreadystatechange = function () {
+    myModal.show();
+  };
+</script>
+{% endif %}
 
 {% endblock %}
 {%block footer%}
