@@ -1,4 +1,4 @@
-from flask import render_template, redirect, flash, url_for, session, current_app as app
+from flask import request, render_template, redirect, flash, url_for, session, current_app as app
 from . import auth
 from app.forms import LoginForm, SignupForm, SignupEstForm
 from app.models import UserData, UserModel, SessionData
@@ -16,7 +16,7 @@ def set_secure_headers(response):
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-
+    next_view = request.args.get('next', 'False')
     val_name = True
     val_cont = True
     login_form = LoginForm()
@@ -40,6 +40,8 @@ def login():
                 login_user(user_model)
                 session['username'] = username
                 session['prev_session'] = False
+                if next_view:
+                    return redirect(url_for('iniciar_terapia'))
                 return redirect(url_for('inicio'))
             else:
                 context['val_cont'] = False

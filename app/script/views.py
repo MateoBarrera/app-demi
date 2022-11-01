@@ -165,7 +165,8 @@ def final_evaluacion(ev_est, virtual):
             #print('MAX {}'.format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
             session['stage'] = 'final'
             app.session_object[key].stage = 'final'
-            response = make_response(redirect(url_for('script.ventana_espera')))
+            #response = make_response(redirect(url_for('script.ventana_espera')))
+            response = make_response(redirect(url_for('script.stage',stage=2)))
         except:
             response = make_response(redirect(url_for('script.error')))
             return response
@@ -180,6 +181,7 @@ def final_evaluacion(ev_est, virtual):
             #print('MAX {}'.format(app.session_object[key].evaluacion['ev_fin_herr']))
             print('Conteos {}'.format(count_dict))
             response = make_response(redirect(url_for('script.cuestionario')))
+            #response = make_response(redirect(url_for('script.stage',stage=3)))
         except:
             response = make_response(redirect(url_for('script.error')))
             return response
@@ -314,3 +316,10 @@ def error():
     flash('Ups! el reconocimiento fallo, intentando nuevamente', 'error')
     response = make_response(redirect(session['url_backup']))
     return response
+
+@script.route('/desarrollo/<stage>', methods=['GET', 'POST'])
+def stage(stage):
+    context = {
+        'actual_stage' : stage
+    }
+    return render_template('stage.html', **context)

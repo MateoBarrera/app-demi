@@ -158,6 +158,11 @@ Iniciar Terapia
             <h5 class="modal-title h5 text-primary" id="prevSessionLabel">Sesión en progreso...</h5>
             <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
           </div>
+          {% if prev_session_data.stage == 'inicial' %}
+          {% set actual_stage = 1 %}
+          {% elif prev_session_data.stage == 'final' %}
+          {% set actual_stage = 3 %}
+          {% endif %}
           <div class="modal-body">
             <p class="fs-5 pb-3">Existe una sesión iniciada con la siguiente información</p>
             <div class="d-flex justify-content-between"><span class="h6">Estudiante:</span><span>{{prev_session_data.nombre | capitalize}}</span></div>
@@ -168,7 +173,7 @@ Iniciar Terapia
           <div class="modal-footer">
             <div class="col-12 py-2"><p class="fs-5">¿Desea reanudar la sesión en progreso?</p></div><br>
             <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
-            <a href="{{url_for('script.ventana_espera')}}" type="button" class="btn btn-primary radius-10">Reanudar</a>
+            <a href="{{url_for('script.stage',stage=actual_stage)}}" type="button" class="btn btn-primary radius-10">Reanudar</a>
           </div>
         </div>
       </div>

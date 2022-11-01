@@ -167,8 +167,7 @@ def iniciar_terapia():
 
         if not session['prev_session']:
             session['session_token'] = secrets.token_urlsafe(6)
-            session['stage'] = 'inicial'
-
+        session['stage'] = 'inicial'
         key = '{}'.format(session['session_token'])
         app.session_object[key] = SessionData()
         app.session_object[key].fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -193,7 +192,7 @@ def iniciar_terapia():
         if terapia_form.virtual.data:
             return redirect(url_for('script.panel_virtual'))
         else:
-            return redirect(url_for('script.ventana_espera'))
+            return redirect(url_for('script.stage',stage=1))
 
     return render_template('terapia.html', **context)
 
