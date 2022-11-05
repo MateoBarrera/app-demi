@@ -70,6 +70,8 @@ Esperando...
     let i = 0;
     for (i; i < stage; i++){
        $('#stage-t-'+ i).addClass('done');
+       $('#stage-t-' + i+':last-child').addClass('text-dark')
+
       console.log("Actual stage "+i)
     }
     $('#stage-t-' + i).addClass('current');
