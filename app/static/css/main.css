@@ -404,3 +404,17 @@ div[style*="margin: 16px 0;"] {
 	animation-delay: 0.2s;
 	animation-name: fadeInRight;
 }
+
+.card.bg-card-primary{
+	background-color: #0487D9;
+}
+
+.card.bg-card-secondary{
+	background-color: #1CC2DB;
+}
+.card.bg-card-tertiary {
+	background-color: #f1cc26;
+}
+.card.bg-card-quaternary {
+	background-color: #D94343;
+}

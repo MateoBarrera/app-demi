@@ -8,11 +8,10 @@ Consulta
 {% block head %}
 {{ super() }}
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css"/>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.2/main.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
 <link rel="stylesheet" href="{{url_for('static',filename='css/styles.css')}}">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block navbar %}
@@ -21,98 +20,106 @@ Consulta
 
 {% block content %}
 
-<body id="body-pd" onload="loadTable({{all_users|safe}})">
-  
+<body id="body-pd" onload="loadTable()">
+
   <!--Container Main start-->
   <!--Container Main end-->
   <section id="vista-general">
     <h3 class="mb-30">Vista general</h4>
       <div class="row">
-        <div class="col-xl-3 col-md-6">
-          <div class="card bg-primary text-white mb-4">
+        {% if rol_user == 'Investigador' %}
+        <div class="col-lg-3 col-12 col-md-6">
+          <div class="card bg-card-primary  text-white mb-4 radius-10">
             <div class="card-title">
               <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Docentes registrados</p>            
+              <p class="pl-15 text-aling-center font-weight-bold">Docentes registrados</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_users|safe}})">Ver resumen</a>
+              <a class="small text-white stretched-link" href="#" onclick='loadTable(1)'>Ver
+                resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-          <div class="card bg-warning text-white mb-4">
+
+        {% endif %}
+        <div class="col-lg-3 col-12 col-md-6">
+          <div class="card bg-card-secondary text-white mb-4 radius-10">
             <div class="card-title">
               <div class="text-white iconify">{{all_students|length}}<i class="bx bx-face"></i></div><br>
               <p class="pl-15 text-aling-center font-weight-bold">Estudiantes registrados</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_students|safe}})">Ver resumen</a>
+              <a class="small text-white stretched-link" href="#" onclick='loadTable(2)'>Ver
+                resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-          <div class="card bg-success text-white mb-4">
+        <div class="col-lg-3 col-12 col-md-6">
+          <div class="card bg-card-tertiary text-white mb-4 radius-10">
             <div class="card-title">
-              <div class="text-white iconify">{{all_sessions_info|length}}<i class="bx bx-bar-chart-alt-2"></i></div><br>
+              <div class="text-white iconify">{{all_sessions_info|length}}<i class="bx bx-bar-chart-alt-2"></i></div>
+              <br>
               <p class="pl-15 text-aling-center font-weight-bold">Sesiones almacenadas</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{all_sessions_info|safe}})">Ver resumen</a>
+              <a class="small text-white stretched-link" href="#" onclick='loadTable(3)'>Ver
+                resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
         </div>
-        <div class="col-xl-3 col-md-6">
-          <div class="card bg-danger text-white mb-4">
+        <div class="col-lg-3 col-12 col-md-6">
+          <div class="card bg-card-quaternary text-white mb-4 radius-10">
             <div class="card-title">
               <div class="text-white iconify">{{recent_sessions|length}}<i class="bx bx-calendar-check"></i></div><br>
               <p class="pl-15 text-aling-center font-weight-bold">Sesiones la ultima semana</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick="loadTable({{recent_sessions|safe}})" >Ver resumen</a>
+              <a class="small text-white stretched-link" href="#" onclick='loadTable(4)'>Ver
+                resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
-      <div class="col-lg-8">
-        <div class="content-wrapper">
-          <div class="section-title mb-40">
-            <div class="card cards-conclution">
-              <div class="card-header d-flex align-content-center">
-                <i class="fa-solid fa-square-poll-horizontal m-1"></i>
-                <h6>Resumen</h6>
+        <div class="col-lg-8">
+          <div class="content-wrapper">
+            <div class="section-title mb-40">
+              <div class="card cards-conclution radius-10">
+                <div class="card-header d-flex align-content-center">
+                  <i class="fa-solid fa-square-poll-horizontal m-1"></i>
+                  <h6>Resumen</h6>
+                </div>
+                <div class="card-body align-self-stretch">
+                  <div class="table-responsive-sm info-table" id="table_content">
+                  </div>
+                </div>
               </div>
-              <div class="card-body align-self-stretch">
-                <div class="table-responsive-sm info-table" id="table_content">
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="content-wrapper">
+            <div class="section-title mb-40">
+              <div class="card cards-conclution radius-10">
+                <div class="card-header d-flex align-content-center">
+                  <i class="fa-solid fa-calendar-days m-1"></i>
+                  <h6>Calendario</h6>
+                </div>
+                <div class="card-body align-self-stretch">
+                  <div class="w-100" id="AgendaJS"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
-        <div class="content-wrapper">
-          <div class="section-title mb-40">
-            <div class="card cards-conclution">
-              <div class="card-header d-flex align-content-center">
-                <i class="fa-solid fa-calendar-days m-1"></i>
-                <h6>Calendario</h6>
-              </div>
-              <div class="card-body align-self-stretch">
-                <div class="w-100" id="AgendaJS"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div>
       <div class="row">
         <div class="col-12">
-          <div class="card mb-4">
+          <div class="card mb-4 radius-10">
             <div class="card-header d-flex align-content-center">
               <i class="fa-solid fa-file-invoice m-1"></i>
               <h6>Información de evaluaciones</h6>
@@ -124,7 +131,7 @@ Consulta
           </div>
         </div>
         <div class="col-12">
-          <div class="card mb-4">
+          <div class="card mb-4 radius-10">
             <div class="card-header d-flex align-content-center">
               <i class="fa-solid fa-chart-pie m-1"></i>
               <h6>Gráficos de evaluaciones</h6>
@@ -141,86 +148,87 @@ Consulta
           </div>
         </div>
       </div>
-  
+
   </section>
   <section id="configuracion" hidden>
     <h3 class="mb-30">Perfil de usuario</h4>
-    <div class="contact-section contact-style-6 bg-white">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-5">
-        <div class="left-wrapper">
-          <div class="d-flex align-items-start py-3 border-bottom"> <img
-              src="https://images.pexels.com/photos/1037995/pexels-photo-1037995.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-              class="img-profile" alt="">
-            <div class="pl-sm-4 pl-2" id="img-section"> <b>Foto de perfil</b>
-              <p>Acepta archivos tipo .jpg <br> Menor a 1MB</p> <button class="btn button border"><b>Actualizar</b></button>
-            </div>
-          </div>
+      <div class="contact-section contact-style-6 bg-white">
+        <div class="container">
           <div class="row">
-            <div class="col-lg-12 col-md-6">
-              <div class="single-item">
-                <div class="icon">
-                  📞
+            <div class="col-lg-5">
+              <div class="left-wrapper">
+                <div class="d-flex align-items-start py-3 border-bottom"> <img
+                    src="https://images.pexels.com/photos/1037995/pexels-photo-1037995.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+                    class="img-profile" alt="">
+                  <div class="pl-sm-4 pl-2" id="img-section"> <b>Foto de perfil</b>
+                    <p>Acepta archivos tipo .jpg <br> Menor a 1MB</p> <button
+                      class="btn button border"><b>Actualizar</b></button>
+                  </div>
                 </div>
-                <div class="text">
-                  <p>Numero</p>
+                <div class="row">
+                  <div class="col-lg-12 col-md-6">
+                    <div class="single-item">
+                      <div class="icon">
+                        📞
+                      </div>
+                      <div class="text">
+                        <p>Numero</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </div>
+            <div class="col-lg-7 order-first order-lg-last">
+              <div class="contact-form-wrapper">
+                <form action="{{ url_for('inicio') }}" method="POST">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="single-input">
+                        {{ contacto_form.csrf_token()}}
+                        <label for="name">{{ contacto_form.nombre.label() }}</label>
+                        {{ contacto_form.nombre() }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="single-input">
+                        <label for="email">{{ contacto_form.correo.label() }}</label>
+                        {{ contacto_form.correo() }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="single-input">
+                        <label for="number">{{ contacto_form.numero.label() }}</label>
+                        {{ contacto_form.numero() }}
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="single-input">
+                        <label for="subject">{{ contacto_form.asunto.label() }}</label>
+                        {{ contacto_form.asunto() }}
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="single-input">
+                        <label for="message">{{ contacto_form.mensaje.label() }}</label>
+                        {{ contacto_form.mensaje() }}
+                      </div>
+                    </div>
+                    <div class="col-md-12">
+                      <div class="form-button">
+                        <button type="submit" class="button radius-10">enviar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
-      </div>
-        <div class="col-lg-7 order-first order-lg-last">
-          <div class="contact-form-wrapper">
-            <form action="{{ url_for('inicio') }}" method="POST">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="single-input">
-                    {{ contacto_form.csrf_token()}}
-                    <label for="name">{{ contacto_form.nombre.label() }}</label>
-                    {{ contacto_form.nombre() }}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="single-input">
-                    <label for="email">{{ contacto_form.correo.label() }}</label>
-                    {{ contacto_form.correo() }}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="single-input">
-                    <label for="number">{{ contacto_form.numero.label() }}</label>
-                    {{ contacto_form.numero() }}
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="single-input">
-                    <label for="subject">{{ contacto_form.asunto.label() }}</label>
-                    {{ contacto_form.asunto() }}
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="single-input">
-                    <label for="message">{{ contacto_form.mensaje.label() }}</label>
-                    {{ contacto_form.mensaje() }}
-                  </div>
-                </div>
-                <div class="col-md-12">
-                  <div class="form-button">
-                    <button type="submit" class="button radius-10">enviar
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-      </div>
 
   </section>
-  <section id="calendario" hidden> 
+  <section id="calendario" hidden>
     <h3>Calendario</h3>
     <div class="container">
       <div class="row">
@@ -239,118 +247,119 @@ Consulta
         </div>
       </div>
     </div>
-    
+
   </section>
   <section id="busqueda1" hidden>
     <h3 class="mb-30">Búsqueda 1</h4>
+      <div class="card mb-4">
+        <div class="card-header">
+          <i class="fas fa-table me-1"></i>
+          DataTable Example
+        </div>
+        <div class="card-body">
+          <table id="datatablesSimple2">
+            <thead>
+              <tr>
+                {% for key, value in all_users[0].items() %}
+                <th> {{ key }} </th>
+                {% endfor %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in all_users %}
+              <tr>
+                {% for key, value in item.items() %}
+                <th> {{ value }} </th>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+  </section>
+  <section id="busqueda2" hidden>
+    <h3 class="mb-30">Búsqueda 2</h3>
+    <h3 class="mb-30">Búsqueda 1</h3>
     <div class="card mb-4">
       <div class="card-header">
         <i class="fas fa-table me-1"></i>
         DataTable Example
       </div>
       <div class="card-body">
-        <table id="datatablesSimple2">
-          <thead>
-            <tr>
-              {% for key, value in all_users[0].items() %}
-                <th> {{ key }} </th>
-              {% endfor %}
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in all_users %}
-              <tr>
-              {% for key, value in item.items() %}
-                <th> {{ value }} </th>
-              {% endfor %}
-              </tr>
-            {% endfor %}
-          </tbody>
+        <table id="datatablesSimple3">
+
         </table>
       </div>
-  </section>
-  <section id="busqueda2" hidden>
-    <h3 class="mb-30">Búsqueda 2</h3>
-      <h3 class="mb-30">Búsqueda 1</h3>
-        <div class="card mb-4">
-          <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            DataTable Example
-          </div>
-          <div class="card-body">
-            <table id="datatablesSimple3">
-
-            </table>
-          </div>
-        </div>
+    </div>
   </section>
 
-  
-
-{% endblock %}
-
-{% block scripts%}
-{{ super() }}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
-<script src="{{url_for('static',filename='js/scripts.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
 
 
-<!-- Calendar script -->
-<script type="text/javascript">
+  {% endblock %}
+
+  {% block scripts%}
+  {{ super() }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.7.0/main.min.js"></script>
+  <script src="{{url_for('static',filename='js/scripts.js')}}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simple-datatables@latest" crossorigin="anonymous"></script>
+  <script type="text/javascript" charset="utf8"
+    src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-colreorder/1.5.6/dataTables.colReorder.min.js"
+    integrity="sha512-BA+XWPyIsXxbBMmGU7Acq8vBGWAFldhFLOkoU4dL+B6Fs16RnhCC9ff+vy5GzmB783tyuzYs42QGHRbV73e1ug=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+  <!-- Calendar script -->
+  <script type="text/javascript">
     let agendaEl = document.getElementById('AgendaJS');
-    let agenda = new FullCalendar.Calendar(agendaEl,{ 
-          locale: 'es',
-          initialView: 'dayGridMonth',
-        events:
-          [
-            
-            {% for event in events %}
-              {
-                title: '{{event.todo}}',
-                start: '{{event.date}}',
-                end: '{{event.hora_1}}'
-                
-              },
-            {% endfor %}
-          ], 
-          /* allDay: false, */
+    let events = Array.from(JSON.parse('{{events | tojson | safe }}'));
+    let object_calendar = [];
+    events.forEach(function(event){
+      object_calendar.push({
+        title : event.todo,
+        start : event.date,
+        end : event.hora_1
+      });
+    });
+    let agenda = new FullCalendar.Calendar(agendaEl, {
+      locale: 'es',
+      initialView: 'dayGridMonth',
+      events: object_calendar,
     });
     agenda.render();
     agenda.setOption('height', '100%');
     agenda.setOption('locale', 'es');
     agenda.setOption('headerToolbar', {
-        locale: 'es',
-        right: /* 'dayGridMonth,timeGridWeek,timeGridDay' */'',
-        left: 'prev,next',
-        center: 'title',
-      })
-/* 
-          headerToolbar: {
-            locale: 'es',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay',
-                left: 'prev,next',
-                  center: 'title',
-          }, */
+      locale: 'es',
+      right: /* 'dayGridMonth,timeGridWeek,timeGridDay' */'',
+      left: 'prev,next',
+      center: 'title',
+    })
+    /* 
+              headerToolbar: {
+                locale: 'es',
+                  right: 'dayGridMonth,timeGridWeek,timeGridDay',
+                    left: 'prev,next',
+                      center: 'title',
+              }, */
 
     var cal2GoTo = function (date) {
-      console.log('cal2go '+date)
-        agenda.fullCalendar('gotoDate', date);
-      }
-</script>
+      console.log('cal2go ' + date)
+      agenda.fullCalendar('gotoDate', date);
+    }
+  </script>
 
-<!-- Table Resumen script -->
-<script type="text/javascript">
-  var _table_ = document.createElement('table'),
+  <!-- Table Resumen script -->
+  <script type="text/javascript">
+    var _table_ = document.createElement('table'),
       _tr_ = document.createElement('tr'),
       _th_ = document.createElement('th'),
       _td_ = document.createElement('td'),
       _thead_ = document.createElement('thead'),
       _tbody_ = document.createElement('tbody');
 
-  function addAllColumnHeaders(arr, table) {
+    function addAllColumnHeaders(arr, table) {
       var columnSet = [],
         thead = _thead_.cloneNode(false);
       tr = _tr_.cloneNode(false);
@@ -370,199 +379,229 @@ Consulta
       return columnSet;
     }
 
-  function  loadTable(arr){    
-    var table = _table_.cloneNode(false);
-    var tbody = _tbody_.cloneNode(false),
-      columns = addAllColumnHeaders(arr, table);
-    console.log(columns)
-    for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+    function loadTable(card_id=false) {
+      if (!card_id || card_id==1){
+        var arr = JSON.parse('{{ all_users| tojson | safe }}');
+      } else if (card_id == 2) {
+        var arr = JSON.parse('{{ all_students| tojson | safe }}');
+      } else if (card_id == 3) {
+        var arr = Array.from(JSON.parse('{{ all_sessions_info | tojson | safe }}'));
+      } else if (card_id == 4) {
+        var arr =  Array.from(JSON.parse('{{ recent_sessions | tojson | safe }}'));
+      };  
+      var table = _table_.cloneNode(false);
+      var tbody = _tbody_.cloneNode(false),
+        columns = addAllColumnHeaders(arr, table);
+      console.log(columns)
+      for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+        var tr = _tr_.cloneNode(false);
+        for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+          var th = _th_.cloneNode(false);
+          cellValue = arr[i][columns[j]];
+          th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+          tr.appendChild(th);
+        }
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+
+      table.id = "table_info";
+      table.classList.add("table");
+      table.classList.add("table-hover");
+      table.classList.add("text-secondary");
+      table.classList.add("h-100");
+
+      var el = document.getElementById("table_content");
+      el.innerHTML = "";
+      el.appendChild(table);
+      const datatablesSimple = document.getElementById('table_info');
+      if (datatablesSimple) {
+        let tables = new DataTable(datatablesSimple, {
+          language: {
+            url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+          }, 
+          responsive: true, 
+          pageLength: 5,
+          dom: "Bfrtip",
+          aaSorting: [],
+          colReorder: orderTable(card_id),
+        });
+      };
+
+      var table_handler = $('#table_info').DataTable();
+      $('#table_info tbody').on('click', 'tr', function () {
+        var data = table_handler.row(this).data();
+        var column_name = $(table_handler.column().header()).html();
+        if (column_name == 'idsesiones') {
+          console.log('You clicked on ' + column_name + '\'s row');
+          console.log(data[0])
+          loadSesions(data[0]);
+
+        } else if (column_name == 'estudiante') {
+          alert('Seleccionaste al estudiante ' + data[0] + ', próximamente se permitirá la búsqueda detallada por estudiantes :)')
+        }
+
+      });
+
+      /* selección de cada celda tr pasa a ser td */
+      /*     var table = $('#example').DataTable();
+        
+        $('#example tbody').on( 'click', 'td', function () {
+            var idx = table.cell( this ).index().column;
+            var title = table.column( idx ).header();
+        
+            alert( 'Column title clicked on: '+$(title).html() );
+        } ); */
+
+    };
+
+    function orderTable(card_id){
+      let reorder;
+      if (card_id == 2){
+        return  {
+            order: [0, 2, 1, 3, 4]
+          };
+      } else if (card_id == 3 || card_id == 4){
+        return {
+            order: [4, 1, 5, 2, 3, 0]
+          };
+      } else{
+        return {
+            order: [1, 0]
+          };
+      };
+    };
+
+
+    function loadSesions(session) {
+      console.log("si entra al menos");
+      var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
+      var arr = all_sessions.filter(arr => (arr.Sesión == session));
+      var table = _table_.cloneNode(false);
+      var tbody = _tbody_.cloneNode(false),
+        columns = addAllColumnHeaders(all_sessions, table);
+      console.log(arr)
       var tr = _tr_.cloneNode(false);
       for (var j = 0, maxj = columns.length; j < maxj; ++j) {
         var th = _th_.cloneNode(false);
-        cellValue = arr[i][columns[j]];
-        th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+        cellValue = arr[0][columns[j]];
+        console.log(cellValue)
+        th.appendChild(document.createTextNode(arr[0][columns[j]] || ''));
         /* console.log("Click" + th.textContent) */
         tr.appendChild(th);
-      }   
-      tbody.appendChild(tr);
-    }
-    table.appendChild(tbody);
-    
-    table.id = "table_info"; 
-    table.classList.add("table");
-    table.classList.add("table-hover");
-    table.classList.add("text-secondary");
-    table.classList.add("h-100");
-
-    var el = document.getElementById("table_content");
-    el.innerHTML= "";
-    el.appendChild(table);
-    const datatablesSimple = document.getElementById('table_info');
-    if (datatablesSimple) {
-      let tables = new DataTable(datatablesSimple, {
-      language: {
-        url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-      }, responsive:true, pageLength: 5,
-        });
-    }
-
-    var table_handler = $('#table_info').DataTable();
-    $('#table_info tbody').on('click', 'tr', function () {
-      var data = table_handler.row(this).data(); 
-      var column_name = $(table_handler.column().header()).html();
-      if (column_name =='idsesiones'){
-        console.log('You clicked on ' + column_name + '\'s row');
-        console.log(data[0])
-        loadSesions(data[0]);
-
-      } else if (column_name=='estudiante'){
-        alert('Seleccionaste al estudiante '+ data[0] +', próximamente se permitirá la búsqueda detallada por estudiantes :)')
       }
+      tbody.appendChild(tr);
+      table.appendChild(tbody);
+      table.id = "table_session";
+      table.classList.add("table");
+      table.classList.add("table-hover");
+      table.classList.add("text-secondary");
+      table.classList.add("h-100");
 
-  } );
+      var el = document.getElementById("table_content_2");
+      el.innerHTML = "";
+      el.appendChild(table);
+      const datatablesSimple = document.getElementById('table_session');
+      if (datatablesSimple) {
+        let tables = new DataTable(datatablesSimple, {
+          language: {
+            url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+          }, responsive: true,
+          bPaginate: false,
+          bFilter: false,
+          bInfo: false,
 
-/* selección de cada celda tr pasa a ser td */
-/*     var table = $('#example').DataTable();
-  
-  $('#example tbody').on( 'click', 'td', function () {
-      var idx = table.cell( this ).index().column;
-      var title = table.column( idx ).header();
-  
-      alert( 'Column title clicked on: '+$(title).html() );
-  } ); */
-
-  }
-
-  function loadSesions(session){
-    console.log("si entra al menos");
-    var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
-    console.log(all_sessions)
-    var arr = all_sessions.filter(arr=> (arr.Sesión==session));
-    var table = _table_.cloneNode(false);
-    var tbody = _tbody_.cloneNode(false),
-      columns = addAllColumnHeaders(all_sessions, table);
-    console.log(arr)
-    var tr = _tr_.cloneNode(false);
-    for (var j = 0, maxj = columns.length; j < maxj; ++j) {
-      var th = _th_.cloneNode(false);
-      cellValue = arr[0][columns[j]];
-      console.log(cellValue)
-      th.appendChild(document.createTextNode(arr[0][columns[j]] || ''));
-      /* console.log("Click" + th.textContent) */
-      tr.appendChild(th);
+        });
+      };
+      console.log("AAAAAAAAAAAAAA")
+      var props = JSON.parse('{{props| tojson |safe}}');
+      console.log(props)
+      props = props.filter(props => (props.Sesión == session));
+      console.log(props)
+      loadGraphs(props[0]);
     }
-    tbody.appendChild(tr);
-    table.appendChild(tbody);
-    table.id = "table_session";
-    table.classList.add("table");
-    table.classList.add("table-hover");
-    table.classList.add("text-secondary");
-    table.classList.add("h-100");
+  </script>
 
-    var el = document.getElementById("table_content_2");
-    el.innerHTML = "";
-    el.appendChild(table);
-    const datatablesSimple = document.getElementById('table_session');
-    if (datatablesSimple) {
-      let tables = new DataTable(datatablesSimple, {
-        language: {
-          url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-        }, responsive: true,
-        bPaginate: false,
-        bFilter: false,
-        bInfo: false,
+  <!-- Gráfica de evaluaciones  -->
+  <script type="text/javascript">
+    // Pie Chart Example
+    function loadGraphs(props) {
+      var _canvas_ = document.createElement('canvas');
+      var canvas = _canvas_.cloneNode(false);
+      canvas.id = "chart-1";
+      canvas.width = "100%";
+      canvas.height = "250";
+      var conteo_inicial = props['conteo_inicial'];
+      var el = document.getElementById("div-chart-1");
+      el.innerHTML = "";
+      el.appendChild(canvas);
 
+      var ctx = document.getElementById("chart-1");
+      var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: 'Reconocimiento Evaluación Inicial'
+          },
+          legend: {
+            position: 'right',
+            align: "middle"
+          }
+        },
+        data: {
+          labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
+          datasets: [{
+            label: 'Reconocimiento',
+            data: [conteo_inicial.Felicidad, conteo_inicial.Tristeza, conteo_inicial.Enojo, conteo_inicial.Sorpresa, conteo_inicial.Neutral],
+            backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
+          }],
+        },
       });
-    };
-    console.log("AAAAAAAAAAAAAA")
-    var props = JSON.parse('{{props| tojson |safe}}');
-    console.log(props)
-    props = props.filter(props=> (props.Sesión == session));
-    console.log(props)
-    loadGraphs(props[0]);
-  }
-</script>
 
-<!-- Gráfica de evaluaciones  -->
-<script type="text/javascript">
-  // Pie Chart Example
-  function loadGraphs(props){
-    var _canvas_ = document.createElement('canvas');
-    var canvas = _canvas_.cloneNode(false);
-    canvas.id = "chart-1";
-    canvas.width = "100%";    
-    canvas.height = "250";
-    var conteo_inicial = props['conteo_inicial'];
-    var el = document.getElementById("div-chart-1");
-    el.innerHTML = "";
-    el.appendChild(canvas);
+      var canvas = _canvas_.cloneNode(false);
+      canvas.id = "chart-2";
+      canvas.width = "100%";
+      canvas.height = "250";
+      var conteo_final = props['conteo_final'];
+      var al = document.getElementById("div-chart-2");
+      al.innerHTML = "";
+      al.appendChild(canvas);
 
-    var ctx = document.getElementById("chart-1");
-    var myPieChart = new Chart(ctx, {
-      type: 'pie',
-      options: {
-        responsive: true,
-        title: {
-          display: true,
-          text: 'Reconocimiento Evaluación Inicial'
+      var ctx = document.getElementById("chart-2");
+      var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: 'Reconocimiento Evaluación Final'
+          },
+          legend: {
+            position: 'right',
+            align: "middle"
+          }
         },
-        legend: {
-          position: 'right',
-          align: "middle"
-        }
-      },
-      data: {
-        labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
-        datasets: [{
-          label: 'Reconocimiento',
-          data: [conteo_inicial.Felicidad, conteo_inicial.Tristeza, conteo_inicial.Enojo, conteo_inicial.Sorpresa, conteo_inicial.Neutral],
-          backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
-        }],
-      },
-    });
-
-    var canvas = _canvas_.cloneNode(false);
-    canvas.id = "chart-2";
-    canvas.width = "100%";
-    canvas.height = "250";
-    var conteo_final = props['conteo_final'];
-    var al = document.getElementById("div-chart-2");
-    al.innerHTML = "";
-    al.appendChild(canvas);
-
-    var ctx = document.getElementById("chart-2");
-    var myPieChart = new Chart(ctx, {
-      type: 'pie',
-      options: {
-        responsive: true,
-        title: {
-          display: true,
-          text: 'Reconocimiento Evaluación Final'
+        data: {
+          labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
+          datasets: [{
+            label: 'Reconocimiento',
+            data: [conteo_final.Felicidad, conteo_final.Tristeza, conteo_final.Enojo, conteo_final.Sorpresa, conteo_final.Neutral],
+            backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
+          }],
         },
-        legend: {
-          position: 'right',
-          align: "middle"
-        }
-      },
-      data: {
-        labels: ["Feliz", "Triste", "Enojado", "Sorprendido", "Neutro", "No se reconoce"],
-        datasets: [{
-          label: 'Reconocimiento',
-          data: [conteo_final.Felicidad, conteo_final.Tristeza, conteo_final.Enojo, conteo_final.Sorpresa, conteo_final.Neutral],
-          backgroundColor: ['#28a745', '#007bff', '#dc3545', '#ffc107', '#767676'],
-        }],
-      },
-    });
+      });
 
 
-  }
-</script>
+    }
+  </script>
 
 
-<!-- [conteo_inicial.Felicidad, conteo_inicial.Tristeza, conteo_inicial.Enojo, conteo_inicial.Sorpresa, conteo_inicial.Neutral,0] -->
+  <!-- [conteo_inicial.Felicidad, conteo_inicial.Tristeza, conteo_inicial.Enojo, conteo_inicial.Sorpresa, conteo_inicial.Neutral,0] -->
 
-{% endblock %}
+  {% endblock %}
 
-{%block footer%}
-{% include 'footer.html' %}
-{% endblock %}
+  {%block footer%}
+  {% include 'footer.html' %}
+  {% endblock %}

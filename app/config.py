@@ -1,5 +1,6 @@
 class Config:
     SECRET_KEY = 'SUPER SECRET'
+    TIMEZONE = 'US/Eastern'
 
     ##DATA BASE https://www.freemysqlhosting.net/account/##
 

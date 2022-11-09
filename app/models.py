@@ -27,7 +27,7 @@ class UserData:
             self.rol = 'est'
         else:
             self.id_table = user_data['idusuarios']
-            self.nombre = user_data['nombre']
+            self.nombre = user_data['docente']
             self.identificacion = user_data['identificacion']
             if user_data['imagen'] is not None:
                 nparr = np.fromstring(user_data['imagen'], np.uint8)
@@ -80,6 +80,7 @@ class SessionData():
         self.est_image = None
         self.docente = None
         self.fecha = None
+        self.tema = None
         self.evaluacion = {
             'ev_ini_doc': 'None doc',
             'ev_ini_herr' : 'None herr',

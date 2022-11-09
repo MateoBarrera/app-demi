@@ -1,8 +1,8 @@
 import unittest
 import os
-import datetime as Datetime
 import secrets
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 import cv2
 from flask import Flask, request, current_app, Response, make_response, render_template, redirect, session, url_for, flash
 from app import create_app
@@ -139,6 +139,7 @@ def iniciar_terapia():
     #Inicializar el contexto de la vista con el modelo de usuario
     user = current_user
     students = app.mysql_object.get_all_students()
+    all_sessions = app.mysql_object.get_all_session_info()
     terapia_form = TerapiaForm()
     context = {
         'students': students,
@@ -146,6 +147,7 @@ def iniciar_terapia():
         'data': user,
         'username': user.id,
         'terapia_form': terapia_form,
+        'all_sessions': all_sessions,
     }  
     #Check de sesiones previas
     try:
@@ -163,6 +165,8 @@ def iniciar_terapia():
     if terapia_form.validate_on_submit() and (user.rol == 'inv/doc'):
         estudiante = terapia_form.nombre_form.data
         emocion = dict(terapia_form.emocion_percibida.choices).get(terapia_form.emocion_percibida.data)
+
+        tema = terapia_form.tema_form.data
         identificacion = terapia_form.identificacion_form.data
 
         if not session['prev_session']:
@@ -170,7 +174,7 @@ def iniciar_terapia():
         session['stage'] = 'inicial'
         key = '{}'.format(session['session_token'])
         app.session_object[key] = SessionData()
-        app.session_object[key].fecha = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        app.session_object[key].fecha = datetime.now(pytz.timezone(app.config['TIMEZONE'])).strftime('%Y-%m-%d %H:%M:%S')
         app.session_object[key].evaluacion['ev_ini_doc'] = emocion
         app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
         app.session_object[key].id_estudiante = app.mysql_object.get_student(identificacion)[0]
@@ -179,6 +183,7 @@ def iniciar_terapia():
         app.session_object[key].institucion = request.form['text_inst']
         app.session_object[key].grado = request.form['text_grado']
         app.session_object[key].docente = user.nombre
+        app.session_object[key].tema = tema
 
         if app.mysql_object.get_student_image(app.session_object[key].id_estudiante):
             app.session_object[key].est_image = url_for(
@@ -255,36 +260,40 @@ def correo():
 @login_required
 def consulta():
     contacto_form = ContactoForm()
-    user_ip = session.get('user_ip')
+    user = current_user
     student_data = dict()
     img = url_for('static', filename='/images/user.jpg')
     events = list()
-    all_users = app.mysql_object.get_all_users()
-
-    all_students = app.mysql_object.get_all_students()
-    all_sessions_info = app.mysql_object.get_all_session_info()
-
-    all_sessions = app.mysql_object.get_all_session_ev()
-    props = app.mysql_object.get_all_session_prob()
-
     recent_sessions = list()
-    now = datetime.now()
-    for item in all_sessions_info:
 
+    if user.cargo == 'Investigador':
+        all_users = app.mysql_object.get_all_users()
+        all_students = app.mysql_object.get_all_students()
+        all_sessions_info = app.mysql_object.get_all_session_info()
+        all_sessions = app.mysql_object.get_all_session_ev()
+        props = app.mysql_object.get_all_session_prob()
+
+    else:
+        all_users = app.mysql_object.get_all_doc_students(user.id_table)
+        all_students = all_users
+        all_sessions_info = app.mysql_object.get_all_doc_session_info(user.id_table)
+        all_sessions = app.mysql_object.get_all_doc_session_ev(user.id_table)
+        props = app.mysql_object.get_all_doc_session_prob(user.id_table)
+
+
+    for item in all_sessions_info:
         aux_day = item['fecha'].split(' ', 1)
         item['fecha'] = '{}'.format(aux_day[0])
         item['hora'] = '{}'.format(aux_day[1])
         events.append({'todo': 'Sesión {}'.format(
             item['idsesiones']), 'date': item['fecha'], 'hora_1': item['hora']})
-        if now-datetime.strptime(item['fecha'], '%Y-%m-%d') < Datetime.timedelta(days=5):
+        time_session = datetime.strptime(item['fecha'], '%Y-%m-%d')
+        now = datetime.now() if not time_session.tzinfo else datetime.now(time_session.tzinfo)
+        if now-time_session < timedelta(days=5):
             recent_sessions.append(item)
-
-
-    print("Print All type"+str(type(all_sessions)))
     context = {
         'contacto_form': contacto_form,
         'student_data': student_data,
-        'user_ip': user_ip,
         'user_img': img,
         'events': events,
         'all_users': all_users,
@@ -292,11 +301,10 @@ def consulta():
         'all_sessions_info': all_sessions_info,
         'all_sessions':all_sessions,
         'props':props,
-        'recent_sessions': recent_sessions
+        'recent_sessions': recent_sessions,
+        'rol_user':user.cargo,
     }
 
-    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-    print(all_sessions)
     return render_template('consulta.html', **context)
 
 @app.route('/test', methods=['GET', 'POST'])

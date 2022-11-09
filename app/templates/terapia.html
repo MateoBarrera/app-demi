@@ -17,8 +17,7 @@ Iniciar Terapia
       <div class="content-wrapper">
         <div class="section-title mb-25">
           {% if rol != 'est' %}
-            <h3 >Bienvenido</h3>
-            <h4 class="mb-20">{{ data.nombre | capitalize }}</h4>
+            <h3 >Bienvenido {{ data.nombre | capitalize }}</h3>
           {% else %}
             <h5 class="mb-60">Información del estudiante</h5>
           {% endif %}
@@ -26,14 +25,15 @@ Iniciar Terapia
             {% if rol == 'inv/doc' %}
             <form autocomplete="off" action="{{ url_for('iniciar_terapia') }}" method="POST">
               <fieldset>
-                <h5 class="mb-2">Información de la sesión</h5>
+                <h5 class="mb-2">Información del estudiante</h5>
                 <div class="select-input mb-1">
                   {{ terapia_form.csrf_token() }}
                   <label class="mb-0" for="name s">
                     <p class="text-muted">Nombre del estudiante</p>
                   </label>
-                  {{ terapia_form.nombre_form(class_="d-flex justify-content-end")}}
-                  {{ terapia_form.identificacion_form(class_="d-flex justify-content-end")}}
+                  {{ terapia_form.nombre_form() }}
+                  {{ terapia_form.identificacion_form() }}
+                  {{ terapia_form.tema_form() }}
                   <select name="nombre_select" onchange="set_values()" id="nombre"></select>
                 </div>
               </fieldset>
@@ -53,11 +53,21 @@ Iniciar Terapia
                   <input name="text_grado" type="text" readonly id="grado" class="form-input">
                 </div>
               </fieldset>
+              <hr>
+              <fieldset>
+                <div class="select-input mb-1">
+                  <h5 class="my-10">Sesión de hoy</h5>
+                  <label class="mb-0" for="grado s">
+                    <p class="text-muted">Selección del tema</p>
+                  </label>
+                  <select disabled name="tema_select" onchange="set_tema()" id="tema"></select>
+                </div>
+              </fieldset>
               <fieldset>
                 <div class="select-input mb-1">
                   <h5 class="mt-10">Evaluación Inicial</h5>
                   <label class="mb-0" for="grado s">
-                    <h6>{{terapia_form.emocion_percibida.label(class_="mb-0")}}</h6>
+                    <p>{{terapia_form.emocion_percibida.label(class_="mb-0 text-muted")}}</p>
                   </label>
                   {{terapia_form.emocion_percibida()}}
                   {% for error in terapia_form.emocion_percibida.errors %}
@@ -67,7 +77,7 @@ Iniciar Terapia
               </fieldset>
               <fieldset>
                 <div class="single-input mb-1">
-                  <label class="mb-0" for="grado s">
+                  <label class="mt-10" for="grado s">
                     <h6>Tipo de sesión</h6>
                   </label>
                 </div>
@@ -91,6 +101,30 @@ Iniciar Terapia
                   {% endfor %}
                 </div>
               </fieldset>
+              <!-- Tema nuevo -->
+              <div class="modal fade " id="newtema" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content radius-10 px-4">
+                    <div class="modal-header">
+                      <h5 class="modal-title h5 text-primary" id="newtemaLabel">Nuevo tema</h5>
+                      <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
+                    </div>
+                    <div class="modal-body">
+                      <p class="fs-5 pb-3">Ingresa el tema:</p>
+                      <div class="single-input">
+                        <input type="text" class="form-input" id="input-newtema">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <div class="col-12 py-2">
+                        <p class="fs-5">Guardar tema</p>
+                      </div><br>
+                      <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
+                      <button type="button" class="btn btn-primary radius-10" data-bs-dismiss="modal" onclick="setNewTema()">Guardar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </form>
             {% else %}
             <form>
@@ -149,7 +183,7 @@ Iniciar Terapia
 <!--     <button id="input-prevSession" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#prevSession">
       Launch demo modal
     </button> -->
-    
+
     <!-- Modal -->
     <div class="modal fade" id="prevSession" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered">
@@ -226,15 +260,82 @@ Iniciar Terapia
   document.getElementById('nombre_form').value = nombre;
   document.getElementById('institucion').value = inst;
   document.getElementById('grado').value = grado;
-  document.getElementById('identificacion_form').value = identificacion;    
+  document.getElementById('identificacion_form').value = identificacion;
+  set_list_tema(nombre); 
+  };
+
+  function set_list_tema(nombre){
+    if (nombre === ""){
+      return
+    }else{
+      let sessions = JSON.parse('{{ all_sessions | tojson | safe}}');
+      let temas_list = []
+      sessions.forEach(element => {
+        if (element['estudiante'] == nombre) {
+          temas_list.push(element['tema'])
+        }
+      });
+      add_option_tema(temas_list); 
+    }
+  };
+
+  function set_tema(){
+    var select_text =  $('#tema').find(":selected").text();    
+    console.log("Select " + select_text)
+    if (select_text == "Iniciar con tema nuevo"){
+      $("#newtema").modal('show');
+    }
+    else if (select_text != ' '){
+      console.log("Done "+select_text)
+      document.getElementById('tema_form').value = select_text;
+    };
+  };
+
+  async function add_option_tema(tema_list){
+    $('#tema').find('option').remove().end()
+    var x_tema = document.getElementById("tema");
+    var option = document.createElement("option");
+    option.text = ' '
+    x_tema.add(option);
+    removeDuplicates(tema_list).forEach(element => {
+      if (element) {
+      var option = document.createElement("option");
+      option.text = element.charAt(0).toUpperCase() + element.slice(1);
+      x_tema.add(option);
+      };
+    });
+    var option = document.createElement("option");
+    option.text = "Iniciar con tema nuevo";
+    x_tema.add(option);    
+    x_tema.disabled = false;  
+  };
+  function removeDuplicates(arr) {
+      return arr.filter((item,
+        index) => arr.indexOf(item) === index);
+  };
+
+  function setNewTema(){
+    var x_tema = document.getElementById("tema");
+    var option = document.createElement("option");
+    var new_tema = document.getElementById("input-newtema");
+    option.text = new_tema.value
+    x_tema.add(option);
+    x_tema.value = option.value;
+    set_tema();
   }
+
+</script>
+
+
+
+<script>
+  var temaModal = new bootstrap.Modal(document.getElementById("newtema"), {});
 </script>
 
 {% if prev_session %}
 <script>
-  var myModal = new bootstrap.Modal(document.getElementById("prevSession"), {});
   document.onreadystatechange = function () {
-    myModal.show();
+    $("#prevSession").modal('show');
   };
 </script>
 {% endif %}
