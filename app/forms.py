@@ -87,6 +87,7 @@ class TerapiaForm(FlaskForm):
                               validators=[DataRequired()])
     emocion_percibida = SelectField("Emoción percibida", choices=[('-1', ' '), ('a', 'Felicidad'), (
         'b', 'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutral')], validators=[DataRequired()])
+    tema_form = HiddenField('Tema', validators=[DataRequired()])
     virtual = BooleanField("¿Terapia presencial o remota?")
     iniciar = SubmitField(label='Iniciar')
 

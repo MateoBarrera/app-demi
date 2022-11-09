@@ -308,8 +308,8 @@ div[style*="margin: 16px 0;"] {
 
 .steps li a {
 	display: inline-block;
-	width: 40px;
-	height: 40px;
+	width: 50px;
+	height: 50px;
 	border-radius: 50%;
 	-o-border-radius: 50%;
 	-ms-border-radius: 50%;
@@ -353,9 +353,9 @@ div[style*="margin: 16px 0;"] {
 }
 
 .steps li.current a{
-	border: 3px solid #2e932e;	
+	border: 2px solid #fff;
+	outline: 3px solid #0eda0e;
 	background-color: #0eda0e;
-	transform: scale(1.5);
 }
 
 .steps li .current-info {
@@ -403,4 +403,18 @@ div[style*="margin: 16px 0;"] {
 	visibility: visible;
 	animation-delay: 0.2s;
 	animation-name: fadeInRight;
+}
+
+.card.bg-card-primary{
+	background-color: #0487D9;
+}
+
+.card.bg-card-secondary{
+	background-color: #1CC2DB;
+}
+.card.bg-card-tertiary {
+	background-color: #f1cc26;
+}
+.card.bg-card-quaternary {
+	background-color: #D94343;
 }

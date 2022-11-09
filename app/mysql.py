@@ -72,16 +72,16 @@ class MySQL_connector():
         conn.close()
         return rows
 
-    def set_user_data(self, idlogin, cargo, nombre=None, imagen=None, identificacion=None):
+    def set_user_data(self, idlogin, cargo, docente=None, imagen=None, identificacion=None):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = "INSERT INTO usuarios (nombre, identificacion, cargo, imagen, idlogin) VALUES (%s, %s, %s, %s, %s);"
-        val = (nombre, identificacion, cargo, imagen, idlogin)
+        sql = "INSERT INTO usuarios (docente, identificacion, cargo, imagen, idlogin) VALUES (%s, %s, %s, %s, %s);"
+        val = (docente, identificacion, cargo, imagen, idlogin)
         cursor.execute(sql, val)
         conn.commit()
         conn.close()
 
-    def set_student_data(self, id_login, nombre, identificacion, nacimiento, grado, institucion, anotacion, imagen=None):
+    def set_student_data(self, id_login, docente, identificacion, nacimiento, grado, institucion, anotacion, imagen=None):
         byte_im = None
         if imagen is not None:
             is_success, im_buf_arr = cv2.imencode(".jpg", imagen)
@@ -89,7 +89,7 @@ class MySQL_connector():
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
         sql = "INSERT INTO estudiantes (estudiante, identificacion, fecha_nacimiento, grado, institucion, imagen, idlogin, anotacion) VALUES (%s, %s, %s, %s, %s ,%s ,%s, %s);"
-        val = (nombre, identificacion, nacimiento,
+        val = (docente, identificacion, nacimiento,
                grado, institucion, byte_im, id_login, anotacion)
         cursor.execute(sql, val)
         conn.commit()
@@ -107,7 +107,7 @@ class MySQL_connector():
     def get_all_users(self):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = f"SELECT nombre, cargo FROM usuarios;"
+        sql = f"SELECT docente, cargo FROM usuarios;"
         cursor.execute(sql)
         user_login = dict()
         columns = [col[0] for col in cursor.description]
@@ -119,6 +119,16 @@ class MySQL_connector():
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
         sql = f"SELECT estudiante, fecha_nacimiento, institucion, identificacion, grado  FROM estudiantes;"
+        cursor.execute(sql)
+        columns = [col[0] for col in cursor.description]
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        conn.close()
+        return rows
+
+    def get_all_doc_students(self, id_usuarios):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT estudiantes.estudiante, estudiantes.fecha_nacimiento, estudiantes.institucion, estudiantes.identificacion, estudiantes.grado  FROM estudiantes JOIN sesion ON estudiantes.idestudiantes = sesion.idestudiantes WHERE sesion.idusuarios = '{id_usuarios}';"
         cursor.execute(sql)
         columns = [col[0] for col in cursor.description]
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
@@ -143,9 +153,18 @@ class MySQL_connector():
     def get_all_session_info(self):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = f"SELECT sesion.idsesiones, usuarios.nombre,estudiantes.estudiante, sesion.fecha FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;"
+        sql = f"SELECT sesion.idsesiones, usuarios.docente, estudiantes.estudiante, sesion.tema, sesion.fecha FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes;"
         cursor.execute(sql)
-        user_login = dict()
+        columns = [col[0] for col in cursor.description]
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        conn.close()
+        return rows
+
+    def get_all_doc_session_info(self, id_usuarios):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT sesion.idsesiones, usuarios.docente, estudiantes.estudiante, sesion.tema, sesion.fecha FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes WHERE sesion.idusuarios = '{id_usuarios}';"
+        cursor.execute(sql)
         columns = [col[0] for col in cursor.description]
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
         conn.close()
@@ -167,16 +186,40 @@ class MySQL_connector():
         conn.close()
         return rows
 
+    def get_all_doc_session_ev(self, id_usuarios):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT sesion.idsesiones, sesion.ev_ini_doc, sesion.ev_ini_est, sesion.ev_ini_herr, sesion.ev_fin_doc, sesion.ev_fin_est, sesion.ev_fin_herr, sesion.observaciones FROM sesion JOIN usuarios ON usuarios.idusuarios= sesion.idusuarios JOIN estudiantes ON estudiantes.idestudiantes = sesion.idestudiantes WHERE sesion.idusuarios = '{id_usuarios}';"
+
+        cursor.execute(sql)
+        user_login = dict()
+        columns = ['Sesión', 'Inicial Docente', 'Inicial Estudiante', 'Inicial Herramienta',
+                   'Final Docente', 'Final Estudiante', 'Final Herramienta', 'Observaciones']
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        conn.close()
+        return rows
+
+
     def get_all_session_prob(self):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
         sql = f"SELECT sesion.idsesiones, sesion.conteo_inicial, sesion.conteo_final FROM sesion;"
         cursor.execute(sql)
-        user_login = dict()
         columns = ['Sesión', 'conteo_inicial', 'conteo_final']
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
-        print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
-        print(rows)
+        for row in rows:
+            row['conteo_inicial'] = eval(row['conteo_inicial'])
+            row['conteo_final'] = eval(row['conteo_final'])
+        conn.close()
+        return rows
+
+    def get_all_doc_session_prob(self, id_usuarios):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT sesion.idsesiones, sesion.conteo_inicial, sesion.conteo_final FROM sesion WHERE idusuarios = '{id_usuarios}';"
+        cursor.execute(sql)
+        columns = ['Sesión', 'conteo_inicial', 'conteo_final']
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
         for row in rows:
             row['conteo_inicial'] = eval(row['conteo_inicial'])
             row['conteo_final'] = eval(row['conteo_final'])
