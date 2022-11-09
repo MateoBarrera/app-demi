@@ -8,3 +8,4 @@ app/_pycache_/
 app/auth/_pycache_/
 venv/
 ngrok
+requirements copy.txt
