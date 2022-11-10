@@ -116,9 +116,6 @@ Iniciar Terapia
                       </div>
                     </div>
                     <div class="modal-footer">
-                      <div class="col-12 py-2">
-                        <p class="fs-5">Guardar tema</p>
-                      </div><br>
                       <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
                       <button type="button" class="btn btn-primary radius-10" data-bs-dismiss="modal" onclick="setNewTema()">Guardar</button>
                     </div>
@@ -306,13 +303,21 @@ Iniciar Terapia
     });
     var option = document.createElement("option");
     option.text = "Iniciar con tema nuevo";
+    option.classList.add('text-muted')
     x_tema.add(option);    
     x_tema.disabled = false;  
+    addHr(x_tema);
   };
   function removeDuplicates(arr) {
       return arr.filter((item,
         index) => arr.indexOf(item) === index);
   };
+
+  function addHr(select){
+    var hr = document.createElement('hr');
+    hr.classList.add('text-primary')
+    select.insertBefore(hr, select[select.length - 1]);
+  }
 
   function setNewTema(){
     var x_tema = document.getElementById("tema");
@@ -325,8 +330,6 @@ Iniciar Terapia
   }
 
 </script>
-
-
 
 <script>
   var temaModal = new bootstrap.Modal(document.getElementById("newtema"), {});

@@ -83,6 +83,22 @@ Consulta
             </div>
           </div>
         </div>
+        {% if not rol_user == 'Investigador' %}
+        <div class="col-lg-3 col-12 col-md-6">
+          <div class="card bg-card-primary  text-white mb-4 radius-10">
+            <div class="card-title">
+              <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
+              <p class="pl-15 text-aling-center font-weight-bold">Temas trabajados</p>
+            </div>
+            <div class="card-footer d-flex align-items-center justify-content-between">
+              <a class="small text-white stretched-link" href="#" onclick='loadTable(4)'>Ver
+                resumen</a>
+              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            </div>
+          </div>
+        </div>
+        
+        {% endif %}
       </div>
       <div class="row">
         <div class="col-lg-8">
@@ -126,6 +142,11 @@ Consulta
             </div>
             <div class="card-body">
               <div class="table-responsive-sm info-table" id="table_content_2">
+              </div>
+              <div class="col-12">
+                <h6 class="primary-text">Observaciones:</h6>
+                <div id="observaciones">
+                </div>
               </div>
             </div>
           </div>
@@ -424,6 +445,7 @@ Consulta
           pageLength: 5,
           dom: "Bfrtip",
           aaSorting: [],
+          filter: false,
           colReorder: orderTable(card_id),
         });
       };
@@ -474,18 +496,20 @@ Consulta
 
 
     function loadSesions(session) {
-      console.log("si entra al menos");
+      
       var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
       var arr = all_sessions.filter(arr => (arr.Sesión == session));
+      delete arr[0].Sesión;
+      var observacion = document.getElementById("observaciones")
+      observacion.innerText = arr[0].Observaciones;
+      delete arr[0].Observaciones;
       var table = _table_.cloneNode(false);
       var tbody = _tbody_.cloneNode(false),
-        columns = addAllColumnHeaders(all_sessions, table);
-      console.log(arr)
+        columns = addAllColumnHeaders(arr, table);
       var tr = _tr_.cloneNode(false);
       for (var j = 0, maxj = columns.length; j < maxj; ++j) {
         var th = _th_.cloneNode(false);
         cellValue = arr[0][columns[j]];
-        console.log(cellValue)
         th.appendChild(document.createTextNode(arr[0][columns[j]] || ''));
         /* console.log("Click" + th.textContent) */
         tr.appendChild(th);
@@ -506,18 +530,18 @@ Consulta
         let tables = new DataTable(datatablesSimple, {
           language: {
             url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-          }, responsive: true,
+          }, 
+          responsive: true,
+          dom: "Bfrtip",
+          aaSorting: [],
           bPaginate: false,
           bFilter: false,
           bInfo: false,
-
+          colReorder: {order : [3,4,5,0,1,2]},
         });
       };
-      console.log("AAAAAAAAAAAAAA")
       var props = JSON.parse('{{props| tojson |safe}}');
-      console.log(props)
       props = props.filter(props => (props.Sesión == session));
-      console.log(props)
       loadGraphs(props[0]);
     }
   </script>

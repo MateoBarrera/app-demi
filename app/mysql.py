@@ -128,7 +128,7 @@ class MySQL_connector():
     def get_all_doc_students(self, id_usuarios):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
-        sql = f"SELECT estudiantes.estudiante, estudiantes.fecha_nacimiento, estudiantes.institucion, estudiantes.identificacion, estudiantes.grado  FROM estudiantes JOIN sesion ON estudiantes.idestudiantes = sesion.idestudiantes WHERE sesion.idusuarios = '{id_usuarios}';"
+        sql = f"SELECT DISTINCT estudiantes.estudiante, estudiantes.fecha_nacimiento, estudiantes.institucion, estudiantes.identificacion, estudiantes.grado  FROM estudiantes JOIN sesion ON estudiantes.idestudiantes = sesion.idestudiantes WHERE sesion.idusuarios = '{id_usuarios}';"
         cursor.execute(sql)
         columns = [col[0] for col in cursor.description]
         rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
@@ -232,8 +232,8 @@ class MySQL_connector():
         sql = f"SELECT idusuarios FROM usuarios WHERE (idlogin ='{session.id_usuario}');"
         cursor.execute(sql)
         result = cursor.fetchone()
-        sql = "INSERT INTO sesion (fecha, idusuarios, idestudiantes) VALUES (%s, %s, %s);"
-        val = (session.fecha, result[0], session.id_estudiante)
+        sql = "INSERT INTO sesion (fecha, idusuarios, idestudiantes, tema) VALUES (%s, %s, %s, %s);"
+        val = (session.fecha, result[0], session.id_estudiante, session.tema)
         cursor.execute(sql, val)
         conn.commit()
         sql = f"SELECT idsesiones FROM sesion WHERE (fecha = '{session.fecha}');"

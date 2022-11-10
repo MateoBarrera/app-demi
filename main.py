@@ -138,8 +138,13 @@ def inicio():
 def iniciar_terapia():
     #Inicializar el contexto de la vista con el modelo de usuario
     user = current_user
-    students = app.mysql_object.get_all_students()
-    all_sessions = app.mysql_object.get_all_session_info()
+    if user.cargo == 'Investigador':
+        students = app.mysql_object.get_all_students()
+        all_sessions = app.mysql_object.get_all_session_ev()
+    else:
+        students = app.mysql_object.get_all_doc_students(user.id_table)
+        all_sessions = app.mysql_object.get_all_doc_session_info(user.id_table)
+
     terapia_form = TerapiaForm()
     context = {
         'students': students,
