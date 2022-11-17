@@ -1,3 +1,4 @@
+from datetime import timedelta
 class Config:
     SECRET_KEY = 'SUPER SECRET'
     TIMEZONE = 'US/Eastern'
@@ -30,3 +31,5 @@ class Config:
     MAIL_USERNAME = 'web.noreply.app@gmail.com'
     MAIL_DEFAULT_SENDER = 'web.noreply.app@gmail.com'
     MAIL_PASSWORD = 'Flask_APP/54'
+
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=45)

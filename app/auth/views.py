@@ -16,7 +16,9 @@ def set_secure_headers(response):
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
-    next_view = request.args.get('next', 'False')
+    next_view = request.args.get('next', False)
+    print("NEXT            ###############  ")
+    print(next_view)
     val_name = True
     val_cont = True
     login_form = LoginForm()
@@ -40,14 +42,17 @@ def login():
                 login_user(user_model)
                 session['username'] = username
                 session['prev_session'] = False
-                if next_view:
-                    return redirect(url_for('iniciar_terapia'))
-                return redirect(url_for('inicio'))
+                session.permanent = True
+                if not next_view:
+                    print("11111111111111111$$$$$$$$$$$$$$$$$$")
+                    return redirect(url_for('inicio'))
+                print("########$$$$$$$$$$$$$$$$$$")
+                return redirect(url_for('iniciar_terapia'))
             else:
                 context['val_cont'] = False
         else:
             context['val_name'] = False
-    print(context['val_name'], context['val_cont'])
+    #print(context['val_name'], context['val_cont'])
     return render_template('auth/login.html', **context)
 
 @auth.route('signup', methods=['GET', 'POST'])
@@ -71,7 +76,7 @@ def signup():
             if user_new:
                 user_new = user_new[0]
                 app.mysql_object.set_user_data(
-                    user_new['idlogin'], position, nombre=username, identificacion=username)
+                    user_new['idlogin'], position, docente=username, identificacion=username)
                 user_data, est = (app.mysql_object.get_user_data(
                     user_id=user_new['idlogin'], rol=user_new['rol']))
                 user_class = UserData(user_new, user_data, est)

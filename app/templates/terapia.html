@@ -294,6 +294,8 @@ Iniciar Terapia
     var option = document.createElement("option");
     option.text = ' '
     x_tema.add(option);
+    console.log("Temas list")
+    console.log(tema_list)
     removeDuplicates(tema_list).forEach(element => {
       if (element) {
       var option = document.createElement("option");
@@ -303,7 +305,7 @@ Iniciar Terapia
     });
     var option = document.createElement("option");
     option.text = "Iniciar con tema nuevo";
-    option.classList.add('text-muted')
+    option.classList.add('text-primary')
     x_tema.add(option);    
     x_tema.disabled = false;  
     addHr(x_tema);

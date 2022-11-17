@@ -15,9 +15,9 @@ class SignupForm(FlaskForm):
     nombre = StringField('Nombre de usuario', validators=[
                          InputRequired(), Regexp('^[\S]+$', message="El campo no debe contener espacios"), Length(min=4, max=25)])
     contraseña = PasswordField('Contraseña', validators=[
-                               InputRequired(), Length(min=4, max=25)])
+                               InputRequired(), Length(min=4, max=16)])
     contraseña_conf = PasswordField(
-        'Confirmar Contraseña', validators=[InputRequired(), EqualTo('contraseña', message='Las contraseñas no coinciden'), Length(min=4, max=25)])
+        'Confirmar Contraseña', validators=[InputRequired(), EqualTo('contraseña', message='Las contraseñas no coinciden'), Length(min=4, max=16)])
     cargo = SelectField('Cargo', choices=[
                         ('-1', ' '), ('1', 'Docente'), ('2', 'Investigador')], validators=[DataRequired()])
     terminos = BooleanField(

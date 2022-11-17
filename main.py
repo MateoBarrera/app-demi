@@ -138,9 +138,10 @@ def inicio():
 def iniciar_terapia():
     #Inicializar el contexto de la vista con el modelo de usuario
     user = current_user
-    if user.cargo == 'Investigador':
+    #if user.cargo == 'Investigador':
+    if True:
         students = app.mysql_object.get_all_students()
-        all_sessions = app.mysql_object.get_all_session_ev()
+        all_sessions = app.mysql_object.get_all_session_info()
     else:
         students = app.mysql_object.get_all_doc_students(user.id_table)
         all_sessions = app.mysql_object.get_all_doc_session_info(user.id_table)
@@ -183,12 +184,12 @@ def iniciar_terapia():
         app.session_object[key].evaluacion['ev_ini_doc'] = emocion
         app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
         app.session_object[key].id_estudiante = app.mysql_object.get_student(identificacion)[0]
-        app.session_object[key].nombre = estudiante
+        app.session_object[key].nombre = estudiante.lower()
         app.session_object[key].identificacion = identificacion
         app.session_object[key].institucion = request.form['text_inst']
         app.session_object[key].grado = request.form['text_grado']
         app.session_object[key].docente = user.nombre
-        app.session_object[key].tema = tema
+        app.session_object[key].tema = tema.lower()
 
         if app.mysql_object.get_student_image(app.session_object[key].id_estudiante):
             app.session_object[key].est_image = url_for(

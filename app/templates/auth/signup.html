@@ -28,9 +28,9 @@ Registrarse
 										<label for="name s">
 											<h6>{{signup_form.nombre.label()}}</h6>
 										</label>
-										{{signup_form.nombre()}}
-										<small id="emailHelp" class="form-text text-muted"
-											>Este sera tu usuario dentro WebAPP.</small>
+										{{signup_form.nombre(title_="Nombre de usuario sin espacios.")}}
+										<!-- <small id="emailHelp" class="form-text text-muted"
+											>Este sera tu usuario dentro WebAPP.</small> -->
 										{% if signup_form.nombre.errors %} {% for error in signup_form.nombre.errors %}
 										<div class="error-input">{{error}}</div>
 										{% endfor %} {% endif %} {% if not val_name %}
@@ -43,7 +43,7 @@ Registrarse
 										<label for="name s">
 											<h6>{{signup_form.contraseña.label()}}</h6>
 										</label>
-										{{signup_form.contraseña()}}
+										{{signup_form.contraseña(title_="Contraseña entre 4 y 16 caracteres, se permiten combinación de números, letras y caracteres especiales.")}}
 										<small id="emailHelp" class="form-text text-muted"></small>
 										{% if signup_form.contraseña.errors %} {% for error in
 										signup_form.contraseña.errors %}
@@ -56,7 +56,7 @@ Registrarse
 										<label for="name s">
 											<h6>{{signup_form.contraseña_conf.label()}}</h6>
 										</label>
-										{{signup_form.contraseña_conf()}} {% if signup_form.contraseña_conf.errors %} {%
+										{{signup_form.contraseña_conf(title_="Ingresa nuevamente la contraseña propuesta.")}} {% if signup_form.contraseña_conf.errors %} {%
 										for error in signup_form.contraseña_conf.errors %}
 										<div class="error-input">{{error}}</div>
 										{% endfor %} {% endif %}
@@ -67,7 +67,7 @@ Registrarse
 										<label for="grado s">
 											<h6>{{signup_form.cargo.label()}}</h6>
 										</label>
-										{{signup_form.cargo()}}
+										{{signup_form.cargo(title_="Cargo de docente por defecto.")}}
 									</div>
 								</fieldset>
 								<div class="text-center">
