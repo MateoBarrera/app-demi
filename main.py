@@ -277,6 +277,7 @@ def consulta():
         all_students = app.mysql_object.get_all_students()
         all_sessions_info = app.mysql_object.get_all_session_info()
         all_sessions = app.mysql_object.get_all_session_ev()
+        themes = app.mysql_object.get_all_themes()
         props = app.mysql_object.get_all_session_prob()
 
     else:
@@ -284,6 +285,7 @@ def consulta():
         all_students = all_users
         all_sessions_info = app.mysql_object.get_all_doc_session_info(user.id_table)
         all_sessions = app.mysql_object.get_all_doc_session_ev(user.id_table)
+        themes = app.mysql_object.get_all_doc_themes(user.id_table)
         props = app.mysql_object.get_all_doc_session_prob(user.id_table)
 
 
@@ -306,6 +308,7 @@ def consulta():
         'all_students': all_students,
         'all_sessions_info': all_sessions_info,
         'all_sessions':all_sessions,
+        'themes':themes,
         'props':props,
         'recent_sessions': recent_sessions,
         'rol_user':user.cargo,

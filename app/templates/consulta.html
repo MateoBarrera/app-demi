@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% import 'macros.html' as macros %}
 
 {% block title %}
 {{ super() }}
@@ -87,11 +88,11 @@ Consulta
         <div class="col-lg-3 col-12 col-md-6">
           <div class="card bg-card-primary  text-white mb-4 radius-10">
             <div class="card-title">
-              <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
+              <div class="text-white iconify">{{themes|length}}<i class="bx bx-user"></i></div><br>
               <p class="pl-15 text-aling-center font-weight-bold">Temas trabajados</p>
             </div>
             <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick='loadTable(4)'>Ver
+              <a class="small text-white stretched-link" href="#" onclick='loadTable(5)'>Ver
                 resumen</a>
               <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
             </div>
@@ -133,43 +134,10 @@ Consulta
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-12">
-          <div class="card mb-4 radius-10">
-            <div class="card-header d-flex align-content-center">
-              <i class="fa-solid fa-file-invoice m-1"></i>
-              <h6>Información de evaluaciones</h6>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive-sm info-table" id="table_content_2">
-              </div>
-              <div class="col-12">
-                <h6 class="primary-text">Observaciones:</h6>
-                <div id="observaciones">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="card mb-4 radius-10">
-            <div class="card-header d-flex align-content-center">
-              <i class="fa-solid fa-chart-pie m-1"></i>
-              <h6>Gráficos de evaluaciones</h6>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-12 col-md-6" id="div-chart-1">
-                </div>
-                <div class="col-12 col-md-6" id="div-chart-2">
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
+      <div id="information_1" class="row">
+        {{macros.info_table()}}
+        {{macros.graph()}}
       </div>
-
   </section>
   <section id="configuracion" hidden>
     <h3 class="mb-30">Perfil de usuario</h4>
@@ -270,51 +238,6 @@ Consulta
     </div>
 
   </section>
-  <section id="busqueda1" hidden>
-    <h3 class="mb-30">Búsqueda 1</h4>
-      <div class="card mb-4">
-        <div class="card-header">
-          <i class="fas fa-table me-1"></i>
-          DataTable Example
-        </div>
-        <div class="card-body">
-          <table id="datatablesSimple2">
-            <thead>
-              <tr>
-                {% for key, value in all_users[0].items() %}
-                <th> {{ key }} </th>
-                {% endfor %}
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in all_users %}
-              <tr>
-                {% for key, value in item.items() %}
-                <th> {{ value }} </th>
-                {% endfor %}
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
-  </section>
-  <section id="busqueda2" hidden>
-    <h3 class="mb-30">Búsqueda 2</h3>
-    <h3 class="mb-30">Búsqueda 1</h3>
-    <div class="card mb-4">
-      <div class="card-header">
-        <i class="fas fa-table me-1"></i>
-        DataTable Example
-      </div>
-      <div class="card-body">
-        <table id="datatablesSimple3">
-
-        </table>
-      </div>
-    </div>
-  </section>
-
-
 
   {% endblock %}
 
@@ -409,7 +332,11 @@ Consulta
         var arr = Array.from(JSON.parse('{{ all_sessions_info | tojson | safe }}'));
       } else if (card_id == 4) {
         var arr =  Array.from(JSON.parse('{{ recent_sessions | tojson | safe }}'));
-      };  
+      } else if (card_id == 5) {
+        var arr = Array.from(JSON.parse('{{ themes | tojson | safe }}'));
+        console.log("Themes")
+        console.log(arr)
+      }; 
       var table = _table_.cloneNode(false);
       var tbody = _tbody_.cloneNode(false),
         columns = addAllColumnHeaders(arr, table);

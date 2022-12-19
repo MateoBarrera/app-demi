@@ -199,7 +199,6 @@ class MySQL_connector():
         conn.close()
         return rows
 
-
     def get_all_session_prob(self):
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
@@ -270,6 +269,27 @@ class MySQL_connector():
             nparr = np.fromstring(byte_im[0], np.uint8)
             img_np = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
             registro.append(img_np) """
+
+    def get_all_themes(self):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT DISTINCT tema  FROM sesion;"
+        cursor.execute(sql)
+        columns = [col[0] for col in cursor.description]
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        conn.close()
+        return rows
+
+    def get_all_doc_themes(self, id_usuarios):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"SELECT DISTINCT tema  FROM sesion WHERE idusuarios = '{id_usuarios}';"
+        cursor.execute(sql)
+        columns = [col[0] for col in cursor.description]
+        rows = [dict(zip(columns, row)) for row in cursor.fetchall()]
+        conn.close()
+        return rows
+
 
     def listar_db(self):
         '''

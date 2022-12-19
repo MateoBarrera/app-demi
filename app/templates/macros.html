@@ -1,0 +1,38 @@
+{% macro info_table() %}
+  <div class="col-12">
+    <div class="card mb-4 radius-10">
+      <div class="card-header d-flex align-content-center">
+        <i class="fa-solid fa-file-invoice m-1"></i>
+        <h6>Información de evaluaciones</h6>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive-sm info-table" id="table_content_2">
+        </div>
+        <div class="col-12">
+          <h6 class="primary-text">Observaciones:</h6>
+          <div id="observaciones">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro graph() %}
+  <div class="col-12">
+    <div class="card mb-4 radius-10">
+      <div class="card-header d-flex align-content-center">
+        <i class="fa-solid fa-chart-pie m-1"></i>
+        <h6>Gráficos de evaluaciones</h6>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-12 col-md-6" id="div-chart-1">
+          </div>
+          <div class="col-12 col-md-6" id="div-chart-2">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
