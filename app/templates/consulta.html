@@ -134,6 +134,12 @@ Consulta
           </div>
         </div>
       </div>
+      <div hidden >
+        {{ macros.info_template()}}
+      </div>
+      <p>Container info</p>
+      <div id="container-info">
+      </div>
       <div id="information_1" class="row">
         {{macros.info_table()}}
         {{macros.graph()}}
@@ -238,7 +244,6 @@ Consulta
     </div>
 
   </section>
-
   {% endblock %}
 
   {% block scripts%}
@@ -252,7 +257,7 @@ Consulta
   <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables.net-colreorder/1.5.6/dataTables.colReorder.min.js"
     integrity="sha512-BA+XWPyIsXxbBMmGU7Acq8vBGWAFldhFLOkoU4dL+B6Fs16RnhCC9ff+vy5GzmB783tyuzYs42QGHRbV73e1ug=="
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+  <script src="{{url_for('static',filename='js/consult.js')}}"></script>
 
   <!-- Calendar script -->
   <script type="text/javascript">
@@ -421,7 +426,6 @@ Consulta
       };
     };
 
-
     function loadSesions(session) {
       
       var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
@@ -548,6 +552,11 @@ Consulta
     }
   </script>
 
+
+  <script type="text/javascript">
+    var arr = JSON.parse('{{ all_users| tojson | safe }}');
+    CreateTableInfo(arr)
+  </script>
 
   <!-- [conteo_inicial.Felicidad, conteo_inicial.Tristeza, conteo_inicial.Enojo, conteo_inicial.Sorpresa, conteo_inicial.Neutral,0] -->
 

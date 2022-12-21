@@ -36,3 +36,23 @@
     </div>
   </div>
 {% endmacro %}
+
+{% macro info_template() %}
+<div class="col-12" id="info-template">
+  <div class="card mb-4 radius-10">
+    <div class="card-header d-flex align-content-center">
+      <i class="fa-solid fa-file-invoice m-1"></i>
+      <h6>Información de evaluaciones - template</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive-sm info-table" id="info-template-table">
+      </div>
+      <div class="col-12">
+        <h6 class="primary-text">Observaciones:</h6>
+        <div id="observaciones">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
