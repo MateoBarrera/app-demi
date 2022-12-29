@@ -96,7 +96,7 @@ Consulta
         {% endif %}
       </div>
       <div class="row">
-        <div class="col-lg-7 px-1">
+        <div class="col-lg-8 px-1">
           <div class="content-wrapper mb-1">
             <div class="section-title">
               <div class="card cards-conclution radius-10">
@@ -112,13 +112,13 @@ Consulta
             </div>
           </div>
         </div>
-        <div class="col-lg-5 px-1">
+        <div class="col-lg-4 px-1">
           <div class="content-wrapper">
             <div class="section-title mb-1">
               <div class="card cards-conclution radius-10">
                 <div class="card-header d-flex align-content-center py-1">
                   <i class="fa-solid fa-calendar-days m-1"></i>
-                  <p class="col-2 text-dark font-weight-bolder">Calendario</p>
+                  <p class="col-4 text-dark font-weight-bolder">Calendario</p>
                 </div>
                 <div class="card-body align-self-stretch py-1">
                   <div class="w-100" id="AgendaJS"></div>
@@ -304,31 +304,33 @@ Consulta
       _thead_ = document.createElement('thead'),
       _tbody_ = document.createElement('tbody');
 
-    function loadTable(card_id=false) {
-      if (!card_id || card_id==1){
-        var arr = JSON.parse('{{ all_users| tojson | safe }}');
-      } else if (card_id == 2) {
-        var arr = JSON.parse('{{ all_students| tojson | safe }}');
-      } else if (card_id == 3) {
-        var arr = Array.from(JSON.parse('{{ all_sessions_info | tojson | safe }}'));
-      } else if (card_id == 4) {
-        var arr =  Array.from(JSON.parse('{{ recent_sessions | tojson | safe }}'));
-      } else if (card_id == 5) {
-        var arr = Array.from(JSON.parse('{{ themes | tojson | safe }}'));
-        console.log("Themes")
-        console.log(arr)
-      }
+    let last_topic = "";
+    let last_student_selected = "";
 
+    function loadTable(card_id=null) {
+      let arr = {};
+      if (card_id==null || card_id == 1){
+        arr = JSON.parse('{{ all_users| tojson | safe }}');
+      } else if (card_id == 2) {
+        arr = JSON.parse('{{ all_students| tojson | safe }}');
+      } else if (card_id == 3) {
+        arr = Array.from(JSON.parse('{{ all_sessions_info | tojson | safe }}'));
+      } else if (card_id == 4) {
+        arr =  Array.from(JSON.parse('{{ recent_sessions | tojson | safe }}'));
+      } else if (card_id == 5) {
+        arr = Array.from(JSON.parse('{{ themes | tojson | safe }}'));
+      }
       var table = _table_.cloneNode(false),
         tbody = _tbody_.cloneNode(false),
         columns = addAllColumnHeaders(arr, table);
-      console.log(columns)
+
       for (var i = 0, maxi = arr.length; i < maxi; ++i) {
         var tr = _tr_.cloneNode(false);
         for (var j = 0, maxj = columns.length; j < maxj; ++j) {
           var th = _th_.cloneNode(false);
           cellValue = arr[i][columns[j]];
           th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+          th.classList.add("py-0");
           tr.appendChild(th);
         }
         tbody.appendChild(tr);
@@ -352,10 +354,13 @@ Consulta
             url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
           }, 
           responsive: true, 
-          pageLength: 8,
+          pageLength: 100,
+          scrollY: true,
           dom: "Bfrtip",
           aaSorting: [],
           filter: false,
+          paging: false,
+          info: false,
           colReorder: orderTable(card_id),
         });
       };
@@ -365,32 +370,60 @@ Consulta
         var data = table_handler.row(this).data();
         var column_name = $(table_handler.column().header()).html();
         if (column_name == 'idsesiones') {
-          loadSession(data);
+          if (data[1] != last_student_selected) {
+            ResetContainer();
+            last_student_selected = data[1];
+          }
+          loadSession(data, arr);
 
-        } else if (column_name == 'estudiante') {
-          alert('Seleccionaste al estudiante ' + data[0] + ', próximamente se permitirá la búsqueda detallada por estudiantes :)')
+        } else if (column_name == "estudiante") {
+          alert("Seleccionaste al estudiante " + data[0] + ", próximamente se permitirá la búsqueda detallada por estudiantes :)");
+
+        } else if (column_name == "tema"){
+          if (data[0] != last_topic) {
+            ResetContainer();
+            last_student_selected = data[0];
+          }
+          loadTopics(data[0]);
         }
 
       });
 
       /* selección de cada celda tr pasa a ser td */
-      /*     var table = $('#example').DataTable();
+      /*     var table = $("#example").DataTable();
         
-        $('#example tbody').on( 'click', 'td', function () {
+        $("#example tbody").on( "click", "td", function () {
             var idx = table.cell( this ).index().column;
             var title = table.column( idx ).header();
         
-            alert( 'Column title clicked on: '+$(title).html() );
+            alert( "Column title clicked on: "+$(title).html() );
         } ); */
 
     }
+    function loadTopics(topic){
+      let all_sessions_topic = JSON.parse('{{ all_sessions_info| tojson |safe }}');
+      all_sessions_topic = all_sessions_topic.filter(all_sessions_topic => (all_sessions_topic.tema == topic.toLowerCase()));
+      all_sessions_topic.forEach(async (session) => {
+        session =  Object.values(session);
+        session = [session[4], session[1], session[5], session[2], session[3], session[0]]
+        let all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
+        all_sessions = all_sessions.filter(all_sessions => (all_sessions.Sesión == session[0]));
+        all_sessions = Object.values(all_sessions);
+        let props = JSON.parse('{{props| tojson |safe}}');
+        props = props.filter(props => (props.Sesión == session[0]));
+        CreateInfoBlock(session, all_sessions, props[0]);
+      });
+      /* var props = JSON.parse('{{props| tojson |safe}}');
+      props = props.filter(props => (props.Sesión == session[0]));
 
-    function loadSession(session) {
+      CreateInfoBlock(session, all_sessions, props[0]); */
+    }
+
+    function loadSession(session, arr) {
       var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
       all_sessions = all_sessions.filter(arr => (arr.Sesión == session[0]));
       var props = JSON.parse('{{props| tojson |safe}}');
-      props = props.filter(props => (props.Sesión == session[0]));
-
+      props = props.filter(props => (props.Sesión == session[0]));    
       CreateInfoBlock(session, all_sessions, props[0]);
     }
   </script>

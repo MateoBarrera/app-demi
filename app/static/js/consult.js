@@ -4,7 +4,7 @@ var _table_ = document.createElement('table'),
       _td_ = document.createElement('td'),
       _thead_ = document.createElement('thead'),
       _tbody_ = document.createElement('tbody'),
-      _canvas_ = document.createElement("canvas");;
+      _canvas_ = document.createElement("canvas");
 
 let id_session = null;
 
@@ -30,6 +30,7 @@ function addAllColumnHeaders(arr, table) {
 				columnSet.push(key);
 				var th = _th_.cloneNode(false);
 				th.appendChild(document.createTextNode(key));
+        th.classList.add("py-0");
 				tr.appendChild(th);
 			}
 		}
@@ -49,6 +50,7 @@ function addSessionHeaders(arr, table) {
     columnSet.push(key);
     var th = _th_.cloneNode(false);
     th.appendChild(document.createTextNode(arr[key]));
+    th.classList.add("py-0");
     tr.appendChild(th);
 	}
 	thead.appendChild(tr);
@@ -67,11 +69,15 @@ function orderTable(card_id) {
     return {
       order: [4, 1, 5, 2, 3, 0],
     }
-  } else {
+  } else if (card_id == 5) {
     return {
-      order: [1, 0],
-    }
-  }
+			order: [0],
+		}
+	} else {
+		return {
+			order: [1, 0],
+		}
+	}
 }
 
 function setClasses(table){
@@ -84,7 +90,11 @@ function setClasses(table){
 
 function SetInfo(session, parent, arr){
   var num_session = parent.querySelector("#session-name");
-  num_session.innerHTML = session[1]+" | Sesión "+session[0];
+  num_session.innerHTML = session[1];
+  var id_name = parent.querySelector("#session-id");
+  id_name.innerHTML = " Sesión " + session[0];
+  var topic = parent.querySelector("#session-topic");
+  topic.innerHTML = session[2];
   var hour_session = parent.querySelector("#session-hour");
 	hour_session.innerHTML = session[4];
   var date_session = parent.querySelector("#session-date");
@@ -96,8 +106,6 @@ function SetInfo(session, parent, arr){
   delete arr[0].Observaciones
 
   let id_session = "session" + session[0];
-  var info_child = parent.querySelector("#info-template-table");
-	info_child.id = "info-" + id_session;
 
   let aux_arr = ["Inicial Docente", "Inicial Estudiante", "Inicial Herramienta"];
   var table = _table_.cloneNode(false),
@@ -108,6 +116,7 @@ function SetInfo(session, parent, arr){
   for (var j = 0, maxj = 3; j < maxj; ++j) {
     var th = _th_.cloneNode(false);
     th.appendChild(document.createTextNode(arr[0][aux_arr[j]] || ""));
+    th.classList.add("py-0");
     tr.appendChild(th);
   }
   tbody.appendChild(tr);  
@@ -115,7 +124,9 @@ function SetInfo(session, parent, arr){
   table.id = "info-table-"+id_session;
   setClasses(table);
 
-  info_child.appendChild(table);
+  var info_child = parent.querySelector("#template-info-table-1");
+	info_child.id = "container-table1-"+id_session;
+	info_child.appendChild(table);
   aux_arr = ["Final Docente", "Final Estudiante", "Final Herramienta"];
 
   var table = _table_.cloneNode(false),
@@ -124,15 +135,19 @@ function SetInfo(session, parent, arr){
   addSessionHeaders(aux_arr, table);
 
   for (var j = 0, maxj = 3; j < maxj; ++j) {
-		var th = _th_.cloneNode(false)
-		th.appendChild(document.createTextNode(arr[0][aux_arr[j]] || ""))
-		tr.appendChild(th)
+		var th = _th_.cloneNode(false);
+		th.appendChild(document.createTextNode(arr[0][aux_arr[j]] || ""));
+    th.classList.add("py-0");
+		tr.appendChild(th);
 	}
   tbody.appendChild(tr);
   table.appendChild(tbody);
   table.id = "info-table-2" + id_session;
   setClasses(table);
-  info_child.appendChild(table);
+
+  var info_child = parent.querySelector("#template-info-table-2");
+	info_child.id = "container-table2-" + id_session
+	info_child.appendChild(table);
   /* const datatablesSimple = document.getElementById("info-table-"+id_session);
 	if (datatablesSimple) {
 		let tables = new DataTable(datatablesSimple, {
@@ -153,10 +168,12 @@ function SetInfo(session, parent, arr){
 
 function SetGraph(id_session, parent, props) {
 	var canvas = _canvas_.cloneNode(false);
+  let width = "100%",
+    height = "120";
 
 	canvas.id = id_session+"-chart-1";
-	canvas.width = "100%";
-	canvas.height = "220";
+	canvas.width = width;
+	canvas.height = height;
 
 	var conteo_inicial = props["conteo_inicial"];
 	var el = parent.querySelector("#template-chart-1")
@@ -175,6 +192,13 @@ function SetGraph(id_session, parent, props) {
 			legend: {
 				position: "right",
 				align: "middle",
+			},
+			animations: {
+				radius: {
+					duration: 400,
+					easing: "linear",
+					loop: (context) => context.active,
+				},
 			},
 		},
 		data: {
@@ -197,8 +221,8 @@ function SetGraph(id_session, parent, props) {
 
 	var canvas = _canvas_.cloneNode(false);
 	canvas.id = id_session+"-chart-2";
-	canvas.width = "100%";
-	canvas.height = "250";
+	canvas.width = width;
+	canvas.height = height;
 	var conteo_final = props["conteo_final"];
 	var al = parent.querySelector("#template-chart-2");
 	al.innerHTML = "";
@@ -216,6 +240,13 @@ function SetGraph(id_session, parent, props) {
 			legend: {
 				position: "right",
 				align: "middle",
+			},
+			animations: {
+				radius: {
+					duration: 400,
+					easing: "linear",
+					loop: (context) => context.active,
+				},
 			},
 		},
 		data: {
@@ -238,12 +269,7 @@ function SetGraph(id_session, parent, props) {
   return true;
 }
 
-let last_student_selected = " ";
 function CreateInfoBlock(session, arr, props){
-  
-  if(session[1]!=last_student_selected){
-      ResetContainer();
-  }
   var parent = document.getElementById("info-template").cloneNode(true);
   let id_session = "session_" + session[0];
   parent.id = id_session;
@@ -251,5 +277,4 @@ function CreateInfoBlock(session, arr, props){
   SetGraph(id_session, parent, props);
   AddToContainer(parent);
   last_student_selected = session[1];
-
 }
