@@ -59,6 +59,10 @@ hr {
 	border: 0;
 	opacity: 0.25;
 }
+hr.bolder{
+	height: 2px;
+	opacity: 1;
+}
 hr:not([size]) {
 	height: 1px;
 }
