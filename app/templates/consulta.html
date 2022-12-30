@@ -131,10 +131,8 @@ Consulta
       <div hidden>
         {{ macros.info_template()}}
       </div>
-      <p>Container info start</p>
       <div id="container-info">
       </div>
-      <p>Container info end</p>
   </section>
   <!--Container Main end-->
   <!-- Config section start -->
@@ -354,13 +352,12 @@ Consulta
             url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
           }, 
           responsive: true, 
-          pageLength: 100,
-          scrollY: true,
+          scrollY: "290px",
+          scrollCollapse: true,
+          paging: false,
           dom: "Bfrtip",
           aaSorting: [],
           filter: false,
-          paging: false,
-          info: false,
           colReorder: orderTable(card_id),
         });
       };
