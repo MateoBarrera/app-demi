@@ -16,21 +16,21 @@ Registrarse
 					<img src="{{url_for('static',filename='/images/Online.svg')}}" alt="Registrase" />
 				</div>
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-4">
 				<div class="content-wrapper">
 					<div class="section-title">
 						<h3 class="mb-30">Registrarse</h3>
 						<div class="contact-form-wrapper">
 							<form action="{{ url_for('auth.signup') }}" method="POST">
 								<fieldset>
-									<div class="single-input">
+									<div class="single-input mb-1">
 										{{ signup_form.csrf_token() }}
-										<label for="name s">
+										<label for="nombre">
 											<h6>{{signup_form.nombre.label()}}</h6>
 										</label>
 										{{signup_form.nombre(title_="Nombre de usuario sin espacios.")}}
-										<!-- <small id="emailHelp" class="form-text text-muted"
-											>Este sera tu usuario dentro WebAPP.</small> -->
+										<small id="nombre-help" class="form-text text-muted">Usuario de ingreso a DEMI app, no debe contener
+											espacios.</small>
 										{% if signup_form.nombre.errors %} {% for error in signup_form.nombre.errors %}
 										<div class="error-input">{{error}}</div>
 										{% endfor %} {% endif %} {% if not val_name %}
@@ -39,12 +39,14 @@ Registrarse
 									</div>
 								</fieldset>
 								<fieldset>
-									<div class="single-input">
-										<label for="name s">
+									<div class="single-input mb-1">
+										<label for="contraseña">
 											<h6>{{signup_form.contraseña.label()}}</h6>
 										</label>
-										{{signup_form.contraseña(title_="Contraseña entre 4 y 16 caracteres, se permiten combinación de números, letras y caracteres especiales.")}}
-										<small id="emailHelp" class="form-text text-muted"></small>
+										{{signup_form.contraseña(title_="Contraseña entre 4 y 16 caracteres, se permiten combinación de números, letras y
+										caracteres especiales.")}}
+										<small id="contraseña-help" class="form-text text-muted">De 4 a 16 caracteres, acepta combinación de
+											números, letras y caracteres especiales.</small>
 										{% if signup_form.contraseña.errors %} {% for error in
 										signup_form.contraseña.errors %}
 										<div class="error-input">{{error}}</div>
@@ -52,22 +54,24 @@ Registrarse
 									</div>
 								</fieldset>
 								<fieldset>
-									<div class="single-input">
-										<label for="name s">
+									<div class="single-input mb-1">
+										<label for="contraseña-conf">
 											<h6>{{signup_form.contraseña_conf.label()}}</h6>
 										</label>
 										{{signup_form.contraseña_conf(title_="Ingresa nuevamente la contraseña propuesta.")}} {% if signup_form.contraseña_conf.errors %} {%
 										for error in signup_form.contraseña_conf.errors %}
+										<small id="contraseña-conf-help" class="form-text text-muted">Ingresa nuevamente la contraseña propuesta.</small>
 										<div class="error-input">{{error}}</div>
 										{% endfor %} {% endif %}
 									</div>
 								</fieldset>
 								<fieldset>
 									<div class="select-input">
-										<label for="grado s">
+										<label for="cargo">
 											<h6>{{signup_form.cargo.label()}}</h6>
 										</label>
 										{{signup_form.cargo(title_="Cargo de docente por defecto.")}}
+										<small id="cargo-help" class="form-text text-muted">Rol dentro de DEMI app, cargo de docente predeterminado.</small>
 									</div>
 								</fieldset>
 								<div class="text-center">
