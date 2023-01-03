@@ -4,9 +4,10 @@ import secrets
 from datetime import datetime, timedelta
 import pytz
 import cv2
+import pymysql
 from flask import Flask, request, current_app, Response, make_response, render_template, redirect, session, url_for, flash
 from app import create_app
-from app.forms import TodoForms, DeleteTodoForm, UpdateTodo, TerapiaForm, ConclusionesForm, CuestionarioForm, ContactoForm, SignupEstForm, SignupForm
+from app.forms import TerapiaForm, ConclusionesForm, CuestionarioForm, ContactoForm, SignupEstForm
 from flask_login import login_required, current_user
 from app.email import send_email
 from app.mysql import MySQL_connector
@@ -45,47 +46,6 @@ def index():
     response = make_response(redirect('/inicio'))
     session['user_ip'] = user_ip
     return response
-
-""" @app.route('/hello', methods=['GET', 'POST'])
-@login_required
-def hello():
-    user_ip = session.get('user_ip')
-    username = current_user.nombre  # current_user.id
-    result = app.mysql_object.set_user('nombre', 'contraseña', 1)
-    print("Set_user")
-    print(result)
-    result = app.mysql_object.get_user('nombre')
-    print(result)
-
-    todo_form = TodoForms()
-    delete_form = DeleteTodoForm()
-    update_form = UpdateTodo()
-    context = {
-        'user_ip': user_ip,
-        'todos': get_todos(username),
-        'username': username,
-        'todo_form': todo_form,
-        'delete_form': delete_form,
-        'update_form': update_form
-    }
-    if todo_form.validate_on_submit():
-        put_todo(username, todo_form.description.data)
-        flash('Tarea registrada con exito.')
-        return redirect(url_for('hello'))
-
-    return render_template('hello.html', **context)
-
-@app.route('/todos/delete/<todo_id>', methods=['POST'])
-def delete(todo_id):
-    user_id = current_user.id
-    delete_todo(user_id, todo_id)
-    return redirect(url_for('hello'))
-
-@app.route('/todos/update/<todo_id>/<int:done>', methods=['POST'])
-def update(todo_id, done): 
-    user_id = current_user.id
-    update_todo(user_id, todo_id, done)
-    return redirect(url_for('hello'))"""
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
@@ -271,6 +231,29 @@ def consulta():
     img = url_for('static', filename='/images/user.jpg')
     events = list()
     recent_sessions = list()
+    if request.method == 'POST':
+        print("FORM de consulta update")
+        print(request.form)
+        form = dict(request.form)
+        keys = list(form.keys())
+        values = list(form.values())
+        print(form)
+        print(keys)
+        print(values)
+        try:
+            if len(form)==3:
+                result = app.mysql_object.get_user(user=keys[0])
+                """ app.mysql_object.update_user_data(id_login=result, cargo, docente) """
+            elif len(form)==6:
+                result = app.mysql_object.get_student(student=keys[3])
+                print("result "+str(result[0]))
+                app.mysql_object.update_student_data(values[0], values[3], values[1], values[2], values[4], result[0])
+                print("Formulario de estudiante")
+                flash("Datos actualizados con éxito")
+        except pymysql.err.ProgrammingError as e:
+            flash(e)
+       
+
 
     if user.cargo == 'Investigador':
         all_users = app.mysql_object.get_all_users()
@@ -288,7 +271,6 @@ def consulta():
         themes = app.mysql_object.get_all_doc_themes(user.id_table)
         props = app.mysql_object.get_all_doc_session_prob(user.id_table)
 
-
     for item in all_sessions_info:
         aux_day = item['fecha'].split(' ', 1)
         item['fecha'] = '{}'.format(aux_day[0])
@@ -299,6 +281,7 @@ def consulta():
         now = datetime.now() if not time_session.tzinfo else datetime.now(time_session.tzinfo)
         if now-time_session < timedelta(days=5):
             recent_sessions.append(item)
+    
     context = {
         'contacto_form': contacto_form,
         'student_data': student_data,
@@ -312,6 +295,7 @@ def consulta():
         'props':props,
         'recent_sessions': recent_sessions,
         'rol_user':user.cargo,
+        'usuario':user.usuario,
     }
 
     return render_template('consulta.html', **context)

@@ -105,7 +105,7 @@ Consulta
                   <p class="col-2 text-dark font-weight-bolder">Resumen</p>
                 </div>
                 <div class="card-body align-self-stretch py-1">
-                  <div class="table-responsive-sm info-table" id="table_content">
+                  <div class="table-responsive-sm" id="table_content">
                   </div>
                 </div>
               </div>
@@ -215,27 +215,80 @@ Consulta
 
   </section>
   <!-- Config section end -->
-  <!-- Calendar section start -->
+  <!-- Database management section start -->
   <section id="calendario" hidden>
-    <h3>Calendario</h3>
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-5 m-5 mid-image">
-          <div class="section-title cup-strar">
-            <div class="w-100" id="CalendarJS"></div>
+    <h3 class="mb-10">Gestión de información</h3>
+    <div class="row">
+      <div class="col-lg-2 px-1">
+        <div class="content-wrapper">
+          <div class="section-title mb-1">
+            <div class="card radius-10">
+              <div class="card-header d-flex align-content-center py-1">
+                <i class="fa-solid fa-calendar-days m-1"></i>
+                <p class="col-4 text-dark font-weight-bolder">Tablas</p>
+              </div>
+              <div class="card-body p-1">
+                {% if usuario=='mateo' %}
+                <div class="col-12 py-1">
+                  <div class="card bg-card-primary mb-1 radius-5" onclick="loadDatabaseTable(0)">
+                    <div class="card-body d-flex justify-content-between align-content-center text-white p-1">
+                      <p>Docentes</p>
+                      <i class="bx bx-user p-1"></i>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+                <div class="col-12 py-1">
+                  <div class="card bg-card-secondary mb-1 radius-5" onclick="loadDatabaseTable(1)">
+                    <div class="card-body d-flex justify-content-between align-content-center text-white p-1">
+                      <p>Estudiantes</p>
+                      <i class="bx bx-face p-1"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="col-lg-5">
-          <div class="content-wrapper">
-            <div class="section-title mb-10">
-              <h4 class="mb-60">Agenda</h4>
-              <div class="w-100" id="AgendaJS"></div>
+      </div>
+      <div class="col-lg-10 px-1">
+        <div class="content-wrapper mb-1">
+          <div class="section-title">
+            <div class="card radius-10">
+              <div class="card-header d-flex align-content-center py-1">
+                <i class="fa-solid fa-square-poll-horizontal m-1"></i>
+                <p class="col-2 text-dark font-weight-bolder">Información</p>
+              </div>
+              <div class="card-body align-self-stretch py-1">
+                <div class="table-responsive-sm info-table" id="database-table">
+                  <div class="text-center py-5">
+                    <h5>Seleccione la tabla para listar la información contenida en ella</h5> 
+                  </div>
+                </div>
+                <div id="main-form-buttons" class="contact-form-wrapper" hidden>
+                  <form id="db-form" action="{{url_for('consulta')}}" method="POST">
+                    <fieldset>
+                      <div class="col-12 d-flex mb-2">
+                        <i class="fa-solid fa-pen-to-square p-1"></i>
+                        <h6 class="text-muted">Edición</h6>
+
+                      </div>
+                    </fieldset>
+                    <fieldset id="main-form" class="d-flex flex-wrap row">
+                    </fieldset>
+                    <div class="d-flex flex-wrap justify-content-center">
+                      <input class="button bg-light text-dark border radius-10 w-10 mx-2 py-0" id="reset" name="reset" type="reset"
+                        value="Cancelar" onclick="hideFormButtons(true)">
+                      <input class="button radius-10 w-10 mx-2 py-0" id="guardar" name="guardar" type="submit" value="Guardar">
+                    </div>
+                  </form>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </section>
   <!-- Config section end -->
   {% endblock %}
@@ -304,6 +357,7 @@ Consulta
 
     let last_topic = "";
     let last_student_selected = "";
+    let id_selected = [];
 
     function loadTable(card_id=null) {
       let arr = {};
@@ -364,14 +418,18 @@ Consulta
 
       var table_handler = $('#table_info').DataTable();
       $('#table_info tbody').on('click', 'tr', function () {
-        var data = table_handler.row(this).data();
-        var column_name = $(table_handler.column().header()).html();
+        let data = table_handler.row(this).data();
+        let column_name = $(table_handler.column().header()).html();
         if (column_name == 'idsesiones') {
-          if (data[1] != last_student_selected) {
-            ResetContainer();
-            last_student_selected = data[1];
+          if (!id_selected.some((id) => { return id == data[0] })){
+            if (data[1] != last_student_selected) {
+              ResetContainer();
+              id_selected = [];
+              last_student_selected = data[1];
+            }
+            id_selected.push(data[0]);
+            loadSession(data, arr);
           }
-          loadSession(data, arr);
 
         } else if (column_name == "estudiante") {
           alert("Seleccionaste al estudiante " + data[0] + ", próximamente se permitirá la búsqueda detallada por estudiantes :)");
@@ -410,10 +468,6 @@ Consulta
         props = props.filter(props => (props.Sesión == session[0]));
         CreateInfoBlock(session, all_sessions, props[0]);
       });
-      /* var props = JSON.parse('{{props| tojson |safe}}');
-      props = props.filter(props => (props.Sesión == session[0]));
-
-      CreateInfoBlock(session, all_sessions, props[0]); */
     }
 
     function loadSession(session, arr) {
@@ -423,7 +477,70 @@ Consulta
       props = props.filter(props => (props.Sesión == session[0]));    
       CreateInfoBlock(session, all_sessions, props[0]);
     }
-  </script>
+
+    function loadDatabaseTable(id_table){      
+      hideFormButtons(true);
+      let arr = {};
+      if (id_table == 0) {
+        arr = JSON.parse('{{ all_users| tojson | safe }}');
+      } else if (id_table == 1) {
+        arr = JSON.parse('{{ all_students| tojson | safe }}');
+      }
+      var table = _table_.cloneNode(false),
+        tbody = _tbody_.cloneNode(false),
+        columns = addAllColumnHeaders(arr, table);
+
+      for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+        var tr = _tr_.cloneNode(false);
+        for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+          var th = _th_.cloneNode(false);
+          cellValue = arr[i][columns[j]];
+          th.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+          th.classList.add("py-0");
+          tr.appendChild(th);
+        }
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+
+      table.id = "table-db";
+      table.classList.add("table");
+      table.classList.add("compact");
+      table.classList.add("table-hover");
+      table.classList.add("text-secondary");
+      table.classList.add("h-100");
+
+      var el = document.getElementById("database-table");
+      el.innerHTML = "";
+      el.appendChild(table);
+      const datatablesDB = document.getElementById('table-db');
+      if (datatablesDB) {
+        let tableDB = new DataTable(datatablesDB, {
+          language: {
+            url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
+          },
+          responsive: true,
+          scrollY: "200px",
+          scrollCollapse: true,
+          paging: false,
+          dom: "Bfrtip",
+          aaSorting: [],
+        });
+      };
+      var table_db_handler = $('#table-db').DataTable();
+      $('#table-db tbody').on('click', 'tr', function () {
+        let data = table_db_handler.row(this).data();
+        let column_name = $(table_db_handler.column().header()).html();
+        hideFormButtons(false);
+        if (column_name == 'cargo') {
+          loadDocenteBlock(data);
+        } else if (column_name == 'estudiante') {
+          loadEstudianteBlock(data);
+        }
+      });
+    }
+
+</script>
 
   {% endblock %}
 

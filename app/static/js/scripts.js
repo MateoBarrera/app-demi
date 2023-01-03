@@ -42,10 +42,7 @@ var preSectionId = 'vista-general'
 function ActiveSection(sectionId) {
       document.getElementById(preSectionId).hidden = true;;
       document.getElementById(sectionId).hidden = false;
-      console.log('pre '+preSectionId);
-      console.log('sect '+sectionId);
       preSectionId = sectionId;
-      console.log('new pre '+preSectionId);
       
 };
 

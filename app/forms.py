@@ -28,6 +28,8 @@ class SignupForm(FlaskForm):
 class UploadForm(FlaskForm):
     upload = FileField('Imagen', validators=[Optional(),
         FileAllowed(['jpg', 'png'], 'Requiere .jpg o .png')])
+
+
 class SignupEstForm(FlaskForm):
     nombre = StringField('Nombre estudiante *', validators=[
                          InputRequired(), Regexp("^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$", message="Escriba nombre y apellidos, omita caracteres especiales."), Length(min=4, max=45)])
@@ -43,19 +45,6 @@ class SignupEstForm(FlaskForm):
     terminos = BooleanField(
         "Política de tratamiento de datos personales *",validators=[DataRequired()])
     iniciar = SubmitField('Registrar')
-
-
-class TodoForms(FlaskForm):
-    description = StringField('Descripción', validators=[DataRequired()])
-    submit = SubmitField('Crear')
-
-
-class DeleteTodoForm(FlaskForm):
-    submit = SubmitField('Borrar')
-
-
-class UpdateTodo(FlaskForm):
-    submit = SubmitField('Actualizar')
 
 
 """ def mail_validatork(form, field):
@@ -108,3 +97,4 @@ class ConclusionesForm(FlaskForm):
         'Tristeza'), ('c','Enojo'), ('d','Sorpresa'), ('e','Neutral')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
     observacion = TextAreaField("Observaciones")
     iniciar = SubmitField('Finalizar')
+

@@ -8,11 +8,7 @@
       <a href="{{url_for('inicio')}}" class="nav_logo px-3">
         <img class="icon-modal rounded-circle p-1 bg-white" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
         <span class="nav_logo-name">DEMI</span> 
-      </a>
-<!--       <a class="nav_logo" href="{{url_for('inicio')}}">
-        <img class="nav_logo-icon w-100 bg-white radius-10" alt="shortcut icon" src="{{ url_for('static', filename='images/op8.png') }}">
-      </a> -->
-      
+      </a>     
       <div class="nav_list"> 
         <a class="nav_link active" href="#" onclick="ActiveSection('vista-general')">
           <i class='nav_icon'>
@@ -20,15 +16,17 @@
           </i>
           <span class="nav_name">Vista general</span>
         </a>
-        <!-- <div class="nav_menu">
-          <span>Agenda</span>
+        {% if rol_user == 'Investigador' %}
+        <div class="nav_menu">
+          <span>ADMIN</span>
         </div>
         <a class="nav_link" href="#" onclick="ActiveSection('calendario')">
           <i class='nav_icon'>
-            <img src="{{url_for('static',filename='/images/calendario.svg')}}" alt="">
+            <img src="{{url_for('static',filename='/images/db.png')}}" alt="">
           </i>
-          <span class="nav_name">Calendario</span>
-        </a> -->
+          <span class="nav_name">Base de datos</span>
+        </a>
+        {% endif %}
 <!--         <div class="nav_menu">
           <span>Consulta</span>
         </div>

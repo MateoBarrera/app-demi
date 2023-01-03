@@ -76,7 +76,7 @@
 	transform: scale(1.25);
 }
 
-.iconify {
+.iconify, .iconify-small {
 	font-family: var(--bs-font-sans-serif);
 	font-weight: 500;
 	font-size: 4rem;
@@ -84,11 +84,18 @@
 	display: inline;
 	padding: 1rem;
 }
-.iconify i, .iconify img {
+.iconify i, .iconify-small i, .iconify img, .iconify-small img {
 	padding: 1rem;
 	float: right;
 }
 
+.iconify-small{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	align-content: center;
+	font-size: 1.4rem;
+}
 .info-table table{
 	text-transform: capitalize;
 }

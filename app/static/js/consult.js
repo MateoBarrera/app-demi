@@ -1,10 +1,13 @@
-var _table_ = document.createElement('table'),
-      _tr_ = document.createElement('tr'),
-      _th_ = document.createElement('th'),
-      _td_ = document.createElement('td'),
-      _thead_ = document.createElement('thead'),
-      _tbody_ = document.createElement('tbody'),
-      _canvas_ = document.createElement("canvas");
+var _table_ = document.createElement("table"),
+	_tr_ = document.createElement("tr"),
+	_th_ = document.createElement("th"),
+	_td_ = document.createElement("td"),
+	_thead_ = document.createElement("thead"),
+	_tbody_ = document.createElement("tbody"),
+	_canvas_ = document.createElement("canvas"),
+	_div_ = document.createElement("div"),
+	_label_ = document.createElement("label"),
+	_input_ = document.createElement("input");
 
 let id_session = null;
 
@@ -276,5 +279,68 @@ function CreateInfoBlock(session, arr, props){
   SetInfo(session, parent, arr);
   SetGraph(id_session, parent, props);
   AddToContainer(parent);
-  last_student_selected = session[1];
+}
+
+
+function createCargoSelect(){
+	let select = document.createElement("select").cloneNode(false);
+	let option_0 = document.createElement("option").cloneNode(false);
+	option_0.innerHTML = "Docente";
+	option_0.value = "docente";
+	let option_1 = document.createElement("option").cloneNode(false);
+	option_1.innerHTML = "Investigador";
+	option_1.value = "investigador";
+
+	select.appendChild(option_0);
+	select.appendChild(option_1);
+	return select;
+}
+
+function createFieldset(name, value, type=false){
+	let input;
+	let input_class = "single-input";
+	if (type == "select"){
+		input = createCargoSelect();
+		input_class = "select-input";
+	} else if (type == "date"){
+		input = _input_.cloneNode(false);
+		input.type = "date";
+	} else{
+		input = _input_.cloneNode(false);
+	}
+	let label = _label_.cloneNode(false),
+		div = _div_.cloneNode(false);
+	label.innerHTML = name;
+	label.classList.add("h6");
+	input.value = value;
+	input.id = name;
+	input.name = value;
+	div.classList.add(input_class);
+	div.classList.add("col-3")
+	div.appendChild(label);
+	div.appendChild(input);
+	return div;
+}
+
+function loadDocenteBlock(data){
+	var container = document.getElementById("main-form");
+	container.innerHTML = "";
+	container.appendChild(createFieldset("Docente", data[1]));
+	container.appendChild(createFieldset("Cargo", data[0], "select"));
+	const select = document.getElementById("Cargo");
+	select.value = data[0].toLowerCase();
+}
+
+function loadEstudianteBlock(data) {
+	var container = document.getElementById("main-form")
+	container.innerHTML = ""
+	container.appendChild(createFieldset("Estudiante", data[0]))
+	container.appendChild(createFieldset("Fecha_nacimiento", data[1], "date"))
+	container.appendChild(createFieldset("Grado", data[2]))
+	container.appendChild(createFieldset("Identificacion", data[3]))
+	container.appendChild(createFieldset("Institucion", data[4]))
+}
+
+function hideFormButtons(value){
+	document.getElementById("main-form-buttons").hidden = value;
 }

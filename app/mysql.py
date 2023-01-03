@@ -81,7 +81,17 @@ class MySQL_connector():
         conn.commit()
         conn.close()
 
-    def set_student_data(self, id_login, docente, identificacion, nacimiento, grado, institucion, anotacion, imagen=None):
+    def update_user_data(self, idlogin, cargo, docente=None, imagen=None, identificacion=None):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = f"UPDATE usuarios set (docente, identificacion, cargo) VALUES (%s, %s, %s, %s, %s) WHERE idlogin = '{(idlogin)}';"
+        val = (docente, identificacion, cargo)
+        cursor.execute(sql, val)
+        conn.commit()
+        conn.close()
+
+
+    def set_student_data(self, id_login, estudiante, identificacion, nacimiento, grado, institucion, anotacion, imagen=None):
         byte_im = None
         if imagen is not None:
             is_success, im_buf_arr = cv2.imencode(".jpg", imagen)
@@ -89,8 +99,18 @@ class MySQL_connector():
         conn = self.mysql_init.connect()
         cursor = conn.cursor()
         sql = "INSERT INTO estudiantes (estudiante, identificacion, fecha_nacimiento, grado, institucion, imagen, idlogin, anotacion) VALUES (%s, %s, %s, %s, %s ,%s ,%s, %s);"
-        val = (docente, identificacion, nacimiento,
+        val = (estudiante, identificacion, nacimiento,
                grado, institucion, byte_im, id_login, anotacion)
+        cursor.execute(sql, val)
+        conn.commit()
+        conn.close()
+
+    def update_student_data(self, estudiante, identificacion, nacimiento, grado, institucion, idestudiantes):
+        conn = self.mysql_init.connect()
+        cursor = conn.cursor()
+        sql = "UPDATE estudiantes SET estudiante = %s, identificacion = %s, fecha_nacimiento = %s, grado = %s, institucion = %s WHERE idestudiantes = %s;"
+        val = (estudiante, identificacion, nacimiento,
+               grado, institucion, idestudiantes)
         cursor.execute(sql, val)
         conn.commit()
         conn.close()
