@@ -47,7 +47,7 @@ def test_connect():
     app.logger.info('Client connected')
 
 @socketio.on('image_ev')
-def image(data_image):
+def image(data_image, stage):
     #print('Recibiendo solicitud')
     image = base64.b64decode(data_image.replace('data:image/jpeg;base64,', ''))
     image = imread(image, pilmode='RGB')
@@ -73,12 +73,12 @@ def image(data_image):
     is_success, im_buf_arr = cv2.imencode(".jpg", cv2_img_raw)
     byte_im_raw = im_buf_arr.tostring()
     preds = np.around(preds, 4)
-
+    str_stage = 'inicial' if stage == 1 else 'final'
     try:
         app.session_object['{}'.format(
-            session['session_token'])].images[session['stage']].append([byte_im_raw, byte_im, preds[0], preds[1], preds[2], preds[3], preds[4]])
+            session['session_token'])].images[str_stage].append([byte_im_raw, byte_im, preds[0], preds[1], preds[2], preds[3], preds[4]])
         app.session_object['{}'.format(
-            session['session_token'])].response_labels[session['stage']].append(response_label)
+            session['session_token'])].response_labels[str_stage].append(response_label)
     except:
         response_label = 'Sin datos de cámara'
 
@@ -92,18 +92,19 @@ def receiber():
     print("#################OSSOCJE")
     return render_template('sockect_hard.html', **context)
 
-@script.route('/ventana-carga', methods=['GET', 'POST'])
-def ventana_carga():
+@script.route('/ventana-carga/<token>', methods=['GET', 'POST'])
+def ventana_carga(token):
     param = request.args.get('virtual', 'False')
     print("Respuesta: {}".format(param))
     print("Respuesta format: {}".format(type(param)))
     context = {
         'etapa': 'Evaluación inicial',
+        'token': token
     }
     return render_template('ventana_carga.html', **context)
 
-@script.route('/evaluacion', methods=['GET', 'POST'])
-def evaluacion():
+@script.route('/evaluacion/<token>/<int:stage>', methods=['GET', 'POST'])
+def evaluacion(token, stage):
     session['virtual'] = request.args.get('virtual', 'False')
     session['admin_id'] = None
 
@@ -113,47 +114,65 @@ def evaluacion():
     session['url_backup'] = url_backup
 
     if session['virtual']=='True':
-        session['stage'] = request.args.get('stage', 'False')
+        stage = request.args.get('stage', 'False')
         session['session_token'] = ('{}'.format(request.args.get('id', 'False'))).replace("'","")
         session['admin_id'] = request.args.get('admin_id', 'False')
 
-    if session['stage'] == 'inicial':
+    if stage == 1:
         context = {
             'etapa': 'Evaluación inicial',
             'mensaje': '¿Como te sientes hoy?',
             'virtual': session['virtual'],
             'admin_id':session['admin_id'],
-            'stage': session['stage'],
+            'token':token,
+            'stage': stage,
         }
         return render_template('evaluacion.html', **context)
-    elif session['stage'] == 'final':
+    elif stage == 2:
+        context = {
+            'etapa': 'Evaluación inicial',
+            'mensaje': '¿Como te sientes hoy?',
+            'virtual': session['virtual'],
+            'admin_id':session['admin_id'],
+            'token':token,
+            'stage': stage,
+        }
+        return make_response(redirect(url_for('script.stage', token=token, stage=2)))
+    elif stage == 3:
         context = {
             'etapa': 'Evaluación final',
             'mensaje': '¿Como te sientes ahora?',
             'virtual': session['virtual'],
             'admin_id': session['admin_id'],
-            'stage': session['stage'],
+            'token':token,
+            'stage': stage,
         }
+
         return render_template('evaluacion.html', **context)
     else:
         return make_response(redirect(url_for('iniciar_terapia')))
 
-@script.route('/ventana-espera', methods=['GET', 'POST'])
-def ventana_espera():
-    if session['stage'] == 'inicial':
+@script.route('/ventana-espera/<token>/<int:stage>', methods=['GET', 'POST'])
+def ventana_espera(token, stage):
+    if stage == 1:
         context = {
-            'etapa': 'Evaluación inicial'
+            'etapa': 'Evaluación inicial',
+            'token':token,
+            'stage':stage
         }
     else:
         context = {
             'etapa': 'Evaluación final',
+            'token': token,
+            'stage':stage
         }
+    
     return render_template('ventana_carga.html', **context)
 
-@script.route('/final-evaluacion/<ev_est>/<virtual>', methods=['GET', 'POST'])
-def final_evaluacion(ev_est, virtual):
-    key = '{}'.format(session['session_token'])
-    if session['stage'] == 'inicial':
+@script.route('/final-evaluacion//<token>/<int:stage>/<ev_est>/<virtual>', methods=['GET', 'POST'])
+def final_evaluacion(token, stage, ev_est, virtual):
+    key = token
+    if stage == 1:
         try:
             labels_list = app.session_object[key].response_labels['inicial']
             count_dict = {i: labels_list.count(i) for i in labels_list}
@@ -163,10 +182,10 @@ def final_evaluacion(ev_est, virtual):
                 count_dict.items(), key=operator.itemgetter(1))[0]
             app.session_object[key].evaluacion['ev_ini_est'] = ev_est
             #print('MAX {}'.format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
-            session['stage'] = 'final'
             app.session_object[key].stage = 'final'
             #response = make_response(redirect(url_for('script.ventana_espera')))
-            response = make_response(redirect(url_for('script.stage',stage=2)))
+            
+            response = make_response(redirect(url_for('script.stage', token=token, stage=2)))
         except:
             response = make_response(redirect(url_for('script.error')))
             return response
@@ -280,7 +299,6 @@ def guardar():
     app.mysql_object.save_session(session_data)
     app.session_object.pop(key)
     session.pop('session_token')
-    session.pop('stage')
     session['prev_session'] = False
     return redirect(url_for('inicio'))
 
@@ -317,10 +335,12 @@ def error():
     response = make_response(redirect(session['url_backup']))
     return response
 
-@script.route('/desarrollo/<token>/<stage>', methods=['GET', 'POST'])
+@script.route('/desarrollo/<token>/<int:stage>', methods=['GET', 'POST'])
 def stage(token, stage):
     session['session_token'] = token
+
     context = {
-        'actual_stage' : stage
+        'actual_stage' : stage,
+        'token':token
     }
     return render_template('stage.html', **context)

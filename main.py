@@ -149,7 +149,6 @@ def iniciar_terapia():
         #if not session['prev_session']:
         session['session_token'] = secrets.token_urlsafe(6)
         session['tokens'].append(session['session_token'])
-        session['stage'] = 'inicial'
         key = '{}'.format(session['session_token'])
         app.session_object[key] = SessionData()
         app.session_object[key].token = key

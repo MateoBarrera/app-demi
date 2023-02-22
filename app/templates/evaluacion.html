@@ -10,22 +10,22 @@
 {% endblock %}
 
 {% block content %}
-  <div class="preloader">
-    <div class="loader">
-      <div class="spinner">
-        <div class="spinner-container">
-          <div class="spinner-rotator">
-            <div class="spinner-left">
-              <div class="spinner-circle"></div>
-            </div>
-            <div class="spinner-right">
-              <div class="spinner-circle"></div>
-            </div>
+<div class="preloader">
+  <div class="loader">
+    <div class="spinner">
+      <div class="spinner-container">
+        <div class="spinner-rotator">
+          <div class="spinner-left">
+            <div class="spinner-circle"></div>
+          </div>
+          <div class="spinner-right">
+            <div class="spinner-circle"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
 
 <audio id="feliz-aud" preload="auto">
@@ -60,7 +60,9 @@
 
 <div class="d-flex justify-content-start align-items-center bd-highlight mb-3">
   <div class="p-2 bd-highlight spinner-grow spinner-grow-sm text-primary" role="status" aria-hidden="true"></div>
-  <small><div id="response-label" class="p-2 bd-highlight text-primary">Loading..</div></small>
+  <small>
+    <div id="response-label" class="p-2 bd-highlight text-primary">Loading..</div>
+  </small>
 </div>
 
 
@@ -79,19 +81,22 @@
       <div id="emojis" class="row text-center">
         <div class="col-md-6 col-lg-6">
           <div class="single-feature grow">
-            <a id="a_feliz" href="{{url_for('script.final_evaluacion', ev_est='Felicidad', virtual=virtual)}}" onmouseover="PlaySound('feliz-aud')" onmouseout="StopSound('feliz-aud')">
+            <a id="a_feliz"
+              href="{{url_for('script.final_evaluacion', token=token, stage=stage, ev_est='Felicidad', virtual=virtual)}}"
+              onmouseover="PlaySound('feliz-aud')" onmouseout="StopSound('feliz-aud')">
               <div class="icon-emoji">
                 <img src="{{url_for('static',filename='/images/emoji/feliz_1.svg')}}" alt="Icono WebAPP">
                 <h3 class="mb-25">FELIZ</h3>
               </div>
-            </a>           
+            </a>
           </div>
         </div>
-        <div class="col-md-6 col-lg-6">  
+        <div class="col-md-6 col-lg-6">
           <div class="single-feature grow">
-            <a href="{{url_for('script.final_evaluacion', ev_est='Tristeza', virtual=virtual)}}" onmouseover="PlaySound('triste-aud')" onmouseout="StopSound('triste-aud')">
+            <a href="{{url_for('script.final_evaluacion', token=token, stage=stage, ev_est='Tristeza', virtual=virtual)}}"
+              onmouseover="PlaySound('triste-aud')" onmouseout="StopSound('triste-aud')">
               <div class="icon-emoji">
-                <img src="{{url_for('static',filename='/images/emoji/triste_1b.svg')}}" alt="Icono WebAPP" >
+                <img src="{{url_for('static',filename='/images/emoji/triste_1b.svg')}}" alt="Icono WebAPP">
                 <h3 class="mb-25">TRISTE</h3>
               </div>
             </a>
@@ -99,17 +104,19 @@
         </div>
         <div class="col-md-6 col-lg-6">
           <div class="single-feature grow">
-            <a href="{{url_for('script.final_evaluacion', ev_est='Enojo',  virtual=virtual)}}" onmouseover="PlaySound('enojado-aud')" onmouseout="StopSound('enojado-aud')">
+            <a href="{{url_for('script.final_evaluacion', token=token, stage=stage, ev_est='Enojo',  virtual=virtual)}}"
+              onmouseover="PlaySound('enojado-aud')" onmouseout="StopSound('enojado-aud')">
               <div class="icon-emoji">
                 <img src="{{url_for('static',filename='/images/emoji/enojado_1.svg')}}" alt="Icono WebAPP">
                 <h3 class="mb-25">ENOJADO</h3>
               </div>
             </a>
-          </div>          
+          </div>
         </div>
         <div class="col-md-6 col-lg-6">
           <div class="single-feature grow">
-            <a href="{{url_for('script.final_evaluacion', ev_est='Sorpresa',  virtual=virtual )}}" onmouseover="PlaySound('sorprendido-aud')" onmouseout="StopSound('sorprendido-aud')">
+            <a href="{{url_for('script.final_evaluacion', token=token, stage=stage, ev_est='Sorpresa',  virtual=virtual )}}"
+              onmouseover="PlaySound('sorprendido-aud')" onmouseout="StopSound('sorprendido-aud')">
               <div class="icon-emoji">
                 <img src="{{url_for('static',filename='/images/emoji/sorprendido_1.svg')}}" alt="Icono WebAPP">
                 <h3 class="mb-25">SORPRENDIDO</h3>
@@ -121,10 +128,10 @@
     </div>
   </div>
   </div>
-    <div>
-      <button id="message" type="button" class="btn btn-labeled btn-secondary">mensaje</button>
-    </div>
-  
+  <div>
+    <button id="message" type="button" class="btn btn-labeled btn-secondary">mensaje</button>
+  </div>
+
   <div class='video'>
     <img id="image">
   </div>
@@ -133,10 +140,10 @@
     <video autoplay="true" id="videoElement" style="visibility: visible;"></video>
   </div>
 
-{% endblock %}
+  {% endblock %}
 
-{% block scripts%}
-{{super()}}
+  {% block scripts%}
+  {{super()}}
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
 
   <script type="text/javascript">
@@ -255,10 +262,12 @@
 
     setInterval(() => {
         const frame = cap.read(src);
+        let stage = {{stage}};
+        console.log(stage)
         let tempCanvas = document.createElement("canvas");
         cv.imshow(tempCanvas,src)
         let b64image = tempCanvas.toDataURL('image/jpeg',0.1)
-        socket.emit('image_ev', b64image);
+        socket.emit('image_ev', b64image, stage);
         console.log('enviando...')
     }, 10000/FPS);
 
@@ -291,5 +300,5 @@
     }
   </script>
 
-<script src="{{url_for('static',filename='js/opencv.js')}}" onload="onOpenCvReady()" ;></script>
-{% endblock %}
+  <script src="{{url_for('static',filename='js/opencv.js')}}" onload="onOpenCvReady()" ;></script>
+  {% endblock %}

@@ -12,24 +12,25 @@ Esperando...
 {% block content %}
 
 <section id="pre" class="feature-section feature-style-2">
-<div class="container">
-  <div class="row"> <!-- align-items-center" style="padding: auto; height:100%; position:fixed ;"> -->
-    <div class="col-lg-5 m-auto p-auto">
-      <div class="hero-image cup-end mid-image">
-        <img src="{{url_for('static',filename='/images/team_up.svg')}}" alt="" class="wow fadeInRight"
-          data-wow-delay=".2s">
+  <div class="container">
+    <div class="row"> <!-- align-items-center" style="padding: auto; height:100%; position:fixed ;"> -->
+      <div class="col-lg-5 m-auto p-auto">
+        <div class="hero-image cup-end mid-image">
+          <img src="{{url_for('static',filename='/images/team_up.svg')}}" alt="" class="wow fadeInRight"
+            data-wow-delay=".2s">
+        </div>
       </div>
-    </div>
-    <div class="col-lg-12">
-      <div class=" section-title mt-40 mb-60 ">
-        <h5 class=" text-center mb-50" data-wow-delay=".2s">{{etapa}}</h5>
-        <div class="text-center buttons">
-          <a class="button button-lg radius-10 w-25" href="{{url_for('script.evaluacion')}}">Iniciar</a>
+      <div class="col-lg-12">
+        <div class=" section-title mt-40 mb-60 ">
+          <h5 class=" text-center mb-50" data-wow-delay=".2s">{{etapa}}</h5>
+          <div class="text-center buttons">
+            <a class="button button-lg radius-10 w-25"
+              href="{{url_for('script.evaluacion', token=token, stage=stage)}}">Iniciar</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </section>
 
 {% endblock%}
