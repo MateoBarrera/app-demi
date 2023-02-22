@@ -25,7 +25,7 @@ Cuestionario
         <div class="container">
           <div class="row">
             <div class="content-wrapper">
-              <form action="{{ url_for('script.cuestionario') }}" method="POST">
+              <form action="{{ url_for('script.cuestionario', token=token) }}" method="POST">
                 {{ cuestionario_form.csrf_token() }}
                 <div class="row">
                   <div class="col">
@@ -33,73 +33,73 @@ Cuestionario
                   </div>
                 </div>
                 <div>
-                <ul class="single-input mb-40">
-                  <li class="form-label text-center p-5">
-                    <h5>Pregunta 1</h5>
-                    <h4 class="text-muted m-4">{{cuestionario_form.resp_1.label()}}</h4>
-                    <div class="m-4 radio-cuestionario">
-                      {% for subfield in cuestionario_form.resp_1 %}
-                      {% if loop.first%}
+                  <ul class="single-input mb-40">
+                    <li class="form-label text-center p-5">
+                      <h5>Pregunta 1</h5>
+                      <h4 class="text-muted m-4">{{cuestionario_form.resp_1.label()}}</h4>
+                      <div class="m-4 radio-cuestionario">
+                        {% for subfield in cuestionario_form.resp_1 %}
+                        {% if loop.first%}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_1-0">
                             <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
                           </label>
                         </td>
-                      {% else %}
+                        {% else %}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_1-1">
                             <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
                           </label></td>
                         </tr>
-                      {% endif %}                       
-                      {% endfor %}                 
-                    </div>
-                  </li>
-                  <li class="form-label text-center p-5">
-                    <h5>Pregunta 2</h5>
-                    <h4 class="text-muted m-4">{{cuestionario_form.resp_2.label()}}</h4>
-                    <div class="m-4 radio-cuestionario">
-                      {% for subfield in cuestionario_form.resp_2 %}
-                      {% if loop.first%}
-                      <td>{{ subfield }}</td>
-                      <td><label for="resp_2-0">
-                          <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
-                        </label>
-                      </td>
-                      {% else %}
-                      <td>{{ subfield }}</td>
-                      <td><label for="resp_2-1">
-                          <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
-                        </label></td>
-                      </tr>
-                      {% endif %}
-                      {% endfor %}
-                    </div>
-                  </li>
-                  <li class="form-label text-center p-5">
-                    <h5>Pregunta 3</h5>
-                    <h4 class="text-muted m-4">{{cuestionario_form.resp_3.label()}}</h4>
-                    <div class="m-4 radio-cuestionario">
-                      {% for subfield in cuestionario_form.resp_3 %}
-                      {% if loop.first%}
-                      <td>{{ subfield }}</td>
-                      <td><label for="resp_3-0">
-                          <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
-                        </label>
-                      </td>
-                      {% else %}
-                      <td>{{ subfield }}</td>
-                      <td><label for="resp_3-1">
-                          <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
-                        </label></td>
-                      </tr>
-                      {% endif %}
-                      {% endfor %}
-                    </div>
-                  </li>
-                </ul>
+                        {% endif %}
+                        {% endfor %}
+                      </div>
+                    </li>
+                    <li class="form-label text-center p-5">
+                      <h5>Pregunta 2</h5>
+                      <h4 class="text-muted m-4">{{cuestionario_form.resp_2.label()}}</h4>
+                      <div class="m-4 radio-cuestionario">
+                        {% for subfield in cuestionario_form.resp_2 %}
+                        {% if loop.first%}
+                        <td>{{ subfield }}</td>
+                        <td><label for="resp_2-0">
+                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                          </label>
+                        </td>
+                        {% else %}
+                        <td>{{ subfield }}</td>
+                        <td><label for="resp_2-1">
+                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                          </label></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                      </div>
+                    </li>
+                    <li class="form-label text-center p-5">
+                      <h5>Pregunta 3</h5>
+                      <h4 class="text-muted m-4">{{cuestionario_form.resp_3.label()}}</h4>
+                      <div class="m-4 radio-cuestionario">
+                        {% for subfield in cuestionario_form.resp_3 %}
+                        {% if loop.first%}
+                        <td>{{ subfield }}</td>
+                        <td><label for="resp_3-0">
+                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                          </label>
+                        </td>
+                        {% else %}
+                        <td>{{ subfield }}</td>
+                        <td><label for="resp_3-1">
+                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                          </label></td>
+                        </tr>
+                        {% endif %}
+                        {% endfor %}
+                      </div>
+                    </li>
+                  </ul>
                 </div>
-                
+
                 <div class="mt-80">
                   <div class="col-auto">
                     {{cuestionario_form.iniciar(class_="button w-25 button-sm radius-10 d-lg-flex ml-auto")}}

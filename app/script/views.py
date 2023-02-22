@@ -103,7 +103,7 @@ def ventana_carga(token):
     }
     return render_template('ventana_carga.html', **context)
 
-@script.route('/evaluacion/<token>/<int:stage>', methods=['GET', 'POST'])
+@script.route('/evaluacion/<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def evaluacion(token, stage):
     session['virtual'] = request.args.get('virtual', 'False')
     session['admin_id'] = None
@@ -129,14 +129,6 @@ def evaluacion(token, stage):
         }
         return render_template('evaluacion.html', **context)
     elif stage == 2:
-        context = {
-            'etapa': 'Evaluación inicial',
-            'mensaje': '¿Como te sientes hoy?',
-            'virtual': session['virtual'],
-            'admin_id':session['admin_id'],
-            'token':token,
-            'stage': stage,
-        }
         return make_response(redirect(url_for('script.stage', token=token, stage=2)))
     elif stage == 3:
         context = {
@@ -152,7 +144,7 @@ def evaluacion(token, stage):
     else:
         return make_response(redirect(url_for('iniciar_terapia')))
 
-@script.route('/ventana-espera/<token>/<int:stage>', methods=['GET', 'POST'])
+@script.route('/ventana-espera/<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def ventana_espera(token, stage):
     if stage == 1:
         context = {
@@ -169,7 +161,7 @@ def ventana_espera(token, stage):
     
     return render_template('ventana_carga.html', **context)
 
-@script.route('/final-evaluacion//<token>/<int:stage>/<ev_est>/<virtual>', methods=['GET', 'POST'])
+@script.route('/final-evaluacion//<token>/stage=<int:stage>/<ev_est>/<virtual>', methods=['GET', 'POST'])
 def final_evaluacion(token, stage, ev_est, virtual):
     key = token
     if stage == 1:
@@ -199,7 +191,7 @@ def final_evaluacion(token, stage, ev_est, virtual):
             app.session_object[key].conteo_final = count_dict
             #print('MAX {}'.format(app.session_object[key].evaluacion['ev_fin_herr']))
             print('Conteos {}'.format(count_dict))
-            response = make_response(redirect(url_for('script.cuestionario')))
+            response = make_response(redirect(url_for('script.cuestionario', token=token)))
             #response = make_response(redirect(url_for('script.stage',stage=3)))
         except:
             response = make_response(redirect(url_for('script.error')))
@@ -209,22 +201,24 @@ def final_evaluacion(token, stage, ev_est, virtual):
         return render_template('virtual/close_tab.html')
     return response
 
-@script.route('/cuestionario', methods=['GET', 'POST'])
-def cuestionario():
+@script.route('/cuestionario/<token>', methods=['GET', 'POST'])
+def cuestionario(token):
     cuestionario_form = CuestionarioForm()
     context = {
         'etapa': 'Evaluación inicial',
         'mensaje': '¿Como te sientes hoy?',
-        'cuestionario_form': cuestionario_form
+        'cuestionario_form': cuestionario_form,
+        'token':token
     }
     if cuestionario_form.validate_on_submit():
-        return redirect(url_for('script.conclusion'))
+        return redirect(url_for('script.conclusion', token=token))
 
     return render_template('cuestionario.html', **context)
 
-@script.route('/conclusion', methods=['GET', 'POST'])
-def conclusion():
-    key = '{}'.format(session['session_token'])
+@script.route('/conclusion/<token>', methods=['GET', 'POST'])
+def conclusion(token):
+    session['session_token'] = token
+    key = token
     ev_ini_doc = app.session_object[key].evaluacion['ev_ini_doc']
     ev_ini_herr = app.session_object[key].evaluacion['ev_ini_herr']
     ev_ini_est = app.session_object[key].evaluacion['ev_ini_est']
@@ -273,24 +267,21 @@ def conclusion():
         'conteo_final': conteo_final,
         'preds_inicial': preds_inicial,
         'preds_final': preds_final,
-        'conclusion_form': conclusiones_form
+        'conclusion_form': conclusiones_form,
+        'token':token
     }
     if conclusiones_form.validate_on_submit():
         app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_doc'] = dict(conclusiones_form.emocion_percibida.choices).get(
             conclusiones_form.emocion_percibida.data)
         app.session_object['{}'.format(
             session['session_token'])].observaciones = conclusiones_form.observacion.data
-        return redirect(url_for('script.guardar'))
-    
-    session_data = app.session_object['{}'.format(session['session_token'])]
-    print("####################### SESION DATA #######################")
-    print(session_data.evaluacion)
+        return redirect(url_for('script.guardar', token=token))
 
     return render_template('conclusion.html', **context)
 
-@script.route('/conclusion/guardando', methods=['GET', 'POST'])
-def guardar():
-    key = '{}'.format(session['session_token'])
+@script.route('/conclusion/guardando/<token>', methods=['GET', 'POST'])
+def guardar(token):
+    key = token
     session_data = app.session_object[key]#.id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
     session_data.id_session = app.mysql_object.create_session(
         app.session_object[key])
@@ -335,7 +326,7 @@ def error():
     response = make_response(redirect(session['url_backup']))
     return response
 
-@script.route('/desarrollo/<token>/<int:stage>', methods=['GET', 'POST'])
+@script.route('/desarrollo/<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def stage(token, stage):
     session['session_token'] = token
 
