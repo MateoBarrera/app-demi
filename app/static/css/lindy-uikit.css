@@ -1565,10 +1565,10 @@ p {
 }
 
 .contact-form-wrapper form .single-input input{
-	height: 36px;
+	height: 28px;
 }
 .contact-form-wrapper form .select-input select {
-	height: 36px;
+	height: 28px;
 }
 .contact-form-wrapper form .single-input textarea {
 	padding: 15px 20px;

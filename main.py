@@ -119,17 +119,16 @@ def iniciar_terapia():
     
     session['prev_session'] = False
     try:#Cambiar el uso de prev data sesion a una lista e iterar sobre ella
-        if session['prev_session']:
+        prev_session_data = list()
+        for item in session['tokens']:
+            object = app.session_object['{}'.format(item)]
+            object.token = item
+            prev_session_data.append(object)
+        context['prev_session_data'] = prev_session_data
+        if len(prev_session_data) != 0:
+            session['prev_session'] = True
             context['prev_session'] = session['prev_session']
-            prev_session_data = list()
-            for item in session['tokens']:
-                object = app.session_object['{}'.format(item)]
-                object.token = item
-                prev_session_data.append(object)
-            context['prev_session_data'] = prev_session_data
-            if len(prev_session_data) != 0:
-                session['prev_session'] = True
-                flash('Existe una sesión previa en curso')   
+            flash('Existe una sesión previa en curso')   
     except KeyError as e:
         print(e)
         session['tokens'] = list()

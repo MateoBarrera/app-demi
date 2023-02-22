@@ -19,65 +19,90 @@ Iniciar Terapia
             {% if rol != 'est' %}
             <h3>Bienvenido {{ data.nombre | capitalize }}</h3>
             {% else %}
-            <h5 class="mb-60">Información del estudiante</h5>
+            <h5 class="mb-5">Información del estudiante</h5>
             {% endif %}
             <div class="contact-form-wrapper">
               {% if rol == 'inv/doc' %}
               <form autocomplete="off" action="{{ url_for('iniciar_terapia') }}" method="POST">
+                <h5 class="mt-5 mb-2">Información del estudiante</h5>
+                {{ terapia_form.csrf_token() }}
+                {{ terapia_form.nombre_form() }}
+                {{ terapia_form.identificacion_form() }}
+                {{ terapia_form.tema_form() }}
                 <fieldset>
-                  <h5 class="mb-2">Información del estudiante</h5>
-                  <div class="select-input mb-1">
-                    {{ terapia_form.csrf_token() }}
-                    <label class="mb-0" for="name s">
-                      <p class="text-muted">Nombre del estudiante</p>
-                    </label>
-                    {{ terapia_form.nombre_form() }}
-                    {{ terapia_form.identificacion_form() }}
-                    {{ terapia_form.tema_form() }}
-                    <select name="nombre_select" onchange="set_values()" id="nombre"></select>
+                  <div class="select-input mb-1 row d-flex">
+                    <div class="col-12 col-md-4 pr-0">
+                      <label class="mb-0" for="name s">
+                        <p class="text-muted">Nombre del estudiante</p>
+                      </label>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      <select name="nombre_select" onchange="set_values()" id="nombre"
+                        class="form-input form-select-sm"></select>
+                    </div>
                   </div>
                 </fieldset>
                 <fieldset>
+                  <div class="single-input mb-1 row d-flex">
+                    <div class="col-12 col-md-4">
+                      <label class="mb-0" for="institucion s">
+                        <p class="text-muted">Institución Educativa</p>
+                      </label>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      <input name="text_inst" type="text" readonly id="institucion" class="form-input form-select-sm">
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input mb-1 row d-flex">
+                    <div class="col-12 col-md-4">
+                      <label class="mb-0" for="grado s">
+                        <p class="text-muted">Grado Escolar</p>
+                      </label>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      <input name="text_grado" type="text" readonly id="grado" class="form-input form-select-sm">
+                    </div>
+                  </div>
+                </fieldset>
+                <hr class="my-3">
+                <fieldset>
+                  <div class="select-input mb-1 row d-flex">
+                    <h5 class="mb-1">Sesión de hoy</h5>
+                    <div class="col-12 col-md-4">
+                      <label class="mb-0" for="grado s">
+                        <p class="text-muted">Selección del tema</p>
+                      </label>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      <select disabled name="tema_select" onchange="set_tema()" id="tema"
+                        class="form-input form-select-sm"></select>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="select-input mb-1 row d-flex">
+                    <h6 class="mt-2">Evaluación Inicial</h6>
+                    <div class="col-12 col-md-4">
+                      <label class="mb-0" for="grado s">
+                        <p>{{terapia_form.emocion_percibida.label(class_="mb-0 text-muted")}}
+                        </p>
+                      </label>
+                    </div>
+                    <div class="col-12 col-md-8">
+                      {{terapia_form.emocion_percibida(class_="form-input form-select-sm")}}
+                      {% for error in terapia_form.emocion_percibida.errors %}
+                      <span style="color: red;">{{ error }}</span>
+                      {% endfor %}
+                    </div>
+
+                  </div>
+                </fieldset>
+                <!-- Ocultar mientras se revisa a detalle -->
+                <fieldset class="d-none">
                   <div class="single-input mb-1">
-                    <label class="mb-0" for="institucion s">
-                      <p class="text-muted">Institución Educativa</p>
-                    </label>
-                    <input name="text_inst" type="text" readonly id="institucion" class="form-input">
-                  </div>
-                </fieldset>
-                <fieldset>
-                  <div class="single-input mb-1">
-                    <label class="mb-0" for="grado s">
-                      <p class="text-muted">Grado Escolar</p>
-                    </label>
-                    <input name="text_grado" type="text" readonly id="grado" class="form-input">
-                  </div>
-                </fieldset>
-                <hr>
-                <fieldset>
-                  <div class="select-input mb-1">
-                    <h5 class="my-10">Sesión de hoy</h5>
-                    <label class="mb-0" for="grado s">
-                      <p class="text-muted">Selección del tema</p>
-                    </label>
-                    <select disabled name="tema_select" onchange="set_tema()" id="tema"></select>
-                  </div>
-                </fieldset>
-                <fieldset>
-                  <div class="select-input mb-1">
-                    <h5 class="mt-10">Evaluación Inicial</h5>
-                    <label class="mb-0" for="grado s">
-                      <p>{{terapia_form.emocion_percibida.label(class_="mb-0 text-muted")}}</p>
-                    </label>
-                    {{terapia_form.emocion_percibida()}}
-                    {% for error in terapia_form.emocion_percibida.errors %}
-                    <span style="color: red;">{{ error }}</span>
-                    {% endfor %}
-                  </div>
-                </fieldset>
-                <fieldset>
-                  <div class="single-input mb-1">
-                    <label class="mt-10" for="grado s">
+                    <label class="mt-2" for="grado s">
                       <h6>Tipo de sesión</h6>
                     </label>
                   </div>
