@@ -116,30 +116,43 @@ def iniciar_terapia():
         'all_sessions': all_sessions,
     }  
     #Check de sesiones previas
-    try:
+    try:#Cambiar el uso de prev data sesion a una lista e iterar sobre ella
         if session['prev_session']:
             context['prev_session'] = session['prev_session']
-            prev_session_data = app.session_object['{}'.format(
-                session['session_token'])]
+            prev_session_data = list()
+            for item in session['tokens']:
+                print(item)
+                object = app.session_object['{}'.format(item)]
+                object.token = item
+                prev_session_data.append(object)
+            
+            print("LENNNNNNNN")    
+            print(len(prev_session_data))
             context['prev_session_data'] = prev_session_data
-            flash('Existe una sesión previa en curso')            
+            flash('Existe una sesión previa en curso')         
+        print(f"Sessión tokens {session['tokens']}")   
     except KeyError as e:
         print(e)
         session['prev_session'] = False
+        session['tokens'] = list()
         
+    print(f"prev_session {session['prev_session']}")
+    
     #Gestión de los post en el formulario de iniciar terapia, reanudar o iniciar de cero
     if terapia_form.validate_on_submit() and (user.rol == 'inv/doc'):
         estudiante = terapia_form.nombre_form.data
         emocion = dict(terapia_form.emocion_percibida.choices).get(terapia_form.emocion_percibida.data)
-
+        
         tema = terapia_form.tema_form.data
         identificacion = terapia_form.identificacion_form.data
 
-        if not session['prev_session']:
-            session['session_token'] = secrets.token_urlsafe(6)
+        #if not session['prev_session']:
+        session['session_token'] = secrets.token_urlsafe(6)
+        session['tokens'].append(session['session_token'])
         session['stage'] = 'inicial'
         key = '{}'.format(session['session_token'])
         app.session_object[key] = SessionData()
+        app.session_object[key].token = key
         app.session_object[key].fecha = datetime.now(pytz.timezone(app.config['TIMEZONE'])).strftime('%Y-%m-%d %H:%M:%S')
         app.session_object[key].evaluacion['ev_ini_doc'] = emocion
         app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
@@ -159,12 +172,12 @@ def iniciar_terapia():
                 'static', filename='/images/avatar.jpg')
 
         session['prev_session'] = True
-    
+         
+        print(f"prev_session {session['prev_session']}")   
         if terapia_form.virtual.data:
             return redirect(url_for('script.panel_virtual'))
         else:
-            return redirect(url_for('script.stage',stage=1))
-
+            return redirect(url_for('script.stage',token= session["session_token"],stage=1))
     return render_template('terapia.html', **context)
 
 @app.route('/registro-estudiante/<terapia>', methods=['GET', 'POST'])

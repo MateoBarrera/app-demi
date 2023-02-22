@@ -317,8 +317,9 @@ def error():
     response = make_response(redirect(session['url_backup']))
     return response
 
-@script.route('/desarrollo/<stage>', methods=['GET', 'POST'])
-def stage(stage):
+@script.route('/desarrollo/<token>/<stage>', methods=['GET', 'POST'])
+def stage(token, stage):
+    session['session_token'] = token
     context = {
         'actual_stage' : stage
     }

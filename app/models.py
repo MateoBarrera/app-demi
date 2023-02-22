@@ -69,6 +69,7 @@ class UserModel(UserMixin):
 
 class SessionData():
     def __init__(self):
+        self.token = None
         self.id_sesion = None
         self.id_usuario = None
         self.id_estudiante = None

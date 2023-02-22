@@ -13,202 +13,229 @@ Iniciar Terapia
 <section id="iniciar_terapia" class="contact-section contact-style-6 mt-0">
   <div class="container justify-content-center">
     <div class="row">
-    <div class="col-lg-5">
-      <div class="content-wrapper">
-        <div class="section-title mb-25">
-          {% if rol != 'est' %}
-            <h3 >Bienvenido {{ data.nombre | capitalize }}</h3>
-          {% else %}
+      <div class="col-lg-5">
+        <div class="content-wrapper">
+          <div class="section-title mb-25">
+            {% if rol != 'est' %}
+            <h3>Bienvenido {{ data.nombre | capitalize }}</h3>
+            {% else %}
             <h5 class="mb-60">Información del estudiante</h5>
-          {% endif %}
-          <div class="contact-form-wrapper">
-            {% if rol == 'inv/doc' %}
-            <form autocomplete="off" action="{{ url_for('iniciar_terapia') }}" method="POST">
-              <fieldset>
-                <h5 class="mb-2">Información del estudiante</h5>
-                <div class="select-input mb-1">
-                  {{ terapia_form.csrf_token() }}
-                  <label class="mb-0" for="name s">
-                    <p class="text-muted">Nombre del estudiante</p>
-                  </label>
-                  {{ terapia_form.nombre_form() }}
-                  {{ terapia_form.identificacion_form() }}
-                  {{ terapia_form.tema_form() }}
-                  <select name="nombre_select" onchange="set_values()" id="nombre"></select>
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="single-input mb-1">
-                  <label class="mb-0" for="institucion s">
-                    <p class="text-muted">Institución Educativa</p>
-                  </label>
-                  <input name="text_inst" type="text" readonly id="institucion" class="form-input">
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="single-input mb-1">
-                  <label class="mb-0" for="grado s">
-                    <p class="text-muted">Grado Escolar</p>
-                  </label>
-                  <input name="text_grado" type="text" readonly id="grado" class="form-input">
-                </div>
-              </fieldset>
-              <hr>
-              <fieldset>
-                <div class="select-input mb-1">
-                  <h5 class="my-10">Sesión de hoy</h5>
-                  <label class="mb-0" for="grado s">
-                    <p class="text-muted">Selección del tema</p>
-                  </label>
-                  <select disabled name="tema_select" onchange="set_tema()" id="tema"></select>
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="select-input mb-1">
-                  <h5 class="mt-10">Evaluación Inicial</h5>
-                  <label class="mb-0" for="grado s">
-                    <p>{{terapia_form.emocion_percibida.label(class_="mb-0 text-muted")}}</p>
-                  </label>
-                  {{terapia_form.emocion_percibida()}}
-                  {% for error in terapia_form.emocion_percibida.errors %}
-                  <span style="color: red;">{{ error }}</span>
-                  {% endfor %}
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="single-input mb-1">
-                  <label class="mt-10" for="grado s">
-                    <h6>Tipo de sesión</h6>
-                  </label>
-                </div>
-                <div class="d-flex justify-content-center">
-                  <div class="altern-text form-check form-check-inline mr-50">
-                    <h6>Presencial</h6>
+            {% endif %}
+            <div class="contact-form-wrapper">
+              {% if rol == 'inv/doc' %}
+              <form autocomplete="off" action="{{ url_for('iniciar_terapia') }}" method="POST">
+                <fieldset>
+                  <h5 class="mb-2">Información del estudiante</h5>
+                  <div class="select-input mb-1">
+                    {{ terapia_form.csrf_token() }}
+                    <label class="mb-0" for="name s">
+                      <p class="text-muted">Nombre del estudiante</p>
+                    </label>
+                    {{ terapia_form.nombre_form() }}
+                    {{ terapia_form.identificacion_form() }}
+                    {{ terapia_form.tema_form() }}
+                    <select name="nombre_select" onchange="set_values()" id="nombre"></select>
                   </div>
-                  <div class="form-check form-check-inline form-switch">
-                    {{terapia_form.virtual(class_="col form-check-input")}}
+                </fieldset>
+                <fieldset>
+                  <div class="single-input mb-1">
+                    <label class="mb-0" for="institucion s">
+                      <p class="text-muted">Institución Educativa</p>
+                    </label>
+                    <input name="text_inst" type="text" readonly id="institucion" class="form-input">
                   </div>
-                  <div class="altern-text form-check form-check-inline">
-                    <h6>Virtual</h6>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input mb-1">
+                    <label class="mb-0" for="grado s">
+                      <p class="text-muted">Grado Escolar</p>
+                    </label>
+                    <input name="text_grado" type="text" readonly id="grado" class="form-input">
                   </div>
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="mt-10 wow fadeInUp form-button">
-                  {{terapia_form.iniciar(class_=" button radius-10 w-100")}}
-                  {% for error in terapia_form.errors %}
-                  <span style="color: red;">El error es {{ error }}</span>
-                  {% endfor %}
-                </div>
-              </fieldset>
-              <!-- Tema nuevo -->
-              <div class="modal fade " id="newtema" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered">
-                  <div class="modal-content radius-10 px-4">
-                    <div class="modal-header">
-                      <h5 class="modal-title h5 text-primary" id="newtemaLabel">Nuevo tema</h5>
-                      <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
+                </fieldset>
+                <hr>
+                <fieldset>
+                  <div class="select-input mb-1">
+                    <h5 class="my-10">Sesión de hoy</h5>
+                    <label class="mb-0" for="grado s">
+                      <p class="text-muted">Selección del tema</p>
+                    </label>
+                    <select disabled name="tema_select" onchange="set_tema()" id="tema"></select>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="select-input mb-1">
+                    <h5 class="mt-10">Evaluación Inicial</h5>
+                    <label class="mb-0" for="grado s">
+                      <p>{{terapia_form.emocion_percibida.label(class_="mb-0 text-muted")}}</p>
+                    </label>
+                    {{terapia_form.emocion_percibida()}}
+                    {% for error in terapia_form.emocion_percibida.errors %}
+                    <span style="color: red;">{{ error }}</span>
+                    {% endfor %}
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input mb-1">
+                    <label class="mt-10" for="grado s">
+                      <h6>Tipo de sesión</h6>
+                    </label>
+                  </div>
+                  <div class="d-flex justify-content-center">
+                    <div class="altern-text form-check form-check-inline mr-50">
+                      <h6>Presencial</h6>
                     </div>
-                    <div class="modal-body">
-                      <p class="fs-5 pb-3">Ingresa el tema:</p>
-                      <div class="single-input">
-                        <input type="text" class="form-input" id="input-newtema">
+                    <div class="form-check form-check-inline form-switch">
+                      {{terapia_form.virtual(class_="col form-check-input")}}
+                    </div>
+                    <div class="altern-text form-check form-check-inline">
+                      <h6>Virtual</h6>
+                    </div>
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="mt-10 wow fadeInUp form-button">
+                    {{terapia_form.iniciar(class_=" button radius-10 w-100")}}
+                    {% for error in terapia_form.errors %}
+                    <span style="color: red;">El error es {{ error }}</span>
+                    {% endfor %}
+                  </div>
+                </fieldset>
+                <!-- Tema nuevo -->
+                <div class="modal fade " id="newtema" tabindex="-1" role="dialog">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content radius-10 px-4">
+                      <div class="modal-header">
+                        <h5 class="modal-title h5 text-primary" id="newtemaLabel">Nuevo tema</h5>
+                        <img class="icon-modal" alt="shortcut icon"
+                          src="{{ url_for('static', filename='images/favicon.ico') }}">
+                      </div>
+                      <div class="modal-body">
+                        <p class="fs-5 pb-3">Ingresa el tema:</p>
+                        <div class="single-input">
+                          <input type="text" class="form-input" id="input-newtema">
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary radius-10"
+                          data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary radius-10" data-bs-dismiss="modal"
+                          onclick="setNewTema()">Guardar</button>
                       </div>
                     </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
-                      <button type="button" class="btn btn-primary radius-10" data-bs-dismiss="modal" onclick="setNewTema()">Guardar</button>
-                    </div>
                   </div>
                 </div>
-              </div>
-            </form>
-            {% else %}
-            <form>
-              <fieldset>
-                <div class="single-input ">
-                  <label for="grado s">
-                    <h6>Grado Escolar</h6>
-                  </label>
-                  <input type="text" readonly id="grado_est" class="form-input text-center" value="{{data.grado}}">
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="single-input">
-                  <label for="institucion s">
-                    <h6>Institución Educativa</h6>
-                  </label>
-                  <input type="text" readonly id="institucion_est" class="form-input text-center" value="{{data.institucion|capitalize }}">
-                </div>
-              </fieldset>
-              <fieldset>
-                <div class="text-center form-button wow fadeInUp">
-                  <a href="{{url_for('script.ventana_carga')}}"><button type="button" class="button radius-10">Iniciar</button></a>
-                </div>
-              </fieldset>
-            </from>
-            {% endif %}
+              </form>
+              {% else %}
+              <form>
+                <fieldset>
+                  <div class="single-input ">
+                    <label for="grado s">
+                      <h6>Grado Escolar</h6>
+                    </label>
+                    <input type="text" readonly id="grado_est" class="form-input text-center" value="{{data.grado}}">
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="single-input">
+                    <label for="institucion s">
+                      <h6>Institución Educativa</h6>
+                    </label>
+                    <input type="text" readonly id="institucion_est" class="form-input text-center"
+                      value="{{data.institucion|capitalize }}">
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <div class="text-center form-button wow fadeInUp">
+                    <a href="{{url_for('script.ventana_carga')}}"><button type="button"
+                        class="button radius-10">Iniciar</button></a>
+                  </div>
+                </fieldset>
+                </from>
+                {% endif %}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-5 ml-auto p-auto">
-      <div class="hero-image cup-end">
-        <img src="{{url_for('static',filename='/images/Reading_book.svg')}}" alt="" class="wow fadeInRight"
-          data-wow-delay=".2s"
-          style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInRight; max-width: 100%; ">
+      <div class="col-lg-5 ml-auto p-auto">
+        <div class="hero-image cup-end">
+          <img src="{{url_for('static',filename='/images/Reading_book.svg')}}" alt="" class="wow fadeInRight"
+            data-wow-delay=".2s"
+            style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInRight; max-width: 100%; ">
+        </div>
       </div>
-    </div>
     </div>
   </div>
   {% if rol == 'inv/doc' %}
   <div class="container">
     <div class="row mt-10">
       <div class="col-md-12">
-          <div class="section-title mb-30 ">
-            <h6 class="text-center mb-15 wow fadeInUp" data-wow-delay=".2s">¿Estudiante nuevo?</h6>
-            <div class="text-center form-button wow fadeInUp">
-              <a href="{{url_for('registro_est',terapia=True)}}"><button type="button" class="button radius-10">Registrar</button></a>
-            </div>
+        <div class="section-title mb-30 ">
+          <h6 class="text-center mb-15 wow fadeInUp" data-wow-delay=".2s">¿Estudiante nuevo?</h6>
+          <div class="text-center form-button wow fadeInUp">
+            <a href="{{url_for('registro_est',terapia=True)}}"><button type="button"
+                class="button radius-10">Registrar</button></a>
+          </div>
         </div>
       </div>
     </div>
   </div>
   {% endif %}
   {% if prev_session %}
-    <!-- Button trigger modal -->
-<!--     <button id="input-prevSession" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#prevSession">
+  <!-- Button trigger modal -->
+  <!--     <button id="input-prevSession" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#prevSession">
       Launch demo modal
     </button> -->
 
-    <!-- Modal -->
-    <div class="modal fade" id="prevSession" tabindex="-1" role="dialog">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content radius-10 px-4">
-          <div class="modal-header">
-            <h5 class="modal-title h5 text-primary" id="prevSessionLabel">Sesión en progreso...</h5>
-            <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
-          </div>
-          {% if prev_session_data.stage == 'inicial' %}
+  <!-- Modal -->
+  <div class="modal fade" id="prevSession" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content radius-10 px-4">
+        <div class="modal-header">
+          <h5 class="modal-title h5 text-primary" id="prevSessionLabel">Sesiones en progreso</h5>
+          <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
+        </div>
+        <div class="modal-body pb-1">
+          {% for info_session in prev_session_data %}
+          {% if info_session.stage == 'inicial' %}
           {% set actual_stage = 1 %}
-          {% elif prev_session_data.stage == 'final' %}
+          {% elif info_session.stage == 'final' %}
           {% set actual_stage = 3 %}
           {% endif %}
-          <div class="modal-body">
-            <p class="fs-5 pb-3">Existe una sesión iniciada con la siguiente información</p>
-            <div class="d-flex justify-content-between"><span class="h6">Estudiante:</span><span>{{prev_session_data.nombre | capitalize}}</span></div>
-            <div class="d-flex justify-content-between"><span class="h6">Fecha:</span>{{prev_session_data.fecha[:10]}}</div>
-            <div class="d-flex justify-content-between"><span class="h6">Hora:</span>{{prev_session_data.fecha[11:]}}</div>
-            <div class="d-flex justify-content-between"><span class="h6">Etapa:</span>Evaluación {{prev_session_data.stage | capitalize}}</div>
+          {% set token_id = info_session.token %}
+          <div>
+            <p class="fs-6 pb-3">Información de la sesión</p>
+            <div class="d-flex justify-content-between"><span class="h6"><small> Estudiante:
+                </small></span><span>{{info_session.nombre |
+                capitalize}}</span></div>
+            <div class="d-flex justify-content-between"><span class="h6"><small> Fecha:
+                </small></span>{{info_session.fecha[:10]}}
+            </div>
+            <div class="d-flex justify-content-between"><span class="h6"><small> Hora:
+                </small></span>{{info_session.fecha[11:]}}
+            </div>
+            <div class="d-flex justify-content-between"><span class="h6"><small> Etapa: </small></span>Evaluación
+              {{info_session.stage |
+              capitalize}}
+            </div>
           </div>
-          <div class="modal-footer">
-            <div class="col-12 py-2"><p class="fs-5">¿Desea reanudar la sesión en progreso?</p></div><br>
-            <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
-            <a href="{{url_for('script.stage',stage=actual_stage)}}" type="button" class="btn btn-primary radius-10">Reanudar</a>
+          <div class="d-flex">
+            <div class="col-12 py-2">
+              <p class="fs-6">¿Desea reanudar la sesión en progreso?</p>
+              <a href="{{url_for('script.stage', token = token_id, stage = actual_stage)}}" type="button"
+                class="btn btn-sm btn-primary radius-10 col-12">Reanudar</a>
+            </div>
           </div>
+          <hr>
+          {% endfor %}
+        </div>
+        <div class="modal-footer d-flex">
+          <button type="button" class="btn btn-secondary radius-10 justify-content-start"
+            data-bs-dismiss="modal">Cancelar</button>
         </div>
       </div>
     </div>
+  </div>
   {% endif %}
 
   {% endblock %}
@@ -222,21 +249,21 @@ Iniciar Terapia
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.js">
 </script> -->
 
- <script type="text/javascript">
-      window.onload = function () {
-      /* alert("Page is loaded"); */
-      var x = document.getElementById("nombre");
+<script type="text/javascript">
+  window.onload = function () {
+    /* alert("Page is loaded"); */
+    var x = document.getElementById("nombre");
+    var option = document.createElement("option");
+    option.text = "";
+    x.add(option);
+    let students = JSON.parse('{{students| tojson | safe}}');
+    students.forEach(element => {
       var option = document.createElement("option");
-      option.text = "";
+      option.text = element['estudiante'].charAt(0).toUpperCase() + element['estudiante'].slice(1);
       x.add(option);
-      let students = JSON.parse('{{students| tojson | safe}}');
-      students.forEach(element => {
-        var option = document.createElement("option");
-        option.text = element['estudiante'].charAt(0).toUpperCase()+ element['estudiante'].slice(1);
-        x.add(option);
-      });
-    }
-    
+    });
+  }
+
   function set_values() {
     var index = document.getElementById("nombre").selectedIndex;
     var nombre = "";
@@ -245,7 +272,7 @@ Iniciar Terapia
     var identificacion = "";
     var i = 0;
     let students = JSON.parse('{{students| tojson | safe}}');
-    students.forEach(element => {      
+    students.forEach(element => {
       i += 1;
       if (index == i) {
         nombre = element['estudiante'];
@@ -254,17 +281,17 @@ Iniciar Terapia
         identificacion = element['identificacion'];
       }
     });
-  document.getElementById('nombre_form').value = nombre;
-  document.getElementById('institucion').value = inst;
-  document.getElementById('grado').value = grado;
-  document.getElementById('identificacion_form').value = identificacion;
-  set_list_tema(nombre); 
+    document.getElementById('nombre_form').value = nombre;
+    document.getElementById('institucion').value = inst;
+    document.getElementById('grado').value = grado;
+    document.getElementById('identificacion_form').value = identificacion;
+    set_list_tema(nombre);
   };
 
-  function set_list_tema(nombre){
-    if (nombre === ""){
+  function set_list_tema(nombre) {
+    if (nombre === "") {
       return
-    }else{
+    } else {
       let sessions = JSON.parse('{{ all_sessions | tojson | safe}}');
       let temas_list = []
       sessions.forEach(element => {
@@ -272,23 +299,23 @@ Iniciar Terapia
           temas_list.push(element['tema'])
         }
       });
-      add_option_tema(temas_list); 
+      add_option_tema(temas_list);
     }
   };
 
-  function set_tema(){
-    var select_text =  $('#tema').find(":selected").text();    
+  function set_tema() {
+    var select_text = $('#tema').find(":selected").text();
     console.log("Select " + select_text)
-    if (select_text == "Iniciar con tema nuevo"){
+    if (select_text == "Iniciar con tema nuevo") {
       $("#newtema").modal('show');
     }
-    else if (select_text != ' '){
-      console.log("Done "+select_text)
+    else if (select_text != ' ') {
+      console.log("Done " + select_text)
       document.getElementById('tema_form').value = select_text;
     };
   };
 
-  async function add_option_tema(tema_list){
+  async function add_option_tema(tema_list) {
     $('#tema').find('option').remove().end()
     var x_tema = document.getElementById("tema");
     var option = document.createElement("option");
@@ -298,30 +325,30 @@ Iniciar Terapia
     console.log(tema_list)
     removeDuplicates(tema_list).forEach(element => {
       if (element) {
-      var option = document.createElement("option");
-      option.text = element.charAt(0).toUpperCase() + element.slice(1);
-      x_tema.add(option);
+        var option = document.createElement("option");
+        option.text = element.charAt(0).toUpperCase() + element.slice(1);
+        x_tema.add(option);
       };
     });
     var option = document.createElement("option");
     option.text = "Iniciar con tema nuevo";
     option.classList.add('text-primary')
-    x_tema.add(option);    
-    x_tema.disabled = false;  
+    x_tema.add(option);
+    x_tema.disabled = false;
     addHr(x_tema);
   };
   function removeDuplicates(arr) {
-      return arr.filter((item,
-        index) => arr.indexOf(item) === index);
+    return arr.filter((item,
+      index) => arr.indexOf(item) === index);
   };
 
-  function addHr(select){
+  function addHr(select) {
     var hr = document.createElement('hr');
     hr.classList.add('text-primary')
     select.insertBefore(hr, select[select.length - 1]);
   }
 
-  function setNewTema(){
+  function setNewTema() {
     var x_tema = document.getElementById("tema");
     var option = document.createElement("option");
     var new_tema = document.getElementById("input-newtema");
