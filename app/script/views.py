@@ -150,13 +150,15 @@ def ventana_espera(token, stage):
         context = {
             'etapa': 'Evaluación inicial',
             'token':token,
-            'stage':stage
+            'stage':stage,
+            'student':app.session_object[token].nombre
         }
     else:
         context = {
             'etapa': 'Evaluación final',
             'token': token,
-            'stage':stage
+            'stage':stage,
+            'student':app.session_object[token].nombre
         }
     
     return render_template('ventana_carga.html', **context)
@@ -208,7 +210,8 @@ def cuestionario(token):
         'etapa': 'Evaluación inicial',
         'mensaje': '¿Como te sientes hoy?',
         'cuestionario_form': cuestionario_form,
-        'token':token
+        'token':token,
+        'student':app.session_object[token].nombre
     }
     if cuestionario_form.validate_on_submit():
         return redirect(url_for('script.conclusion', token=token))
@@ -268,7 +271,8 @@ def conclusion(token):
         'preds_inicial': preds_inicial,
         'preds_final': preds_final,
         'conclusion_form': conclusiones_form,
-        'token':token
+        'token':token,
+        'student':app.session_object[token].nombre
     }
     if conclusiones_form.validate_on_submit():
         app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_doc'] = dict(conclusiones_form.emocion_percibida.choices).get(
@@ -332,6 +336,7 @@ def stage(token, stage):
 
     context = {
         'actual_stage' : stage,
-        'token':token
+        'token':token,
+        'student':app.session_object[token].nombre
     }
     return render_template('stage.html', **context)

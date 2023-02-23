@@ -11,86 +11,87 @@ Cuestionario
 
 {% block content %}
 <section id="cuestionario" class="feature-section feature-style-2">
-  <div class="container">
+  <div class="container px-1 px-md-3">
     <div class="row justify-content-center">
       <div class="col-lg-12">
         <div class="row">
           <div class="col-xl-7 col-lg-10 col-md-9"></div>
           <div class="section-title">
-            <h3 class="text-center">Cuestionario</h3>
+            <h4 class="text-center font-weight-bolder text-primary">Cuestionario</h4>
+            <h5 class="text-center text-muted font-weight-bold">{{student|capitalize}}</h5>
           </div>
         </div>
       </div>
-      <div class="contact-section contact-style-6 bg-body">
+      <div class="contact-section contact-style-6 bg-body pt-5">
         <div class="container">
           <div class="row">
-            <div class="content-wrapper">
+            <div class="content-wrapper p-0">
               <form action="{{ url_for('script.cuestionario', token=token) }}" method="POST">
                 {{ cuestionario_form.csrf_token() }}
                 <div class="row">
                   <div class="col">
-                    <h4 class="mt-0 mb-20">Evaluación de la clase</h4>
+                    <h6 class="text-center mt-0 mb-2">Evaluación de la clase</h6>
                   </div>
                 </div>
                 <div>
                   <ul class="single-input mb-40">
-                    <li class="form-label text-center p-5">
+                    <li class="form-label text-center p-3">
                       <h5>Pregunta 1</h5>
-                      <h4 class="text-muted m-4">{{cuestionario_form.resp_1.label()}}</h4>
-                      <div class="m-4 radio-cuestionario">
+                      <h6 class="text-muted m-3">{{cuestionario_form.resp_1.label()}}</h6>
+                      <div class="m-2 radio-cuestionario">
                         {% for subfield in cuestionario_form.resp_1 %}
-                        {% if loop.first%}
+                        {% if loop.first %}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_1-0">
-                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-2" alt="">
                           </label>
                         </td>
                         {% else %}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_1-1">
-                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-2" alt="">
                           </label></td>
                         </tr>
                         {% endif %}
                         {% endfor %}
                       </div>
                     </li>
-                    <li class="form-label text-center p-5">
+                    <li class="form-label text-center p-3">
                       <h5>Pregunta 2</h5>
-                      <h4 class="text-muted m-4">{{cuestionario_form.resp_2.label()}}</h4>
-                      <div class="m-4 radio-cuestionario">
+                      <h6 class="text-muted m-3">{{cuestionario_form.resp_2.label()}}</h6>
+                      <div class="m-2 radio-cuestionario">
                         {% for subfield in cuestionario_form.resp_2 %}
                         {% if loop.first%}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_2-0">
-                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-2" alt="">
                           </label>
                         </td>
                         {% else %}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_2-1">
-                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-2" alt="">
                           </label></td>
                         </tr>
                         {% endif %}
                         {% endfor %}
                       </div>
                     </li>
-                    <li class="form-label text-center p-5">
+                    <li class="form-label text-center p-3">
                       <h5>Pregunta 3</h5>
-                      <h4 class="text-muted m-4">{{cuestionario_form.resp_3.label()}}</h4>
-                      <div class="m-4 radio-cuestionario">
+                      <h6 class="text-muted m-3">{{cuestionario_form.resp_3.label()}}</h6>
+                      <div class="m-2 radio-cuestionario">
                         {% for subfield in cuestionario_form.resp_3 %}
                         {% if loop.first%}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_3-0">
-                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-4" alt="">
+                            <img src="{{url_for('static',filename='/images/like_1.svg')}}" class="w-25 m-2" alt="">
                           </label>
                         </td>
                         {% else %}
                         <td>{{ subfield }}</td>
                         <td><label for="resp_3-1">
-                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-4" alt="">
+                            <img src="{{url_for('static',filename='/images/dislike_1.svg')}}" class="w-25 m-2" alt="">
                           </label></td>
                         </tr>
                         {% endif %}

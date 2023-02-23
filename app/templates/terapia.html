@@ -229,15 +229,15 @@ Iniciar Terapia
           {% endif %}
           {% set token_id = info_session.token %}
           <div>
-            <p class="fs-6 pb-3">Información de la sesión</p>
+            <p class="fs-5 text-muted font-weight-bold">Información de la sesión</p>
             <div class="d-flex justify-content-between"><span class="h6"><small> Estudiante:
                 </small></span><span>{{info_session.nombre |
                 capitalize}}</span></div>
-            <div class="d-flex justify-content-between"><span class="h6"><small> Fecha:
+            <!-- <div class="d-flex justify-content-between"><span class="h6"><small> Fecha:
                 </small></span>{{info_session.fecha[:10]}}
-            </div>
+            </div> -->
             <div class="d-flex justify-content-between"><span class="h6"><small> Hora:
-                </small></span>{{info_session.fecha[11:]}}
+                </small></span>{{info_session.fecha[11:16]}}
             </div>
             <div class="d-flex justify-content-between"><span class="h6"><small> Etapa: </small></span>Evaluación
               {{info_session.stage |
@@ -245,18 +245,17 @@ Iniciar Terapia
             </div>
           </div>
           <div class="d-flex">
-            <div class="col-12 py-2">
-              <p class="fs-6">¿Desea reanudar la sesión en progreso?</p>
+            <div class="col-12 py-2 d-flex justify-content-between">
+              <p class="fs-6 text-muted">¿Desea reanudar la sesión en progreso?</p>
               <a href="{{url_for('script.stage', token = token_id, stage = actual_stage)}}" type="button"
-                class="btn btn-sm btn-primary radius-10 col-12">Reanudar</a>
+                class="btn btn-sm btn-primary radius-10 col-3 justify-self-end">Reanudar</a>
             </div>
           </div>
-          <hr>
+          <hr class="py-1">
           {% endfor %}
-        </div>
-        <div class="modal-footer d-flex">
-          <button type="button" class="btn btn-secondary radius-10 justify-content-start"
-            data-bs-dismiss="modal">Cancelar</button>
+          <div class="d-flex py-2">
+            <button type="button" class="btn btn-secondary radius-10" data-bs-dismiss="modal">Cancelar</button>
+          </div>
         </div>
       </div>
     </div>
