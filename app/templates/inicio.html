@@ -8,30 +8,34 @@ Inicio
 {% endblock %}
 {% block content %}
 <section id="inicio" class="hero-section-wrapper-2">
-<div class="hero-section hero-style-2">
-  <div class="container">
-    <div class="row align-items-end">
-      <div class="col-lg-5 order-last order-lg-first">
-        <div class="hero-content-wrapper pt-0 pt-lg-5">
-          <div class="pt-lg-5">
+  <div class="hero-section hero-style-2">
+    <div class="container">
+      <div class="row align-items-end">
+        <div class="col-lg-5 order-last order-lg-first">
+          <div class="hero-content-wrapper pt-0 pt-lg-5">
             <div class="pt-lg-5">
-              <h2 class="wow fadeInUp text-primary pt-lg-5" data-wow-delay=".2s">DEMI</h2>
-              <p class="mb-50 wow fadeInUp justified-text" data-wow-delay=".6s">Herramienta de apoyo para el reconocimiento de emociones de personas con Síndrome de Down en actividades virtuales y presenciales.</p>
-              <div class="d-flex justify-content-center">
-                <a href="{{url_for('iniciar_terapia')}}" class="button button-lg btn-block radius-10 wow fadeInUp" data-wow-delay=".7s">Iniciar</a>
+              <div class="pt-lg-5">
+                <h2 class="wow fadeInUp text-primary pt-lg-5" data-wow-delay=".2s">DEMI</h2>
+                <p class="mb-50 wow fadeInUp justified-text" data-wow-delay=".6s">Herramienta de apoyo para el
+                  reconocimiento de emociones de personas con Síndrome de Down en actividades virtuales y presenciales.
+                </p>
+                <div class="d-flex justify-content-center">
+                  <a href="{{url_for('iniciar_terapia')}}" class="button btn-block radius-10 wow fadeInUp"
+                    data-wow-delay=".7s">Iniciar</a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="col-lg-5 p-auto m-auto mt-5 mt-lg-auto">
-        <div class="hero-image cup-end mid-image mt-5 mt-lg-auto">
-          <img src="{{url_for('static',filename='/images/informed_decision.svg')}}" alt="" class="wow fadeInRight" data-wow-delay=".2s">
+        <div class="col-lg-5 p-auto m-auto mt-5 mt-lg-auto">
+          <div class="hero-image cup-end mid-image mt-5 mt-lg-auto">
+            <img src="{{url_for('static',filename='/images/informed_decision.svg')}}" alt="" class="wow fadeInRight"
+              data-wow-delay=".2s">
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </section>
 
 <section id="servicios" class="feature-section feature-style-2">
@@ -52,12 +56,14 @@ Inicio
             <a class="mb-25 service text-center text-md-left" href="{{url_for('registro_est',terapia=False)}}">
               <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
-                <img src="{{url_for('static',filename='/images/Icon_editar.svg')}}" alt="Registrar estudiante" style="max-width: 55px;">
+                  <img src="{{url_for('static',filename='/images/Icon_editar.svg')}}" alt="Registrar estudiante"
+                    style="max-width: 55px;">
                 </div>
               </div>
               <h5 class="mb-25 effect-underline">Registrar estudiante</h5>
             </a>
-            <p class="justified-text col-12 col-lg-6">Cargar la información esencial para la identificación del estudiante en la herramienta.</p>
+            <p class="justified-text col-12 col-lg-6">Cargar la información esencial para la identificación del
+              estudiante en la herramienta.</p>
           </div>
         </div>
       </div>
@@ -67,11 +73,12 @@ Inicio
             <a class="mb-25 service text-center text-md-left" href="{{url_for('iniciar_terapia')}}">
               <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
-                <img src="{{url_for('static',filename='/images/Icon_mas.svg')}}" alt="Iniciar terapia" style="max-width: 55px;">
-              </div>
+                  <img src="{{url_for('static',filename='/images/Icon_mas.svg')}}" alt="Iniciar terapia"
+                    style="max-width: 55px;">
+                </div>
               </div>
               <h5 class="mb-25">Iniciar</h5>
-            </a>               
+            </a>
             <p class="justified-text col-12 col-lg-6">Inicia una nueva terapia presencial o virtual de inmediato.</p>
           </div>
         </div>
@@ -82,12 +89,14 @@ Inicio
             <a class="mb-25 service text-center text-md-left" href="#contacto">
               <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
-                  <img src="{{url_for('static',filename='/images/Icon_email.svg')}}" alt="Contacto" style="max-width: 55px;">
+                  <img src="{{url_for('static',filename='/images/Icon_email.svg')}}" alt="Contacto"
+                    style="max-width: 55px;">
                 </div>
               </div>
               <h5 class="mb-25">Contacto</h5>
             </a>
-            <p class="justified-text col-12 col-lg-6">Comunicate mediante correo electrónico para obtener mayor información respecto de las funcionalidades de la herramienta y del proyecto.</p>
+            <p class="justified-text col-12 col-lg-6">Comunicate mediante correo electrónico para obtener mayor
+              información respecto de las funcionalidades de la herramienta y del proyecto.</p>
           </div>
         </div>
       </div>
@@ -97,12 +106,14 @@ Inicio
             <a class="mb-25 service text-center text-md-left" href="{{url_for('consulta')}}">
               <div class="d-flex justify-content-center justify-content-md-start">
                 <div class="icon">
-                  <img src="{{url_for('static',filename='/images/Icon_buscar.svg')}}" alt="Consultar" style="max-width: 55px;">
+                  <img src="{{url_for('static',filename='/images/Icon_buscar.svg')}}" alt="Consultar"
+                    style="max-width: 55px;">
                 </div>
               </div>
               <h5 class="mb-25">Consulta</h5>
             </a>
-            <p class="justified-text col-12 col-lg-6">Navega por la información recopilada a lo largo de las sesiones previas almacenadas por la herramienta.</p>
+            <p class="justified-text col-12 col-lg-6">Navega por la información recopilada a lo largo de las sesiones
+              previas almacenadas por la herramienta.</p>
           </div>
         </div>
       </div>
@@ -114,37 +125,35 @@ Inicio
 </section>
 
 <section id="acercade" class="gallery-section gallery-style-1">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-auto">
-        <div class="hero-image mid-image">
-          <img src="{{url_for('static',filename='/images/online_test.svg')}}" alt="" class="wow fadeInRight"
-            data-wow-delay=".2s">
-        </div>
-      </div>
-      <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-auto">
-        <div class="section-title text-left mb-60">
-          <h3 class="mb-15 wow fadeInUp" data-wow-delay=".2s">Proyecto</h3>
-          <p class="wow fadeInUp justified-text" data-wow-delay=".4s">Demi es una herramienta que nace de la necesidad de apoyar a profesionales que trabajan en actividades terapéuticas y/o pedagógicas a reconocer las emociones de personas con Síndrome de Down (SD) tanto de manera virtual como presencial, con el objetivo de retroalimentar la respuesta del individuo con SD frente a las actividades que estén realizando, para obtener los resultados esperados.</p>
-        </div>
+  <div class="row justify-content-center">
+    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-auto">
+      <div class="hero-image mid-image">
+        <img src="{{url_for('static',filename='/images/online_test.svg')}}" alt="" class="wow fadeInRight"
+          data-wow-delay=".2s">
       </div>
     </div>
-</section>
-
-<section class="clients-logo-section pt-100 pb-100">
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="client-logo wow fadeInUp" data-wow-delay=".2s"
-          style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-          <img src="{{url_for('static',filename='/images/LogosInicio.png')}}" alt="" class="w-100">
-        </div>
+    <div class="col-xxl-5 col-xl-5 col-lg-5 col-md-auto">
+      <div class="section-title text-left mb-60">
+        <h3 class="mb-15 wow fadeInUp" data-wow-delay=".2s">Proyecto</h3>
+        <p class="wow fadeInUp justified-text" data-wow-delay=".4s">Demi es una herramienta que nace de la necesidad
+          de apoyar a profesionales que trabajan en actividades terapéuticas y/o pedagógicas a reconocer las emociones
+          de personas con Síndrome de Down (SD) tanto de manera virtual como presencial, con el objetivo de
+          retroalimentar la respuesta del individuo con SD frente a las actividades que estén realizando, para obtener
+          los resultados esperados.</p>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center p-4 mt-4">
+    <div class="col-10">
+      <div class="client-logo wow fadeInUp" data-wow-delay=".2s"
+        style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+        <img src="{{url_for('static',filename='/images/LogosInicio.png')}}" alt="" class="w-100">
       </div>
     </div>
   </div>
 </section>
 
-<section id="contacto" class="contact-section contact-style-6">
+<section id="contacto" class="contact-section contact-style-6 bg-white">
   <div class="container">
     <div class="row">
       <div class="col-lg-7">
@@ -196,7 +205,8 @@ Inicio
         <div class="left-wrapper">
           <div class="section-title mb-40">
             <h3 class="mb-15">Contacto</h3>
-            <p class="justified-text">Solicita mayor información sobre el funcionamiento de la herramienta o acerca del proyecto directamente con el investigador a cargo.</p>
+            <p class="justified-text">Solicita mayor información sobre el funcionamiento de la herramienta o acerca del
+              proyecto directamente con el investigador a cargo.</p>
           </div>
           <div class="row">
             <div class="col-lg-12 col-md-6">

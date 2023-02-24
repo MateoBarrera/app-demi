@@ -58,7 +58,7 @@
 </audio>
 
 
-<div class="d-flex justify-content-start align-items-center bd-highlight mb-3">
+<div class="d-flex justify-content-start align-items-center bd-highlight m-3">
   <div class="p-2 bd-highlight spinner-grow spinner-grow-sm text-primary" role="status" aria-hidden="true"></div>
   <small>
     <div id="response-label" class="p-2 bd-highlight text-primary">Loading..</div>
@@ -66,8 +66,7 @@
 </div>
 
 
-
-<section id="evaluacion" class="feature-section feature-style-2">
+<section id="evaluacion" class="feature-section feature-style-2 pt-3">
   <div class="container">
     <div class="row">
       <div class="col-lg-12">
@@ -128,17 +127,28 @@
     </div>
   </div>
   </div>
-  <div>
-    <button id="message" type="button" class="btn btn-labeled btn-secondary">mensaje</button>
-  </div>
 
   <div class='video'>
     <img id="image">
   </div>
-  <div id="container">
-    <canvas id="canvasOutput" style="visibility: visible;"></canvas>
-    <video autoplay="true" id="videoElement" style="visibility: visible;"></video>
+  <div class="modal fade" id="errorCamera" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content radius-10 px-4">
+        <div class="modal-header">
+          <h5 class="modal-title h5 text-primary" id="errorCameraLabel">Error en captura de la cámara</h5>
+          <img class="icon-modal" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
+        </div>
+        <div class="modal-body pb-4">
+          <div class="d-flex justify-content-center">
+            <video class="radius-10 border border-5 border-danger" autoplay="true" id="videoElement"
+              style="visibility: visible;"></video>
+          </div>
+          <p class="text-center h6 text-muted py-3">Ubíquese de frente a la cámara</p>
+        </div>
+      </div>
+    </div>
   </div>
+
 
   {% endblock %}
 
@@ -230,10 +240,12 @@
   </script>
 
   <script type="text/javascript ">
+    let cameraErrors=0;
+    const myModal = new bootstrap.Modal(document.getElementById('errorCamera'));
     const video = document.querySelector("#videoElement");
 
-    video.width = 480; 
-    video.height = 360;
+    video.width = 360; 
+    video.height = 270;
     if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
@@ -280,7 +292,17 @@
     socket.on('response_label', function(label){
         const response_label = document.getElementById('response-label');
         console.log('recibiendo label...')
-        response_label.innerHTML=label;
+        response_label.innerHTML=label
+        if (label=="Sin datos de cámara"){
+          cameraErrors += 1;
+          console.log(cameraErrors);
+          if (cameraErrors >= 6){
+            myModal.show();
+          }
+        }else{
+          myModal.hide();
+          cameraErrors = 0;
+        }
     });
 
         };

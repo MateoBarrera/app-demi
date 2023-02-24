@@ -92,7 +92,7 @@ def receiber():
     print("#################OSSOCJE")
     return render_template('sockect_hard.html', **context)
 
-@script.route('/ventana-carga/<token>', methods=['GET', 'POST'])
+@script.route('/ventana-carga/token=<token>', methods=['GET', 'POST'])
 def ventana_carga(token):
     param = request.args.get('virtual', 'False')
     print("Respuesta: {}".format(param))
@@ -103,7 +103,7 @@ def ventana_carga(token):
     }
     return render_template('ventana_carga.html', **context)
 
-@script.route('/evaluacion/<token>/stage=<int:stage>', methods=['GET', 'POST'])
+@script.route('/evaluacion/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def evaluacion(token, stage):
     session['virtual'] = request.args.get('virtual', 'False')
     session['admin_id'] = None
@@ -144,7 +144,7 @@ def evaluacion(token, stage):
     else:
         return make_response(redirect(url_for('iniciar_terapia')))
 
-@script.route('/ventana-espera/<token>/stage=<int:stage>', methods=['GET', 'POST'])
+@script.route('/ventana-espera/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def ventana_espera(token, stage):
     if stage == 1:
         context = {
@@ -163,7 +163,7 @@ def ventana_espera(token, stage):
     
     return render_template('ventana_carga.html', **context)
 
-@script.route('/final-evaluacion//<token>/stage=<int:stage>/<ev_est>/<virtual>', methods=['GET', 'POST'])
+@script.route('/final-evaluacion//token=<token>/stage=<int:stage>/<ev_est>/<virtual>', methods=['GET', 'POST'])
 def final_evaluacion(token, stage, ev_est, virtual):
     key = token
     if stage == 1:
@@ -203,7 +203,7 @@ def final_evaluacion(token, stage, ev_est, virtual):
         return render_template('virtual/close_tab.html')
     return response
 
-@script.route('/cuestionario/<token>', methods=['GET', 'POST'])
+@script.route('/cuestionario/token=<token>', methods=['GET', 'POST'])
 def cuestionario(token):
     cuestionario_form = CuestionarioForm()
     context = {
@@ -218,7 +218,7 @@ def cuestionario(token):
 
     return render_template('cuestionario.html', **context)
 
-@script.route('/conclusion/<token>', methods=['GET', 'POST'])
+@script.route('/conclusion/token=<token>', methods=['GET', 'POST'])
 def conclusion(token):
     session['session_token'] = token
     key = token
@@ -283,7 +283,7 @@ def conclusion(token):
 
     return render_template('conclusion.html', **context)
 
-@script.route('/conclusion/guardando/<token>', methods=['GET', 'POST'])
+@script.route('/conclusion/guardando/token=<token>', methods=['GET', 'POST'])
 def guardar(token):
     key = token
     session_data = app.session_object[key]#.id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
@@ -330,7 +330,7 @@ def error():
     response = make_response(redirect(session['url_backup']))
     return response
 
-@script.route('/desarrollo/<token>/stage=<int:stage>', methods=['GET', 'POST'])
+@script.route('/desarrollo/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def stage(token, stage):
     session['session_token'] = token
 

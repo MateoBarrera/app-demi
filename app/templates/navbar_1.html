@@ -8,9 +8,8 @@
               <a class="navbar-brand" href="{{url_for('inicio')}}">
                 <img src="{{url_for('static',filename='/images/op8.png')}}" alt="Icono WebAPP" class="w-75">
               </a>
-              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2" aria-controls="navbarSupportedContent2"
-              aria-expanded="false"
-              aria-label="Toggle navigation">
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent2"
+                aria-controls="navbarSupportedContent2" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="toggler-icon"></span>
                 <span class="toggler-icon"></span>
                 <span class="toggler-icon"></span>
@@ -32,19 +31,19 @@
                   {% if anonymous %}
                   <li class="nav-item">
                     <button type="button" class="button button-sm  radius-10">
-                     <a href="{{url_for('auth.login')}}">Iniciar sesión</a></button>                     
+                      <a href="{{url_for('auth.login')}}">Iniciar sesión</a></button>
                   </li>
                   <li class="nav-item text-center">
                     <small><a href="{{url_for('auth.signup')}}">Registrarse</a></small>
                   </li>
-                  {% else %} 
+                  {% else %}
                   <li class="nav-item">
                     <button type="button" class="button button-sm  radius-10">
                       <a href="{{url_for('auth.logout')}}">Cerrar sesión</a></button>
                   </li>
-                  <li class="nav-item">
-                   <a class="user-img" href="#Usuario"><img src="{{user_img}}" alt="Usuario"></a>
-                  </li>                                         
+                  <li>
+                    <a class="user-img" href="#Usuario"><img src="{{user_img}}" alt="Usuario"></a>
+                  </li>
                   {% endif %}
                 </ul>
               </div>
