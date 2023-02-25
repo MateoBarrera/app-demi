@@ -12,56 +12,59 @@ Esperando...
 {% block content %}
 
 <section id="pre" class="feature-section feature-style-2">
-  <div
-    class="row d-flex justify-content-center my-1 py-1 my-lg-5 py-lg-5 h-100 wh-100 px-1 px-md-5 overflow-hidden wow fadeInRight">
-    <!-- align-items-center" style="padding: auto; height:100%; position:fixed ;"> -->
-    <div class="d-flex col-12 col-lg-6 px-1 mb-3 mb-lg-0 justify-content-center">
-      <div class="stage-image">
-        <img src="{{url_for('static',filename='/images/team_up.svg')}}" alt="Section image" height="250px">
+  <div class="container ">
+    <div
+      class="row d-flex justify-content-center my-1 py-1 my-lg-5 py-lg-5 h-100 wh-100 px-1 px-md-5 overflow-hidden wow fadeInRight">
+      <!-- align-items-center" style="padding: auto; height:100%; position:fixed ;"> -->
+      <div class="d-flex col-12 col-lg-6 px-1 mb-3 mb-lg-0 justify-content-center">
+        <div class="stage-image">
+          <img src="{{url_for('static',filename='/images/team_up.svg')}}" alt="Section image" height="250px">
+        </div>
       </div>
-    </div>
-    <div class="d-flex col-12 col-lg-6 px-1 justify-content-center">
-      <div>
-        <div class="font-weight-bolder fs-3 text-primary">
-          Desarrollo de la sesión
-        </div>
-        <div class="fs-5">
-          {{student | capitalize}}
-        </div>
-        <div class="col-12 steps d-flex justify-content-center">
-          <ul role="tablist">
-            <li id="stage-t-1" role="tab" aria-disabled="false" class="first" aria-selected="true">
-              <a href="#stage-1"><span class="title">1</span></a>
-            </li>
-            <li id="stage-t-2" role="tab" aria-disabled="false" class="none" aria-selected="false">
-              <a href="#stage-2"><span class="title">2</span></a>
-            </li>
-            <li id="stage-t-3" role="tab" aria-disabled="false" class="last" aria-selected="false">
-              <a href="#stage-3"><span class="title">3</span></a>
-            </li>
-          </ul>
-        </div>
-        <div class="col-12 d-none d-md-flex stage-title text-center d-flex .justify-content-between">
-          <span class="stage-title" id="stage-title-t-1">Evaluación Inicial</span>
-          <span class="stage-title" id="stage-title-t-2">Desarrollo de la clase</span>
-          <span class="stage-title" id="stage-title-t-3">Evaluación Final</span>
-        </div>
-        <div class="col-12 section-title mt-40 mb-60 ">
-          <h5 class=" text-center mb-50">{{etapa}}</h5>
-          <div class="text-center buttons">
-            {% if actual_stage == 2 %}
-            <a class="button button-md radius-10 w-50 w-lg-25"
-              href="{{url_for('script.stage', token=token, stage=3)}}">Continuar</a>
-            {% else %}
-            <a class="button button-md radius-10 w-50 w-lg-25"
-              href="{{url_for('script.ventana_espera', token=token, stage=actual_stage)}}">Tomar
-              Evaluación</a>
-            {% endif %}
+      <div class="d-flex col-12 col-lg-6 px-1 justify-content-center">
+        <div>
+          <div class="font-weight-bolder fs-3 text-primary">
+            Desarrollo de la sesión
+          </div>
+          <div class="fs-5">
+            {{student | capitalize}}
+          </div>
+          <div class="col-12 steps d-flex justify-content-center">
+            <ul role="tablist">
+              <li id="stage-t-1" role="tab" aria-disabled="false" class="first" aria-selected="true">
+                <a href="#stage-1"><span class="title">1</span></a>
+              </li>
+              <li id="stage-t-2" role="tab" aria-disabled="false" class="none" aria-selected="false">
+                <a href="#stage-2"><span class="title">2</span></a>
+              </li>
+              <li id="stage-t-3" role="tab" aria-disabled="false" class="last" aria-selected="false">
+                <a href="#stage-3"><span class="title">3</span></a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 d-none d-md-flex stage-title text-center d-flex .justify-content-between">
+            <span class="stage-title" id="stage-title-t-1">Evaluación Inicial</span>
+            <span class="stage-title" id="stage-title-t-2">Desarrollo de la clase</span>
+            <span class="stage-title" id="stage-title-t-3">Evaluación Final</span>
+          </div>
+          <div class="col-12 section-title mt-40 mb-60 ">
+            <h5 class=" text-center mb-50">{{etapa}}</h5>
+            <div class="text-center buttons">
+              {% if actual_stage == 2 %}
+              <a class="button button-md radius-10 w-50 w-lg-25"
+                href="{{url_for('script.stage', token=token, stage=3)}}">Continuar</a>
+              {% else %}
+              <a class="button button-md radius-10 w-50 w-lg-25"
+                href="{{url_for('script.ventana_espera', token=token, stage=actual_stage)}}">Tomar
+                Evaluación</a>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
 </section>
 
 {% endblock %}
