@@ -425,3 +425,102 @@ div[style*="margin: 16px 0;"] {
 .card.bg-card-quaternary {
 	background-color: #D94343;
 }
+
+@media only print{
+	body {
+			background: white;
+			font-size: 11pt;
+		}
+
+		#header,
+		.no-print{
+			display: none;
+		}
+
+
+		.to-print,
+		#vista-general {
+			width: auto;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			float: none !important;
+			color: black;
+			background: transparent none;
+		}
+	
+		div#vista-general {
+			margin-left: 10%;
+			padding-top: 1em;
+			border-top: 1px solid #930;
+		}
+	
+		div#mast {
+			margin-bottom: -8px;
+		}
+	
+		div#mast img {
+			vertical-align: bottom;
+		}
+	
+		#vista-general a:link:after,
+		#vista-general a:visited:after {
+			content: " (" attr(href) ") ";
+			font-size: 90%;
+		}
+
+		#vista-general #cards-print div.col-lg-3{
+			flex: 0 0 auto;
+			width: 50%;
+		}
+
+		#vista-general hr {
+			display: none;
+		}
+
+		#vista-general .graph-col-12{
+			flex: 0 0 auto;
+			width: 100%;
+		}
+		#vista-general .graph-col-9 {
+			flex: 0 0 auto;
+			width: 66.6%;
+		}
+		#vista-general .graph-col-6 {
+			flex: 0 0 auto;
+			width: 50%;
+		}
+		#vista-general .graph-col-3 {
+			flex: 0 0 auto;
+			width: 33.3%;
+		}
+		#vista-general canvas{
+			margin: 0;
+			padding: 0;
+		}
+		footer {
+			position:fixed;
+			bottom: 0;
+		}
+
+		.content-print,
+		.content-print canvas{
+			page-break-inside: avoid !important;
+		}
+
+		html,
+		#vista-general {
+			justify-content: center;
+			width: 280mm;
+			height: 297mm;
+		}
+}
+
+footer {
+	font-size: 9px;
+}
+
+@page {
+	size: A4;
+	margin: 5mm 10mm 5mm 5mm;
+}

@@ -22,23 +22,28 @@ app, socketio, mysql_init = create_app()
 app.mysql_object = MySQL_connector(mysql_init)
 app.session_object = dict()
 
+
 @app.after_request
 def set_secure_headers(response):
     secure_headers.framework.flask(response)
     return response
+
 
 @app.cli.command()
 def test():
     tests = unittest.TestLoader().discover('test')
     unittest.TextTestRunner().run(tests)
 
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template('error/404.html', error=error)
 
+
 @app.errorhandler(500)
 def not_found(error):
     return render_template('error/500.html', error=error)
+
 
 @app.route('/')
 def index():
@@ -46,6 +51,7 @@ def index():
     response = make_response(redirect('/inicio'))
     session['user_ip'] = user_ip
     return response
+
 
 @app.route('/inicio', methods=['GET', 'POST'])
 def inicio():
@@ -93,12 +99,13 @@ def inicio():
 
     return render_template('inicio.html', **context)
 
+
 @app.route('/iniciar-terapia', methods=['GET', 'POST'])
 @login_required
 def iniciar_terapia():
-    #Inicializar el contexto de la vista con el modelo de usuario
+    # Inicializar el contexto de la vista con el modelo de usuario
     user = current_user
-    #if user.cargo == 'Investigador':
+    # if user.cargo == 'Investigador':
     if True:
         students = app.mysql_object.get_all_students()
         all_sessions = app.mysql_object.get_all_session_info()
@@ -114,11 +121,11 @@ def iniciar_terapia():
         'username': user.id,
         'terapia_form': terapia_form,
         'all_sessions': all_sessions,
-    }  
-    #Check de sesiones previas
-    
+    }
+    # Check de sesiones previas
+
     session['prev_session'] = False
-    try:#Cambiar el uso de prev data sesion a una lista e iterar sobre ella
+    try:  # Cambiar el uso de prev data sesion a una lista e iterar sobre ella
         prev_session_data = list()
         for item in session['tokens']:
             object = app.session_object['{}'.format(item)]
@@ -128,31 +135,35 @@ def iniciar_terapia():
         if len(prev_session_data) != 0:
             session['prev_session'] = True
             context['prev_session'] = session['prev_session']
-            flash('Existe una sesión previa en curso')   
+            flash('Existe una sesión previa en curso')
     except KeyError as e:
         print(e)
         session['tokens'] = list()
-        
+
     print(f"prev_session {session['prev_session']}")
-    
-    #Gestión de los post en el formulario de iniciar terapia, reanudar o iniciar de cero
+
+    # Gestión de los post en el formulario de iniciar terapia, reanudar o iniciar de cero
     if terapia_form.validate_on_submit() and (user.rol == 'inv/doc'):
         estudiante = terapia_form.nombre_form.data
-        emocion = dict(terapia_form.emocion_percibida.choices).get(terapia_form.emocion_percibida.data)
-        
+        emocion = dict(terapia_form.emocion_percibida.choices).get(
+            terapia_form.emocion_percibida.data)
+
         tema = terapia_form.tema_form.data
         identificacion = terapia_form.identificacion_form.data
 
-        #if not session['prev_session']:
+        # if not session['prev_session']:
         session['session_token'] = secrets.token_urlsafe(6)
         session['tokens'].append(session['session_token'])
         key = '{}'.format(session['session_token'])
         app.session_object[key] = SessionData()
         app.session_object[key].token = key
-        app.session_object[key].fecha = datetime.now(pytz.timezone(app.config['TIMEZONE'])).strftime('%Y-%m-%d %H:%M:%S')
+        app.session_object[key].fecha = datetime.now(pytz.timezone(
+            app.config['TIMEZONE'])).strftime('%Y-%m-%d %H:%M:%S')
         app.session_object[key].evaluacion['ev_ini_doc'] = emocion
-        app.session_object[key].id_usuario = app.mysql_object.get_user(session['username'])[0]['idlogin']
-        app.session_object[key].id_estudiante = app.mysql_object.get_student(identificacion)[0]
+        app.session_object[key].id_usuario = app.mysql_object.get_user(
+            session['username'])[0]['idlogin']
+        app.session_object[key].id_estudiante = app.mysql_object.get_student(identificacion)[
+            0]
         app.session_object[key].nombre = estudiante.lower()
         app.session_object[key].identificacion = identificacion
         app.session_object[key].institucion = request.form['text_inst']
@@ -168,13 +179,14 @@ def iniciar_terapia():
                 'static', filename='/images/avatar.jpg')
 
         session['prev_session'] = True
-         
-        print(f"prev_session {session['prev_session']}")   
+
+        print(f"prev_session {session['prev_session']}")
         if terapia_form.virtual.data:
             return redirect(url_for('script.panel_virtual'))
         else:
-            return redirect(url_for('script.stage',token= session["session_token"],stage=1))
+            return redirect(url_for('script.stage', token=session["session_token"], stage=1))
     return render_template('terapia.html', **context)
+
 
 @app.route('/registro-estudiante/<terapia>', methods=['GET', 'POST'])
 @login_required
@@ -220,6 +232,7 @@ def registro_est(terapia):
 
     return render_template('registro_est.html', **context)
 
+
 @app.route('/correo', methods=['GET', 'POST'])
 def correo():
     contacto_context = {
@@ -230,6 +243,7 @@ def correo():
         'mensaje': "contacto_form.mensaje.data contacto_form.mensaje.data contacto_form.mensaje.data contacto_form.mensaje.data",
     }
     return render_template('correo_contato.html', **contacto_context)
+
 
 @app.route('/consulta', methods=['GET', 'POST'])
 @login_required
@@ -250,19 +264,18 @@ def consulta():
         print(keys)
         print(values)
         try:
-            if len(form)==3:
+            if len(form) == 3:
                 result = app.mysql_object.get_user(user=keys[0])
                 """ app.mysql_object.update_user_data(id_login=result, cargo, docente) """
-            elif len(form)==6:
+            elif len(form) == 6:
                 result = app.mysql_object.get_student(student=keys[3])
                 print("result "+str(result[0]))
-                app.mysql_object.update_student_data(values[0], values[3], values[1], values[2], values[4], result[0])
+                app.mysql_object.update_student_data(
+                    values[0], values[3], values[1], values[2], values[4], result[0])
                 print("Formulario de estudiante")
                 flash("Datos actualizados con éxito")
         except pymysql.err.ProgrammingError as e:
             flash(e)
-       
-
 
     if user.cargo == 'Investigador':
         all_users = app.mysql_object.get_all_users()
@@ -275,7 +288,8 @@ def consulta():
     else:
         all_users = app.mysql_object.get_all_doc_students(user.id_table)
         all_students = all_users
-        all_sessions_info = app.mysql_object.get_all_doc_session_info(user.id_table)
+        all_sessions_info = app.mysql_object.get_all_doc_session_info(
+            user.id_table)
         all_sessions = app.mysql_object.get_all_doc_session_ev(user.id_table)
         themes = app.mysql_object.get_all_doc_themes(user.id_table)
         props = app.mysql_object.get_all_doc_session_prob(user.id_table)
@@ -290,7 +304,7 @@ def consulta():
         now = datetime.now() if not time_session.tzinfo else datetime.now(time_session.tzinfo)
         if now-time_session < timedelta(days=5):
             recent_sessions.append(item)
-    
+
     context = {
         'contacto_form': contacto_form,
         'student_data': student_data,
@@ -299,15 +313,16 @@ def consulta():
         'all_users': all_users,
         'all_students': all_students,
         'all_sessions_info': all_sessions_info,
-        'all_sessions':all_sessions,
-        'themes':themes,
-        'props':props,
+        'all_sessions': all_sessions,
+        'themes': themes,
+        'props': props,
         'recent_sessions': recent_sessions,
-        'rol_user':user.cargo,
-        'usuario':user.usuario,
+        'rol_user': user.cargo,
+        'usuario': user.usuario,
     }
 
     return render_template('consulta.html', **context)
+
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
@@ -316,6 +331,7 @@ def test():
     }
     return render_template('virtual/admin_session.html', **context)
 
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
-    #socketio.run(app, host='0.0.0.0', debug=True)
+    # socketio.run(app, host='0.0.0.0', debug=True)

@@ -19,120 +19,146 @@ Consulta
 {% endblock %}
 
 {% block content %}
+
 <body id="body-pd" onload="loadTable()">
+
+  <div id="print-header" class="row justify-content-center wow fadeInUp pl-5 pb-4" hidden>
+    <div class="col-3">
+      <div class="logo">
+        <a href="#0"> <img src="{{url_for('static',filename='/images/op8.png')}}" alt="WebAPP icon"
+            style="max-width: 180px;"> </a>
+      </div>
+    </div>
+    <div class="col-6 text-center">
+      <p class="h3">Informe evaluaciones</p>
+    </div>
+    <div class="col-3 text-right">
+      <div class="logo">
+        <p class="text-muted">Generado automáticamente</p>
+        <p class="text-muted"><strong>A solicitud de:</strong> {{usuario | capitalize}}</p>
+        <p class="text-muted"><strong>Fecha:</strong> <small id="print-fecha"></small></p>
+      </div>
+    </div>
+  </div>
+
   <!--Container Main start-->
-  <section id="vista-general">
-    <h3 class="mb-10">Vista general</h3>
-      <div class="row">
-        {% if rol_user == 'Investigador' %}
-        <div class="col-lg-3 col-12 col-md-6 px-1">
-          <div class="card bg-card-primary  text-white mb-1 radius-10">
-            <div class="card-title">
-              <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Docentes registrados</p>
-            </div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick='loadTable(1)'>Ver
-                resumen</a>
-              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
-            </div>
+  <section id="vista-general" class="to-print">
+    <h3 class="mb-10 no-print">Vista general</h3>
+    <div id="cards-print" class="row no-print">
+      {% if rol_user == 'Investigador' %}
+      <div class="col-lg-3 col-12 col-md-6 px-1">
+        <div class="card bg-card-primary  text-white mb-1 radius-10">
+          <div class="card-title">
+            <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
+            <p class="pl-15 text-aling-center font-weight-bold">Docentes registrados</p>
+          </div>
+          <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="small text-white stretched-link" href="#" onclick='loadTable(1)'>Ver
+              resumen</a>
+            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
           </div>
         </div>
-        {% endif %}
-        <div class="col-lg-3 col-12 col-md-6 px-1">
-          <div class="card bg-card-secondary text-white mb-1 radius-10">
-            <div class="card-title">
-              <div class="text-white iconify">{{all_students|length}}<i class="bx bx-face"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Estudiantes registrados</p>
-            </div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick='loadTable(2)'>Ver
-                resumen</a>
-              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-12 col-md-6 px-1">
-          <div class="card bg-card-tertiary text-white mb-1 radius-10">
-            <div class="card-title">
-              <div class="text-white iconify">{{all_sessions_info|length}}<i class="bx bx-bar-chart-alt-2"></i></div>
-              <br>
-              <p class="pl-15 text-aling-center font-weight-bold">Sesiones almacenadas</p>
-            </div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick='loadTable(3)'>Ver
-                resumen</a>
-              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-3 col-12 col-md-6 px-1">
-          <div class="card bg-card-quaternary text-white mb-1 radius-10">
-            <div class="card-title">
-              <div class="text-white iconify">{{recent_sessions|length}}<i class="bx bx-calendar-check"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Sesiones la ultima semana</p>
-            </div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick='loadTable(4)'>Ver
-                resumen</a>
-              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
-            </div>
-          </div>
-        </div>
-        {% if not rol_user == 'Investigador' %}
-        <div class="col-lg-3 col-12 col-md-6 px-1">
-          <div class="card bg-card-primary  text-white mb-1 radius-10">
-            <div class="card-title">
-              <div class="text-white iconify">{{themes|length}}<i class="bx bx-user"></i></div><br>
-              <p class="pl-15 text-aling-center font-weight-bold">Temas trabajados</p>
-            </div>
-            <div class="card-footer d-flex align-items-center justify-content-between">
-              <a class="small text-white stretched-link" href="#" onclick='loadTable(5)'>Ver
-                resumen</a>
-              <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
-            </div>
-          </div>
-        </div>
-        {% endif %}
       </div>
-      <div class="row">
-        <div class="col-lg-8 px-1">
-          <div class="content-wrapper mb-1">
-            <div class="section-title">
-              <div class="card cards-conclution radius-10">
-                <div class="card-header d-flex align-content-center py-1">
-                  <i class="fa-solid fa-square-poll-horizontal m-1"></i>
-                  <p class="col-2 text-dark font-weight-bolder">Resumen</p>
-                </div>
-                <div class="card-body align-self-stretch py-1">
-                  <div class="table-responsive-sm" id="table_content">
-                  </div>
-                </div>
-              </div>
-            </div>
+      {% endif %}
+      <div class="col-lg-3 col-12 col-md-6 px-1">
+        <div class="card bg-card-secondary text-white mb-1 radius-10">
+          <div class="card-title">
+            <div class="text-white iconify">{{all_students|length}}<i class="bx bx-face"></i></div><br>
+            <p class="pl-15 text-aling-center font-weight-bold">Estudiantes registrados</p>
+          </div>
+          <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="small text-white stretched-link" href="#" onclick='loadTable(2)'>Ver
+              resumen</a>
+            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
           </div>
         </div>
-        <div class="col-lg-4 px-1">
-          <div class="content-wrapper">
-            <div class="section-title mb-1">
-              <div class="card cards-conclution radius-10">
-                <div class="card-header d-flex align-content-center py-1">
-                  <i class="fa-solid fa-calendar-days m-1"></i>
-                  <p class="col-4 text-dark font-weight-bolder">Calendario</p>
-                </div>
-                <div class="card-body align-self-stretch py-1">
-                  <div class="w-100" id="AgendaJS"></div>
+      </div>
+      <div class="col-lg-3 col-12 col-md-6 px-1">
+        <div class="card bg-card-tertiary text-white mb-1 radius-10">
+          <div class="card-title">
+            <div class="text-white iconify">{{all_sessions_info|length}}<i class="bx bx-bar-chart-alt-2"></i></div>
+            <br>
+            <p class="pl-15 text-aling-center font-weight-bold">Sesiones almacenadas</p>
+          </div>
+          <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="small text-white stretched-link" href="#" onclick='loadTable(3)'>Ver
+              resumen</a>
+            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-12 col-md-6 px-1">
+        <div class="card bg-card-quaternary text-white mb-1 radius-10">
+          <div class="card-title">
+            <div class="text-white iconify">{{recent_sessions|length}}<i class="bx bx-calendar-check"></i></div><br>
+            <p class="pl-15 text-aling-center font-weight-bold">Sesiones la ultima semana</p>
+          </div>
+          <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="small text-white stretched-link" href="#" onclick='loadTable(4)'>Ver
+              resumen</a>
+            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+          </div>
+        </div>
+      </div>
+      {% if not rol_user == 'Investigador' %}
+      <div class="col-lg-3 col-12 col-md-6 px-1">
+        <div class="card bg-card-primary  text-white mb-1 radius-10">
+          <div class="card-title">
+            <div class="text-white iconify">{{themes|length}}<i class="bx bx-user"></i></div><br>
+            <p class="pl-15 text-aling-center font-weight-bold">Temas trabajados</p>
+          </div>
+          <div class="card-footer d-flex align-items-center justify-content-between">
+            <a class="small text-white stretched-link" href="#" onclick='loadTable(5)'>Ver
+              resumen</a>
+            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="row no-print">
+      <div class="col-lg-8 px-1">
+        <div class="content-wrapper mb-1">
+          <div class="section-title">
+            <div class="card cards-conclution radius-10">
+              <div class="card-header d-flex align-content-center py-1">
+                <i class="fa-solid fa-square-poll-horizontal m-1"></i>
+                <p class="col-2 text-dark font-weight-bolder">Resumen</p>
+              </div>
+              <div class="card-body align-self-stretch py-1">
+                <div class="table-responsive-sm" id="table_content">
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div hidden>
-        {{ macros.info_template()}}
+      <div class="col-lg-4 px-1">
+        <div class="content-wrapper">
+          <div class="section-title mb-1">
+            <div class="card cards-conclution radius-10">
+              <div class="card-header d-flex align-content-center py-1">
+                <i class="fa-solid fa-calendar-days m-1"></i>
+                <p class="col-4 text-dark font-weight-bolder">Calendario</p>
+              </div>
+              <div class="card-body align-self-stretch py-1">
+                <div class="w-100" id="AgendaJS"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="container-info">
+    </div>
+    <div hidden>
+      {{ macros.info_template()}}
+    </div>
+    <div id="container-info">
+    </div>
+    <div id="print-button" class="row no-print" hidden>
+      <div class="col-3 d-flex">
+        <button class="button button-sm radius-10 d-flex " onclick="cssPrint()">Imprimir</button>
       </div>
+    </div>
   </section>
   <!--Container Main end-->
   <!-- Config section start -->
@@ -262,7 +288,7 @@ Consulta
               <div class="card-body align-self-stretch py-1">
                 <div class="table-responsive-sm info-table" id="database-table">
                   <div class="text-center py-5">
-                    <h5>Seleccione la tabla para listar la información contenida en ella</h5> 
+                    <h5>Seleccione la tabla para listar la información contenida en ella</h5>
                   </div>
                 </div>
                 <div id="main-form-buttons" class="contact-form-wrapper" hidden>
@@ -277,9 +303,10 @@ Consulta
                     <fieldset id="main-form" class="d-flex flex-wrap row">
                     </fieldset>
                     <div class="d-flex flex-wrap justify-content-center">
-                      <input class="button bg-light text-dark border radius-10 w-10 mx-2 py-0" id="reset" name="reset" type="reset"
-                        value="Cancelar" onclick="hideFormButtons(true)">
-                      <input class="button radius-10 w-10 mx-2 py-0" id="guardar" name="guardar" type="submit" value="Guardar">
+                      <input class="button bg-light text-dark border radius-10 w-10 mx-2 py-0" id="reset" name="reset"
+                        type="reset" value="Cancelar" onclick="hideFormButtons(true)">
+                      <input class="button radius-10 w-10 mx-2 py-0" id="guardar" name="guardar" type="submit"
+                        value="Guardar">
                     </div>
                   </form>
                 </div>
@@ -311,11 +338,11 @@ Consulta
     let agendaEl = document.getElementById('AgendaJS');
     let events = Array.from(JSON.parse('{{events | tojson | safe }}'));
     let object_calendar = [];
-    events.forEach(function(event){
+    events.forEach(function (event) {
       object_calendar.push({
-        title : event.todo,
-        start : event.date,
-        end : event.hora_1
+        title: event.todo,
+        start: event.date,
+        end: event.hora_1
       });
     });
     let agenda = new FullCalendar.Calendar(agendaEl, {
@@ -359,16 +386,16 @@ Consulta
     let last_student_selected = "";
     let id_selected = [];
 
-    function loadTable(card_id=null) {
+    function loadTable(card_id = null) {
       let arr = {};
-      if (card_id==null || card_id == 1){
+      if (card_id == null || card_id == 1) {
         arr = JSON.parse('{{ all_users| tojson | safe }}');
       } else if (card_id == 2) {
         arr = JSON.parse('{{ all_students| tojson | safe }}');
       } else if (card_id == 3) {
         arr = Array.from(JSON.parse('{{ all_sessions_info | tojson | safe }}'));
       } else if (card_id == 4) {
-        arr =  Array.from(JSON.parse('{{ recent_sessions | tojson | safe }}'));
+        arr = Array.from(JSON.parse('{{ recent_sessions | tojson | safe }}'));
       } else if (card_id == 5) {
         arr = Array.from(JSON.parse('{{ themes | tojson | safe }}'));
       }
@@ -404,8 +431,8 @@ Consulta
         let tables = new DataTable(datatablesSimple, {
           language: {
             url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/es-ES.json'
-          }, 
-          responsive: true, 
+          },
+          responsive: true,
           scrollY: "290px",
           scrollCollapse: true,
           paging: false,
@@ -421,7 +448,7 @@ Consulta
         let data = table_handler.row(this).data();
         let column_name = $(table_handler.column().header()).html();
         if (column_name == 'idsesiones') {
-          if (!id_selected.some((id) => { return id == data[0] })){
+          if (!id_selected.some((id) => { return id == data[0] })) {
             if (data[1] != last_student_selected) {
               ResetContainer();
               id_selected = [];
@@ -434,7 +461,7 @@ Consulta
         } else if (column_name == "estudiante") {
           alert("Seleccionaste al estudiante " + data[0] + ", próximamente se permitirá la búsqueda detallada por estudiantes :)");
 
-        } else if (column_name == "tema"){
+        } else if (column_name == "tema") {
           if (data[0] != last_topic) {
             ResetContainer();
             last_student_selected = data[0];
@@ -455,11 +482,11 @@ Consulta
         } ); */
 
     }
-    function loadTopics(topic){
+    function loadTopics(topic) {
       let all_sessions_topic = JSON.parse('{{ all_sessions_info| tojson |safe }}');
       all_sessions_topic = all_sessions_topic.filter(all_sessions_topic => (all_sessions_topic.tema == topic.toLowerCase()));
       all_sessions_topic.forEach(async (session) => {
-        session =  Object.values(session);
+        session = Object.values(session);
         session = [session[4], session[1], session[5], session[2], session[3], session[0]]
         let all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
         all_sessions = all_sessions.filter(all_sessions => (all_sessions.Sesión == session[0]));
@@ -474,11 +501,11 @@ Consulta
       var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
       all_sessions = all_sessions.filter(arr => (arr.Sesión == session[0]));
       var props = JSON.parse('{{props| tojson |safe}}');
-      props = props.filter(props => (props.Sesión == session[0]));    
+      props = props.filter(props => (props.Sesión == session[0]));
       CreateInfoBlock(session, all_sessions, props[0]);
     }
 
-    function loadDatabaseTable(id_table){      
+    function loadDatabaseTable(id_table) {
       hideFormButtons(true);
       let arr = {};
       if (id_table == 0) {
@@ -540,10 +567,30 @@ Consulta
       });
     }
 
-</script>
-
+  </script>
+  <script>
+    function cssPrint() {
+      document.getElementById("print-header").hidden = false;
+      let today = new Date();
+      let date = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
+      let fecha = document.getElementById("print-fecha");
+      fecha.innerHTML = date;
+      print();
+      document.getElementById("print-header").hidden = true;
+    }
+  </script>
   {% endblock %}
 
   {%block footer%}
-  {% include 'footer.html' %}
+  <footer id="footer" class="footer footer-style-1 bg-white pt-5 to-print">
+    <div class="row d-flex justify-content-center wow fadeInUp px-5">
+      <div class="col-12">
+        <a class=" d-flex justify-content-center" href="#0"> <img class="w-75"
+            src="{{url_for('static',filename='/images/LogosInicio.png')}}" alt="WebAPP icon"> </a>
+      </div>
+    </div>
+    <div class="copyright-wrapper py-1 wow fadeInUp">
+      <p>Desarrollo institucional</p>
+    </div>
+  </footer>
   {% endblock %}
