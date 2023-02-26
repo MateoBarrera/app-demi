@@ -1,15 +1,16 @@
 <header class="header" id="header">
-  <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+  <div class="header_toggle"> <i class="fa-solid fa-bars" id="header-toggle"></i> </div>
   <div class="user-img"><img src="{{user_img}}" alt="Usuario"></div>
 </header>
 <div class="l-navbar" id="nav-bar">
   <nav class="nav">
-    <div> 
+    <div>
       <a href="{{url_for('inicio')}}" class="nav_logo px-3">
-        <img class="icon-modal rounded-circle p-1 bg-white" alt="shortcut icon" src="{{ url_for('static', filename='images/favicon.ico') }}">
-        <span class="nav_logo-name">DEMI</span> 
-      </a>     
-      <div class="nav_list"> 
+        <img class="icon-modal rounded-circle p-1 bg-white" alt="shortcut icon"
+          src="{{ url_for('static', filename='images/favicon.ico') }}">
+        <span class="nav_logo-name">DEMI</span>
+      </a>
+      <div class="nav_list">
         <a class="nav_link active" href="#" onclick="ActiveSection('vista-general')">
           <i class='nav_icon'>
             <img src="{{url_for('static',filename='/images/dashboard.svg')}}" alt="">
@@ -27,24 +28,8 @@
           <span class="nav_name">Base de datos</span>
         </a>
         {% endif %}
-<!--         <div class="nav_menu">
-          <span>Consulta</span>
-        </div>
-        <a href="#collapseLayouts_1" class="nav_link collapsed" data-toggle="collapse" aria-expanded="false"
-          aria-controls="collapseLayouts_1">
-          <i class='nav_icon'>
-            <img src="{{url_for('static',filename='/images/lupa.svg')}}" alt="">
-          </i>
-          <span class="nav_name">Búsqueda<div class="collapse-arrow nav-icon"><i class="bx bx-down-arrow"></i></div></span>
-        </a>
-        <div class="collapse" id="collapseLayouts_1">
-          <a class="nav_link" href="#" onclick="ActiveSection('busqueda1')"><i class='nav_icon'><img src="{{url_for('static',filename='/images/arrow.svg')}}"
-                alt=""></i><span class="nav_name">Terapias</span></a>
-          <a class="nav_link" href="#" onclick="ActiveSection('busqueda2')"><i class='nav_icon'><img src="{{url_for('static',filename='/images/arrow.svg')}}"
-                alt=""></i><span class="nav_name">Terapias</span></a>
-        </div> -->
       </div>
-    </div> 
+    </div>
 
     <div>
       <div class="nav_menu"><span>Usuario</span></div>
@@ -53,9 +38,9 @@
         <span class="nav_name">Ajustes</span>
       </a>
       <a href="{{url_for('auth.logout')}}" class="nav_link">
-        <i class='bx bx-log-out nav_icon'></i>
+        <i class="fa-solid fa-arrow-right-from-bracket nav_icon"></i>
         <span class="nav_name">Cerrar sesión</span>
       </a>
-    </div>  
+    </div>
   </nav>
 </div>

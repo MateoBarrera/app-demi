@@ -49,13 +49,13 @@ Consulta
       <div class="col-lg-3 col-12 col-md-6 px-1">
         <div class="card bg-card-primary  text-white mb-1 radius-10">
           <div class="card-title">
-            <div class="text-white iconify">{{all_users|length}}<i class="bx bx-user"></i></div><br>
+            <div class="text-white iconify">{{all_users|length}}<i class="fa-solid fa-person-chalkboard"></i></div><br>
             <p class="pl-15 text-aling-center font-weight-bold">Docentes registrados</p>
           </div>
           <div class="card-footer d-flex align-items-center justify-content-between">
             <a class="small text-white stretched-link" href="#" onclick='loadTable(1)'>Ver
               resumen</a>
-            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            <div class="small text-white"><i class="fa-solid fa-chevron-right"></i></div>
           </div>
         </div>
       </div>
@@ -63,40 +63,41 @@ Consulta
       <div class="col-lg-3 col-12 col-md-6 px-1">
         <div class="card bg-card-secondary text-white mb-1 radius-10">
           <div class="card-title">
-            <div class="text-white iconify">{{all_students|length}}<i class="bx bx-face"></i></div><br>
+            <div class="text-white iconify">{{all_students|length}}<i class="fa-solid fa-child-reaching"></i></div><br>
             <p class="pl-15 text-aling-center font-weight-bold">Estudiantes registrados</p>
           </div>
           <div class="card-footer d-flex align-items-center justify-content-between">
             <a class="small text-white stretched-link" href="#" onclick='loadTable(2)'>Ver
               resumen</a>
-            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            <div class="small text-white"><i class="fa-solid fa-chevron-right"></i></div>
           </div>
         </div>
       </div>
       <div class="col-lg-3 col-12 col-md-6 px-1">
         <div class="card bg-card-tertiary text-white mb-1 radius-10">
           <div class="card-title">
-            <div class="text-white iconify">{{all_sessions_info|length}}<i class="bx bx-bar-chart-alt-2"></i></div>
+            <div class="text-white iconify">{{all_sessions_info|length}}<i class="fa-regular fa-address-book"></i></div>
             <br>
             <p class="pl-15 text-aling-center font-weight-bold">Sesiones almacenadas</p>
           </div>
           <div class="card-footer d-flex align-items-center justify-content-between">
             <a class="small text-white stretched-link" href="#" onclick='loadTable(3)'>Ver
               resumen</a>
-            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            <div class="small text-white"><i class="fa-solid fa-chevron-right"></i></div>
           </div>
         </div>
       </div>
       <div class="col-lg-3 col-12 col-md-6 px-1">
         <div class="card bg-card-quaternary text-white mb-1 radius-10">
           <div class="card-title">
-            <div class="text-white iconify">{{recent_sessions|length}}<i class="bx bx-calendar-check"></i></div><br>
+            <div class="text-white iconify">{{recent_sessions|length}}<i class="fa-regular fa-calendar-check"></i></div>
+            <br>
             <p class="pl-15 text-aling-center font-weight-bold">Sesiones la ultima semana</p>
           </div>
           <div class="card-footer d-flex align-items-center justify-content-between">
             <a class="small text-white stretched-link" href="#" onclick='loadTable(4)'>Ver
               resumen</a>
-            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            <div class="small text-white"><i class="fa-solid fa-chevron-right"></i></div>
           </div>
         </div>
       </div>
@@ -104,13 +105,13 @@ Consulta
       <div class="col-lg-3 col-12 col-md-6 px-1">
         <div class="card bg-card-primary  text-white mb-1 radius-10">
           <div class="card-title">
-            <div class="text-white iconify">{{themes|length}}<i class="bx bx-user"></i></div><br>
+            <div class="text-white iconify">{{themes|length}}<i class="fa-solid fa-person-chalkboard"></i></div><br>
             <p class="pl-15 text-aling-center font-weight-bold">Temas trabajados</p>
           </div>
           <div class="card-footer d-flex align-items-center justify-content-between">
             <a class="small text-white stretched-link" href="#" onclick='loadTable(5)'>Ver
               resumen</a>
-            <div class="small text-white"><i class="bx bx-chevron-right"></i></div>
+            <div class="small text-white"><i class="fa-solid fa-chevron-right"></i></div>
           </div>
         </div>
       </div>
@@ -259,7 +260,7 @@ Consulta
                   <div class="card bg-card-primary mb-1 radius-5" onclick="loadDatabaseTable(0)">
                     <div class="card-body d-flex justify-content-between align-content-center text-white p-1">
                       <p>Docentes</p>
-                      <i class="bx bx-user p-1"></i>
+                      <i class="fa-solid fa-person-chalkboard p-1"></i>
                     </div>
                   </div>
                 </div>
@@ -268,7 +269,7 @@ Consulta
                   <div class="card bg-card-secondary mb-1 radius-5" onclick="loadDatabaseTable(1)">
                     <div class="card-body d-flex justify-content-between align-content-center text-white p-1">
                       <p>Estudiantes</p>
-                      <i class="bx bx-face p-1"></i>
+                      <i class="fa-solid fa-child-reaching p-1"></i>
                     </div>
                   </div>
                 </div>
@@ -359,14 +360,6 @@ Consulta
       left: 'prev,next',
       center: 'title',
     })
-    /* 
-              headerToolbar: {
-                locale: 'es',
-                  right: 'dayGridMonth,timeGridWeek,timeGridDay',
-                    left: 'prev,next',
-                      center: 'title',
-              }, */
-
     var cal2GoTo = function (date) {
       console.log('cal2go ' + date)
       agenda.fullCalendar('gotoDate', date);
