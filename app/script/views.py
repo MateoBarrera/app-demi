@@ -1,30 +1,33 @@
-from flask import request, render_template, redirect, make_response, url_for, session, Response, flash, current_app as app
+from flask import request, render_template, redirect, make_response, url_for, session, Response, flash, current_app as app  # pylint: disable=import-error
 from . import script
-from flask_login import login_required, login_user, logout_user
-from imageio import imread
-from flask_socketio import SocketIO, emit, send
+from flask_login import login_required, login_user, logout_user  # pylint: disable=import-error
+from imageio import imread  # pylint: disable=import-error
+from flask_socketio import SocketIO, emit, send  # pylint: disable=import-error
 import numpy as np
 import base64
-import cv2
-from flask_login import login_required, current_user
-from app.webcam_web import frames, endframes
+import cv2  # pylint: disable=import-error
+from flask_login import login_required, current_user  # pylint: disable=import-error
+from app.webcam_web import frames, endframes  # pylint: disable=import-error
 from app.forms import CuestionarioForm, ConclusionesForm
 from .. import socketio
 import operator
-from flask_socketio import join_room, leave_room
-import secure
+from flask_socketio import join_room, leave_room  # pylint: disable=import-error
+import secure  # pylint: disable=import-error
 
 secure_headers = secure.Secure()
+
 
 @script.after_request
 def set_secure_headers(response):
     secure_headers.framework.flask(response)
     return response
 
+
 @socketio.on('virtual_status', namespace='/admin-info')
 def on_virtual_status(data):
     session['admin_room'] = data['admin_id']
     emit('virtual_status', data['info'], room=data['admin_id'])
+
 
 @socketio.on('join')
 def on_join(data):
@@ -35,6 +38,7 @@ def on_join(data):
     join_room(room)
     send(username + ' has entered the room.', to=room)
 
+
 @socketio.on('leave')
 def on_leave(data):
     username = data['username']
@@ -42,13 +46,15 @@ def on_leave(data):
     leave_room(room)
     send(username + ' has left the room.', to=room)
 
+
 @socketio.on('connect')
 def test_connect():
     app.logger.info('Client connected')
 
+
 @socketio.on('image_ev')
 def image(data_image, stage):
-    #print('Recibiendo solicitud')
+    # print('Recibiendo solicitud')
     image = base64.b64decode(data_image.replace('data:image/jpeg;base64,', ''))
     image = imread(image, pilmode='RGB')
     cv2_img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
@@ -84,6 +90,7 @@ def image(data_image, stage):
 
     emit('response_label', response_label)
 
+
 @script.route('/socket', methods=['GET', 'POST'])
 def receiber():
     context = {
@@ -91,6 +98,7 @@ def receiber():
     }
     print("#################OSSOCJE")
     return render_template('sockect_hard.html', **context)
+
 
 @script.route('/ventana-carga/token=<token>', methods=['GET', 'POST'])
 def ventana_carga(token):
@@ -103,6 +111,7 @@ def ventana_carga(token):
     }
     return render_template('ventana_carga.html', **context)
 
+
 @script.route('/evaluacion/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def evaluacion(token, stage):
     session['virtual'] = request.args.get('virtual', 'False')
@@ -113,9 +122,10 @@ def evaluacion(token, stage):
     url_backup = requestUrl
     session['url_backup'] = url_backup
 
-    if session['virtual']=='True':
+    if session['virtual'] == 'True':
         stage = request.args.get('stage', 'False')
-        session['session_token'] = ('{}'.format(request.args.get('id', 'False'))).replace("'","")
+        session['session_token'] = ('{}'.format(
+            request.args.get('id', 'False'))).replace("'", "")
         session['admin_id'] = request.args.get('admin_id', 'False')
 
     if stage == 1:
@@ -123,8 +133,8 @@ def evaluacion(token, stage):
             'etapa': 'Evaluación inicial',
             'mensaje': '¿Como te sientes hoy?',
             'virtual': session['virtual'],
-            'admin_id':session['admin_id'],
-            'token':token,
+            'admin_id': session['admin_id'],
+            'token': token,
             'stage': stage,
         }
         return render_template('evaluacion.html', **context)
@@ -136,7 +146,7 @@ def evaluacion(token, stage):
             'mensaje': '¿Como te sientes ahora?',
             'virtual': session['virtual'],
             'admin_id': session['admin_id'],
-            'token':token,
+            'token': token,
             'stage': stage,
         }
 
@@ -144,24 +154,26 @@ def evaluacion(token, stage):
     else:
         return make_response(redirect(url_for('iniciar_terapia')))
 
+
 @script.route('/ventana-espera/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def ventana_espera(token, stage):
     if stage == 1:
         context = {
             'etapa': 'Evaluación inicial',
-            'token':token,
-            'stage':stage,
-            'student':app.session_object[token].nombre
+            'token': token,
+            'stage': stage,
+            'student': app.session_object[token].nombre
         }
     else:
         context = {
             'etapa': 'Evaluación final',
             'token': token,
-            'stage':stage,
-            'student':app.session_object[token].nombre
+            'stage': stage,
+            'student': app.session_object[token].nombre
         }
-    
+
     return render_template('ventana_carga.html', **context)
+
 
 @script.route('/final-evaluacion//token=<token>/stage=<int:stage>/<ev_est>/<virtual>', methods=['GET', 'POST'])
 def final_evaluacion(token, stage, ev_est, virtual):
@@ -175,11 +187,12 @@ def final_evaluacion(token, stage, ev_est, virtual):
             app.session_object[key].evaluacion['ev_ini_herr'] = max(
                 count_dict.items(), key=operator.itemgetter(1))[0]
             app.session_object[key].evaluacion['ev_ini_est'] = ev_est
-            #print('MAX {}'.format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
+            # print('MAX {}'.format(app.session_object['{}'.format(session['session_token'])].evaluacion['ev_ini_herr']))
             app.session_object[key].stage = 'final'
-            #response = make_response(redirect(url_for('script.ventana_espera')))
-            
-            response = make_response(redirect(url_for('script.stage', token=token, stage=2)))
+            # response = make_response(redirect(url_for('script.ventana_espera')))
+
+            response = make_response(
+                redirect(url_for('script.stage', token=token, stage=2)))
         except:
             response = make_response(redirect(url_for('script.error')))
             return response
@@ -191,10 +204,11 @@ def final_evaluacion(token, stage, ev_est, virtual):
                 count_dict.items(), key=operator.itemgetter(1))[0]
             app.session_object[key].evaluacion['ev_fin_est'] = ev_est
             app.session_object[key].conteo_final = count_dict
-            #print('MAX {}'.format(app.session_object[key].evaluacion['ev_fin_herr']))
+            # print('MAX {}'.format(app.session_object[key].evaluacion['ev_fin_herr']))
             print('Conteos {}'.format(count_dict))
-            response = make_response(redirect(url_for('script.cuestionario', token=token)))
-            #response = make_response(redirect(url_for('script.stage',stage=3)))
+            response = make_response(
+                redirect(url_for('script.cuestionario', token=token)))
+            # response = make_response(redirect(url_for('script.stage',stage=3)))
         except:
             response = make_response(redirect(url_for('script.error')))
             return response
@@ -203,6 +217,7 @@ def final_evaluacion(token, stage, ev_est, virtual):
         return render_template('virtual/close_tab.html')
     return response
 
+
 @script.route('/cuestionario/token=<token>', methods=['GET', 'POST'])
 def cuestionario(token):
     cuestionario_form = CuestionarioForm()
@@ -210,13 +225,14 @@ def cuestionario(token):
         'etapa': 'Evaluación inicial',
         'mensaje': '¿Como te sientes hoy?',
         'cuestionario_form': cuestionario_form,
-        'token':token,
-        'student':app.session_object[token].nombre
+        'token': token,
+        'student': app.session_object[token].nombre
     }
     if cuestionario_form.validate_on_submit():
         return redirect(url_for('script.conclusion', token=token))
 
     return render_template('cuestionario.html', **context)
+
 
 @script.route('/conclusion/token=<token>', methods=['GET', 'POST'])
 def conclusion(token):
@@ -241,8 +257,8 @@ def conclusion(token):
         preds_inicial['2'].append(preds[4])
         preds_inicial['3'].append(preds[5])
         preds_inicial['4'].append(preds[6])
-    #print('#####Preds desde images###############')
-    #print(preds_inicial)
+    # print('#####Preds desde images###############')
+    # print(preds_inicial)
     conteo_final = app.session_object[key].conteo_final
     preds_final = {
         '0': list(),
@@ -257,8 +273,8 @@ def conclusion(token):
         preds_final['2'].append(preds[4])
         preds_final['3'].append(preds[5])
         preds_final['4'].append(preds[6])
-    #print('#####Preds Final desde images###############')
-    #print(preds_final)
+    # print('#####Preds Final desde images###############')
+    # print(preds_final)
     conclusiones_form = ConclusionesForm()
     context = {
         'ev_ini_doc': ev_ini_doc,
@@ -271,8 +287,8 @@ def conclusion(token):
         'preds_inicial': preds_inicial,
         'preds_final': preds_final,
         'conclusion_form': conclusiones_form,
-        'token':token,
-        'student':app.session_object[token].nombre
+        'token': token,
+        'student': app.session_object[token].nombre
     }
     if conclusiones_form.validate_on_submit():
         app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_doc'] = dict(conclusiones_form.emocion_percibida.choices).get(
@@ -283,10 +299,12 @@ def conclusion(token):
 
     return render_template('conclusion.html', **context)
 
+
 @script.route('/conclusion/guardando/token=<token>', methods=['GET', 'POST'])
 def guardar(token):
     key = token
-    session_data = app.session_object[key]#.id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
+    # .id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
+    session_data = app.session_object[key]
     session_data.id_session = app.mysql_object.create_session(
         app.session_object[key])
     print("####################### SAVE DATA #########################")
@@ -297,26 +315,28 @@ def guardar(token):
     session['prev_session'] = False
     return redirect(url_for('inicio'))
 
+
 @script.route('/index_r')
 def endwc():
     response = make_response(redirect('/inicio'))
     return response  # , Response=(endframes()))
+
 
 @script.route('/panel-virtual', methods=['GET', 'POST'])
 def panel_virtual():
     key = '{}'.format(session['session_token'])
     student_data = app.session_object[key]
     requestUrl = request.url
-    requestUrl = requestUrl.replace("http","https")
+    requestUrl = requestUrl.replace("http", "https")
     requestUrl = requestUrl.split("panel-virtual")
 
     url_1 = requestUrl[0]+f"evaluacion?virtual=True&stage=inicial&id='{key}'"
     url_2 = requestUrl[0]+f"evaluacion?virtual=True&stage=final&id='{key}'"
     context = {
-        'student':student_data,
-        'url_inicial':url_1,
+        'student': student_data,
+        'url_inicial': url_1,
         'url_final': url_2,
-        'key':key,
+        'key': key,
         'student_image': student_data.est_image
     }
     if request.method == 'POST':
@@ -324,19 +344,21 @@ def panel_virtual():
 
     return render_template('virtual/admin_session.html', **context)
 
+
 @script.route('/internal-error', methods=['GET', 'POST'])
 def error():
     flash('Ups! el reconocimiento fallo, intentando nuevamente', 'error')
     response = make_response(redirect(session['url_backup']))
     return response
 
+
 @script.route('/desarrollo/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def stage(token, stage):
     session['session_token'] = token
 
     context = {
-        'actual_stage' : stage,
-        'token':token,
-        'student':app.session_object[token].nombre
+        'actual_stage': stage,
+        'token': token,
+        'student': app.session_object[token].nombre
     }
     return render_template('stage.html', **context)

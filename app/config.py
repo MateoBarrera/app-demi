@@ -1,10 +1,21 @@
+"""Demi App
+
+Configuration of resources to be loaded at application initialization.
+
+
+@Author: Mateo Barrera
+@Date: 12-07-2022  
+"""
 from datetime import timedelta
+
+
 class Config:
+    """Parameters settings for the app initialization 
+    """
     SECRET_KEY = 'SUPER SECRET'
     TIMEZONE = 'US/Eastern'
 
-    ##DATA BASE https://www.freemysqlhosting.net/account/##
-
+    ## DATA BASE https://www.freemysqlhosting.net/account/##
 
     """     MYSQL_DATABASE_HOST = 'sql5.freemysqlhosting.net'
     MYSQL_DATABASE_USER = 'sql5464955'
@@ -22,9 +33,8 @@ class Config:
     MYSQL_DATABASE_USER = 'root'
     MYSQL_DATABASE_PASSWORD = 'Flask_APP/54'
     MYSQL_DATABASE_DB = 'webapp' """
-    
 
-    ##MAIL CONFIG##
+    ## MAIL CONFIG##
     MAIL_SERVER = 'smtp.googlemail.com'
     MAIL_PORT = 587
     MAIL_USE_TLS = True
