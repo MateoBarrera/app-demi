@@ -1,3 +1,10 @@
+"""Models file
+
+This module includes models for handling user data in DEMI. 
+
+@Author: Mateo Barrera
+@Date: 12-07-2022  
+"""
 from cv2 import imwrite
 from flask_login import UserMixin
 from flask import current_app as app
@@ -6,7 +13,17 @@ import cv2
 
 
 class UserData:
+    """_summary_
+    """
+
     def __init__(self, user_login, user_data, est):
+        """_summary_
+
+        Args:
+            user_login (_type_): _description_
+            user_data (_type_): _description_
+            est (_type_): _description_
+        """
         self.id = user_login['idlogin']
         self.usuario = user_login['usuario']
         self.contraseña = user_login['contraseña']
@@ -40,8 +57,21 @@ class UserData:
             self.institucion = None
             self.cargo = user_data['cargo']
             self.rol = 'inv/doc'
+
+
 class UserModel(UserMixin):
+    """_summary_
+
+    Args:
+        UserMixin (_type_): _description_
+    """
+
     def __init__(self, user_data):
+        """_summary_
+
+        Args:
+            user_data (_type_): _description_
+        """
         self.id = user_data.usuario
         self.usuario = user_data.usuario
         self.contraseña = user_data.contraseña
@@ -57,6 +87,14 @@ class UserModel(UserMixin):
 
     @staticmethod
     def query(user_id):
+        """_summary_
+
+        Args:
+            user_id (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
         user_login = app.mysql_object.get_user(user_id)
         if user_login:
             user_login = user_login[0]
@@ -67,8 +105,14 @@ class UserModel(UserMixin):
         else:
             return None
 
+
 class SessionData():
+    """_summary_
+    """
+
     def __init__(self):
+        """_summary_
+        """
         self.token = None
         self.id_sesion = None
         self.id_usuario = None
@@ -84,22 +128,22 @@ class SessionData():
         self.tema = None
         self.evaluacion = {
             'ev_ini_doc': 'None doc',
-            'ev_ini_herr' : 'None herr',
-            'ev_ini_est' : 'None est',
-            'ev_fin_herr' : 'None herr 2',
-            'ev_fin_est' : 'None est 2',
-            'ev_fin_doc' : 'None doc 2'
+            'ev_ini_herr': 'None herr',
+            'ev_ini_est': 'None est',
+            'ev_fin_herr': 'None herr 2',
+            'ev_fin_est': 'None est 2',
+            'ev_fin_doc': 'None doc 2'
         }
         self.conteo_inicial = list()
-        self.response_labels ={
-            'inicial' : list(),
-            'final' : list()
+        self.response_labels = {
+            'inicial': list(),
+            'final': list()
 
         }
         self.conteo_final = list()
         self.response_preds = {
-            'inicial' : list(),
-            'final' : list()
+            'inicial': list(),
+            'final': list()
 
         }
         self.images = {

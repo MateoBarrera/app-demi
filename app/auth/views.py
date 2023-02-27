@@ -1,3 +1,10 @@
+"""Auth view file
+
+This module includes all dependencies and methods for handling login HTTP requests for DEMI. 
+
+@Author: Mateo Barrera
+@Date: 12-07-2022  
+"""
 from flask import request, render_template, redirect, flash, url_for, session, current_app as app
 from . import auth
 from app.forms import LoginForm, SignupForm, SignupEstForm
@@ -9,16 +16,29 @@ import secure
 
 secure_headers = secure.Secure()
 
+
 @auth.after_request
 def set_secure_headers(response):
+    """_summary_
+
+    Args:
+        response (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     secure_headers.framework.flask(response)
     return response
 
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     next_view = request.args.get('next', False)
-    print("NEXT            ###############  ")
-    print(next_view)
     val_name = True
     val_cont = True
     login_form = LoginForm()
@@ -44,19 +64,23 @@ def login():
                 session['prev_session'] = False
                 session.permanent = True
                 if not next_view:
-                    print("11111111111111111$$$$$$$$$$$$$$$$$$")
                     return redirect(url_for('inicio'))
-                print("########$$$$$$$$$$$$$$$$$$")
                 return redirect(url_for('iniciar_terapia'))
             else:
                 context['val_cont'] = False
         else:
             context['val_name'] = False
-    #print(context['val_name'], context['val_cont'])
+    # print(context['val_name'], context['val_cont'])
     return render_template('auth/login.html', **context)
+
 
 @auth.route('signup', methods=['GET', 'POST'])
 def signup():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     val_name = True
     signup_form = SignupForm()
     context = {
@@ -72,7 +96,6 @@ def signup():
                 signup_form.cargo.data)
             password_hash = generate_password_hash(password)
             user_new = app.mysql_object.set_user(username, password_hash, 1)
-            print(user_new)
             if user_new:
                 user_new = user_new[0]
                 app.mysql_object.set_user_data(
@@ -81,7 +104,6 @@ def signup():
                     user_id=user_new['idlogin'], rol=user_new['rol']))
                 user_class = UserData(user_new, user_data, est)
                 user_model = UserModel(user_class)
-                print(user_model.get_id())
                 login_user(user_model)
                 session['username'] = username
 
@@ -91,9 +113,15 @@ def signup():
 
     return render_template('auth/signup.html', **context)
 
+
 @auth.route('logout')
 @login_required
 def logout():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     logout_user()
     flash('Regresa Pronto.')
     return redirect(url_for('auth.login'))

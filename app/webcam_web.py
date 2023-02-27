@@ -1,35 +1,50 @@
-from keras.preprocessing.image import img_to_array
-import imutils
-import cv2
-from keras.models import load_model
-import numpy as np
-import time
-import datetime
-import os
+"""Webcam file
+
+This module includes the image preprocessing and classification tools with Keras.
+Webcam frames and endframes methods are called from scrip.evaluation in HTTP requests for DEMI. 
+ 
+Returns:
+    web cam files: frame, frame clone, predictions
+
+@Author: Mateo Barrera
+@Date: 12-07-2022 
+"""
+
+import imutils  # pylint: disable=import-error
+import cv2  # pylint: disable=import-error
+from keras.models import load_model  # pylint: disable=import-error
+from keras.preprocessing.image import img_to_array  # pylint: disable=import-error
+import numpy as np  # pylint: disable=import-error
 
 detection_model_path = 'app/lib/files/face.xml'
 emotion_model_path = 'app/lib/files/trained.hdf5'
 face_detection = cv2.CascadeClassifier(detection_model_path)
 emotion_classifier = load_model(emotion_model_path, compile=False)
-EMOTIONS = ['Enojo', 'Felicidad', 'Tristeza', 'Sorpresa', 'Neutral']
+emotions = ['Enojo', 'Felicidad', 'Tristeza', 'Sorpresa', 'Neutral']
 
 
 def frames(frame):
-    # ..............................................................
+    """_summary_
+
+    Args:
+        frame (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     label = 'No se reconoce'
     preds = list()
+    success = True
     if not frame.any():
         success = False
-        pass
-    success = True
     # Captura frame por frame
     frame = imutils.resize(frame, width=300)
-    frame2 = cv2.cvtColor(frame, cv2.IMREAD_COLOR)
+    # frame2 = cv2.cvtColor(frame, cv2.IMREAD_COLOR)
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     faces = face_detection.detectMultiScale(
         gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30), flags=cv2.CASCADE_SCALE_IMAGE)
     canvas = np.zeros((250, 300, 3), dtype="uint8")
-    frameClone = frame.copy()
+    frame_clone = frame.copy()
 
     if len(faces) > 0:
         faces = sorted(faces, reverse=True,
@@ -60,13 +75,13 @@ def frames(frame):
         preds2 = [enojo2, felicidad2, tristeza2, sorpresa2, neutral2]
 
         preds = np.asarray(preds2)  # Probabilidades
-        emotion_probability = np.max(preds)
-        label = EMOTIONS[preds.argmax()]
-        #f = open ('emo.txt','w+')
+        # emotion_probability = np.max(preds)
+        label = emotions[preds.argmax()]
+        # f = open ('emo.txt','w+')
         # f.write(label)
         # f.close()
 
-        for (i, (emotion, prob)) in enumerate(zip(EMOTIONS, preds)):
+        for (i, (emotion, prob)) in enumerate(zip(emotions, preds)):
             # construct the label text
             text = "{}: {:.2f}%".format(emotion, prob * 100)
             w = int(prob * 300)
@@ -75,17 +90,20 @@ def frames(frame):
             cv2.putText(canvas, text, (10, (i * 35) + 23),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.9,
                         (255, 255, 255), 2)
-            cv2.putText(frameClone, label, (fX, fY - 10),
+            cv2.putText(frame_clone, label, (fX, fY - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 0, 0), 2)
-            cv2.rectangle(frameClone, (fX, fY), (fX + fW, fY + fH),
+            cv2.rectangle(frame_clone, (fX, fY), (fX + fW, fY + fH),
                           (255, 0, 0), 2)
 
     if not success:
         pass
     else:
-        return frame, frameClone, label, preds
-        # concatena cada frame y muestra el resultado = Al colocar frame es la imagen original y frameClone es con la emoción
+        return frame, frame_clone, label, preds
+        # concatena cada frame y muestra el resultado = Al colocar frame es la imagen original y frame_clone es con la emoción
+
 
 def endframes():
+    """_summary_
+    """
     cv2.VideoCapture(-1)
-    False
+    # alse

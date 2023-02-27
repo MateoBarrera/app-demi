@@ -1,3 +1,10 @@
+"""Form file
+
+This module includes the forms structure to implemnt in HTTP requests for DEMI. 
+
+@Author: Mateo Barrera
+@Date: 12-07-2022  
+"""
 from flask_wtf import FlaskForm
 from wtforms.fields import StringField, PasswordField, SubmitField, SelectField, TextAreaField, RadioField, FormField, HiddenField, BooleanField, EmailField, DateField
 from wtforms.validators import DataRequired, Optional, EqualTo, InputRequired, Regexp, Email, Length, Regexp, NoneOf
@@ -5,7 +12,8 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
 class LoginForm(FlaskForm):
-    nombre = StringField('Nombre de usuario', validators=[InputRequired(),Length(min=4, max=25)])
+    nombre = StringField('Nombre de usuario', validators=[
+                         InputRequired(), Length(min=4, max=25)])
     contraseña = PasswordField('Contraseña', validators=[
                                InputRequired()])
     login = SubmitField('Iniciar sesión')
@@ -27,7 +35,7 @@ class SignupForm(FlaskForm):
 
 class UploadForm(FlaskForm):
     upload = FileField('Imagen', validators=[Optional(),
-        FileAllowed(['jpg', 'png'], 'Requiere .jpg o .png')])
+                                             FileAllowed(['jpg', 'png'], 'Requiere .jpg o .png')])
 
 
 class SignupEstForm(FlaskForm):
@@ -39,11 +47,12 @@ class SignupEstForm(FlaskForm):
                                              FileAllowed(['jpg'], 'Requiere .jpg')])
     nacimiento = DateField('Fecha Nacimiento *',
                            validators=[DataRequired()])
-    institucion = StringField('Institución Educativa *', validators=[DataRequired()])
+    institucion = StringField(
+        'Institución Educativa *', validators=[DataRequired()])
     grado = StringField("Grado Escolar *", validators=[DataRequired()])
     anotaciones = TextAreaField("Anotaciones")
     terminos = BooleanField(
-        "Política de tratamiento de datos personales *",validators=[DataRequired()])
+        "Política de tratamiento de datos personales *", validators=[DataRequired()])
     iniciar = SubmitField('Registrar')
 
 
@@ -71,9 +80,9 @@ class ContactoForm(FlaskForm):
 
 class TerapiaForm(FlaskForm):
     nombre_form = HiddenField('Nombre del estudiante',
-                                      validators=[DataRequired()])
-    identificacion_form = HiddenField('Identificacion del estudiante',
                               validators=[DataRequired()])
+    identificacion_form = HiddenField('Identificacion del estudiante',
+                                      validators=[DataRequired()])
     emocion_percibida = SelectField("Emoción percibida", choices=[('-1', ' '), ('a', 'Felicidad'), (
         'b', 'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutral')], validators=[DataRequired()])
     tema_form = HiddenField('Tema', validators=[DataRequired()])
@@ -93,8 +102,7 @@ class CuestionarioForm(FlaskForm):
 
 
 class ConclusionesForm(FlaskForm):
-    emocion_percibida = SelectField("Emoción percibida", choices=[('-1',' '), ('a','Felicidad'), ('b',
-        'Tristeza'), ('c','Enojo'), ('d','Sorpresa'), ('e','Neutral')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
+    emocion_percibida = SelectField("Emoción percibida", choices=[('-1', ' '), ('a', 'Felicidad'), ('b',
+                                                                                                    'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutral')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
     observacion = TextAreaField("Observaciones")
     iniciar = SubmitField('Finalizar')
-

@@ -1,3 +1,10 @@
+"""Main file
+
+This module includes all the main dependencies and methods for handling HTTP requests for DEMI. 
+
+@Author: Mateo Barrera
+@Date: 12-07-2022  
+"""
 from flask import request, render_template, redirect, make_response, url_for, session, Response, flash, current_app as app  # pylint: disable=import-error
 from . import script
 from flask_login import login_required, login_user, logout_user  # pylint: disable=import-error
@@ -19,18 +26,36 @@ secure_headers = secure.Secure()
 
 @script.after_request
 def set_secure_headers(response):
+    """_summary_
+
+    Args:
+        response (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     secure_headers.framework.flask(response)
     return response
 
 
 @socketio.on('virtual_status', namespace='/admin-info')
 def on_virtual_status(data):
+    """_summary_
+
+    Args:
+        data (_type_): _description_
+    """
     session['admin_room'] = data['admin_id']
     emit('virtual_status', data['info'], room=data['admin_id'])
 
 
 @socketio.on('join')
 def on_join(data):
+    """_summary_
+
+    Args:
+        data (_type_): _description_
+    """
     print('DATA')
     print(data)
     username = data['username']
@@ -41,6 +66,11 @@ def on_join(data):
 
 @socketio.on('leave')
 def on_leave(data):
+    """_summary_
+
+    Args:
+        data (_type_): _description_
+    """
     username = data['username']
     room = data['room']
     leave_room(room)
@@ -49,15 +79,24 @@ def on_leave(data):
 
 @socketio.on('connect')
 def test_connect():
+    """_summary_
+    """
     app.logger.info('Client connected')
 
 
 @socketio.on('image_ev')
 def image(data_image, stage):
+    """_summary_
+
+    Args:
+        data_image (_type_): _description_
+        stage (_type_): _description_
+    """
     # print('Recibiendo solicitud')
-    image = base64.b64decode(data_image.replace('data:image/jpeg;base64,', ''))
-    image = imread(image, pilmode='RGB')
-    cv2_img = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
+    image_raw = base64.b64decode(
+        data_image.replace('data:image/jpeg;base64,', ''))
+    image_raw = imread(image_raw, pilmode='RGB')
+    cv2_img = cv2.cvtColor(np.array(image_raw), cv2.COLOR_RGB2BGR)
     cv2_img_raw, cv2_img_response, response_label, preds = frames(cv2_img)
 
     # base64 encode
@@ -93,6 +132,11 @@ def image(data_image, stage):
 
 @script.route('/socket', methods=['GET', 'POST'])
 def receiber():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     context = {
         'user': 'user'
     }
@@ -102,6 +146,14 @@ def receiber():
 
 @script.route('/ventana-carga/token=<token>', methods=['GET', 'POST'])
 def ventana_carga(token):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     param = request.args.get('virtual', 'False')
     print("Respuesta: {}".format(param))
     print("Respuesta format: {}".format(type(param)))
@@ -114,6 +166,15 @@ def ventana_carga(token):
 
 @script.route('/evaluacion/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def evaluacion(token, stage):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+        stage (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     session['virtual'] = request.args.get('virtual', 'False')
     session['admin_id'] = None
 
@@ -157,6 +218,15 @@ def evaluacion(token, stage):
 
 @script.route('/ventana-espera/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def ventana_espera(token, stage):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+        stage (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     if stage == 1:
         context = {
             'etapa': 'Evaluación inicial',
@@ -177,12 +247,23 @@ def ventana_espera(token, stage):
 
 @script.route('/final-evaluacion//token=<token>/stage=<int:stage>/<ev_est>/<virtual>', methods=['GET', 'POST'])
 def final_evaluacion(token, stage, ev_est, virtual):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+        stage (_type_): _description_
+        ev_est (_type_): _description_
+        virtual (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     key = token
     if stage == 1:
         try:
             labels_list = app.session_object[key].response_labels['inicial']
             count_dict = {i: labels_list.count(i) for i in labels_list}
-            print('Conteos {}'.format(count_dict))
+            print(f'Conteos {count_dict}')
             app.session_object[key].conteo_inicial = count_dict
             app.session_object[key].evaluacion['ev_ini_herr'] = max(
                 count_dict.items(), key=operator.itemgetter(1))[0]
@@ -193,7 +274,7 @@ def final_evaluacion(token, stage, ev_est, virtual):
 
             response = make_response(
                 redirect(url_for('script.stage', token=token, stage=2)))
-        except:
+        except Exception:
             response = make_response(redirect(url_for('script.error')))
             return response
     else:
@@ -205,11 +286,11 @@ def final_evaluacion(token, stage, ev_est, virtual):
             app.session_object[key].evaluacion['ev_fin_est'] = ev_est
             app.session_object[key].conteo_final = count_dict
             # print('MAX {}'.format(app.session_object[key].evaluacion['ev_fin_herr']))
-            print('Conteos {}'.format(count_dict))
+            print(f'Conteos {count_dict}')
             response = make_response(
                 redirect(url_for('script.cuestionario', token=token)))
             # response = make_response(redirect(url_for('script.stage',stage=3)))
-        except:
+        except Exception:
             response = make_response(redirect(url_for('script.error')))
             return response
 
@@ -220,6 +301,14 @@ def final_evaluacion(token, stage, ev_est, virtual):
 
 @script.route('/cuestionario/token=<token>', methods=['GET', 'POST'])
 def cuestionario(token):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     cuestionario_form = CuestionarioForm()
     context = {
         'etapa': 'Evaluación inicial',
@@ -236,6 +325,14 @@ def cuestionario(token):
 
 @script.route('/conclusion/token=<token>', methods=['GET', 'POST'])
 def conclusion(token):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     session['session_token'] = token
     key = token
     ev_ini_doc = app.session_object[key].evaluacion['ev_ini_doc']
@@ -291,10 +388,10 @@ def conclusion(token):
         'student': app.session_object[token].nombre
     }
     if conclusiones_form.validate_on_submit():
-        app.session_object['{}'.format(session['session_token'])].evaluacion['ev_fin_doc'] = dict(conclusiones_form.emocion_percibida.choices).get(
+        app.session_object[f"{session['session_token']}"].evaluacion['ev_fin_doc'] = dict(
+            conclusiones_form.emocion_percibida.choices).get(
             conclusiones_form.emocion_percibida.data)
-        app.session_object['{}'.format(
-            session['session_token'])].observaciones = conclusiones_form.observacion.data
+        app.session_object[f"{session['session_token']}"].observaciones = conclusiones_form.observacion.data
         return redirect(url_for('script.guardar', token=token))
 
     return render_template('conclusion.html', **context)
@@ -302,6 +399,14 @@ def conclusion(token):
 
 @script.route('/conclusion/guardando/token=<token>', methods=['GET', 'POST'])
 def guardar(token):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     key = token
     # .id_session = app.mysql_object.create_session(app.session_object['{}'.format(session['session_token'])])
     session_data = app.session_object[key]
@@ -318,20 +423,30 @@ def guardar(token):
 
 @script.route('/index_r')
 def endwc():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     response = make_response(redirect('/inicio'))
     return response  # , Response=(endframes()))
 
 
 @script.route('/panel-virtual', methods=['GET', 'POST'])
 def panel_virtual():
-    key = '{}'.format(session['session_token'])
-    student_data = app.session_object[key]
-    requestUrl = request.url
-    requestUrl = requestUrl.replace("http", "https")
-    requestUrl = requestUrl.split("panel-virtual")
+    """_summary_
 
-    url_1 = requestUrl[0]+f"evaluacion?virtual=True&stage=inicial&id='{key}'"
-    url_2 = requestUrl[0]+f"evaluacion?virtual=True&stage=final&id='{key}'"
+    Returns:
+        _type_: _description_
+    """
+    key = f"{session['session_token']}"
+    student_data = app.session_object[key]
+    request_url = request.url
+    request_url = request_url.replace("http", "https")
+    request_url = request_url.split("panel-virtual")
+
+    url_1 = request_url[0]+f"evaluacion?virtual=True&stage=inicial&id='{key}'"
+    url_2 = request_url[0]+f"evaluacion?virtual=True&stage=final&id='{key}'"
     context = {
         'student': student_data,
         'url_inicial': url_1,
@@ -347,6 +462,11 @@ def panel_virtual():
 
 @script.route('/internal-error', methods=['GET', 'POST'])
 def error():
+    """_summary_
+
+    Returns:
+        _type_: _description_
+    """
     flash('Ups! el reconocimiento fallo, intentando nuevamente', 'error')
     response = make_response(redirect(session['url_backup']))
     return response
@@ -354,6 +474,15 @@ def error():
 
 @script.route('/desarrollo/token=<token>/stage=<int:stage>', methods=['GET', 'POST'])
 def stage(token, stage):
+    """_summary_
+
+    Args:
+        token (_type_): _description_
+        stage (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
     session['session_token'] = token
 
     context = {

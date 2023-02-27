@@ -313,7 +313,7 @@ def correo():
 @login_required
 def consulta():
     """_summary_
-
+    *TODO: Update user data admin.
     Returns:
         _type_: _description_
     """
@@ -341,7 +341,6 @@ def consulta():
                 print("result "+str(result[0]))
                 app.mysql_object.update_student_data(
                     values[0], values[3], values[1], values[2], values[4], result[0])
-                print("Formulario de estudiante")
                 flash("Datos actualizados con éxito")
         except pymysql.err.ProgrammingError as error:
             flash(error)
@@ -400,10 +399,10 @@ def noindex():
     Returns:
         HTTP response: text plain response
     """
-    r = Response(response="User-Agent: *\nAllow: /\nDisallow: /terapia/",
-                 status=200, mimetype="text/plain")
-    r.headers["Content-Type"] = "text/plain; charset=utf-8"
-    return r
+    resp = Response(response="User-Agent: *\nAllow: /\nDisallow: /terapia/",
+                    status=200, mimetype="text/plain")
+    resp.headers["Content-Type"] = "text/plain; charset=utf-8"
+    return resp
 
 
 if __name__ == '__main__':
