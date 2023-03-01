@@ -47,7 +47,7 @@ Consulta
     <div id="cards-print" class="row no-print">
       {% if rol_user == 'Investigador' %}
       <div class="col-lg-3 col-12 col-md-6 px-1">
-        <div class="card bg-card-primary  text-white mb-1 radius-10">
+        <div class="card bg-card-primary text-white mb-1 radius-10">
           <div class="card-title">
             <div class="text-white iconify">{{all_users|length}}<i class="fa-solid fa-person-chalkboard"></i></div><br>
             <p class="pl-15 text-aling-center font-weight-bold">Docentes registrados</p>
@@ -87,6 +87,7 @@ Consulta
           </div>
         </div>
       </div>
+      {% if not rol_user == 'Investigador' %}
       <div class="col-lg-3 col-12 col-md-6 px-1">
         <div class="card bg-card-quaternary text-white mb-1 radius-10">
           <div class="card-title">
@@ -101,7 +102,7 @@ Consulta
           </div>
         </div>
       </div>
-      {% if not rol_user == 'Investigador' %}
+      {% endif %}
       <div class="col-lg-3 col-12 col-md-6 px-1">
         <div class="card bg-card-primary  text-white mb-1 radius-10">
           <div class="card-title">
@@ -115,7 +116,6 @@ Consulta
           </div>
         </div>
       </div>
-      {% endif %}
     </div>
     <div class="row no-print">
       <div class="col-lg-8 px-1">
@@ -378,6 +378,7 @@ Consulta
     let last_topic = "";
     let last_student_selected = "";
     let id_selected = [];
+    let id_student_selected = "";
 
     function loadTable(card_id = null) {
       let arr = {};
@@ -442,17 +443,25 @@ Consulta
         let column_name = $(table_handler.column().header()).html();
         if (column_name == 'idsesiones') {
           if (!id_selected.some((id) => { return id == data[0] })) {
-            if (data[1] != last_student_selected) {
+            if (data[3] != last_student_selected) {
               ResetContainer();
               id_selected = [];
-              last_student_selected = data[1];
+              last_student_selected = data[3];
             }
             id_selected.push(data[0]);
             loadSession(data, arr);
           }
 
         } else if (column_name == "estudiante") {
-          alert("Seleccionaste al estudiante " + data[0] + ", próximamente se permitirá la búsqueda detallada por estudiantes :)");
+          ResetContainer();
+          if (data[3] != id_student_selected) {
+            ResetContainer();
+            id_student_selected = [];
+            last_student_selected = data[3];
+          }
+          id_student_selected.push(data[3])
+          loadStudent(data);
+          /* alert("Seleccionaste al estudiante " + data[0] + ", próximamente se permitirá la búsqueda detallada por estudiantes :)"); */
 
         } else if (column_name == "tema") {
           if (data[0] != last_topic) {
@@ -491,11 +500,27 @@ Consulta
     }
 
     function loadSession(session, arr) {
-      var all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
+      let all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
       all_sessions = all_sessions.filter(arr => (arr.Sesión == session[0]));
-      var props = JSON.parse('{{props| tojson |safe}}');
+      let props = JSON.parse('{{props| tojson |safe}}');
       props = props.filter(props => (props.Sesión == session[0]));
       CreateInfoBlock(session, all_sessions, props[0]);
+    }
+
+    function loadStudent(arr) {
+      let all_sessions = JSON.parse('{{ all_sessions_info| tojson |safe }}');
+      all_sessions = all_sessions.filter(all_sessions => (all_sessions.estudiante == arr[0]));
+      all_sessions.forEach(async (session) => {
+        session = Object.values(session);
+        session = [session[4], session[1], session[5], session[2], session[3], session[0]]
+        let all_sessions = JSON.parse('{{ all_sessions| tojson |safe }}');
+        all_sessions = all_sessions.filter(all_sessions => (all_sessions.Sesión == session[0]));
+        all_sessions = Object.values(all_sessions);
+        let props = JSON.parse('{{props| tojson |safe}}');
+        props = props.filter(props => (props.Sesión == session[0]));
+        CreateInfoBlock(session, all_sessions, props[0])
+      });
+
     }
 
     function loadDatabaseTable(id_table) {
