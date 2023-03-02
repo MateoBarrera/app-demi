@@ -12,6 +12,11 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
 class LoginForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     nombre = StringField('Nombre de usuario', validators=[
                          InputRequired(), Length(min=4, max=25)])
     contraseña = PasswordField('Contraseña', validators=[
@@ -20,6 +25,11 @@ class LoginForm(FlaskForm):
 
 
 class SignupForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     nombre = StringField('Nombre de usuario', validators=[
                          InputRequired(), Regexp('^[\S]+$', message="El campo no debe contener espacios"), Length(min=4, max=25)])
     contraseña = PasswordField('Contraseña', validators=[
@@ -34,11 +44,21 @@ class SignupForm(FlaskForm):
 
 
 class UploadForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     upload = FileField('Imagen', validators=[Optional(),
                                              FileAllowed(['jpg', 'png'], 'Requiere .jpg o .png')])
 
 
 class SignupEstForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     nombre = StringField('Nombre estudiante *', validators=[
                          InputRequired(), Regexp("^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$", message="Escriba nombre y apellidos, omita caracteres especiales."), Length(min=4, max=45)])
     identificacion = StringField('Cedula de identidad *', validators=[
@@ -65,6 +85,11 @@ class MyForm(Form):
 
 
 class ContactoForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     nombre = StringField('Nombre', validators=[
                          InputRequired("Ingrese su nombre")])
     correo = EmailField('Correo', validators=[InputRequired(
@@ -79,6 +104,11 @@ class ContactoForm(FlaskForm):
 
 
 class TerapiaForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     nombre_form = HiddenField('Nombre del estudiante',
                               validators=[DataRequired()])
     identificacion_form = HiddenField('Identificacion del estudiante',
@@ -91,6 +121,11 @@ class TerapiaForm(FlaskForm):
 
 
 class CuestionarioForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     resp_1 = RadioField("¿Te sentiste bien con el desarrollo de la clase?", choices=[
                         ('a', 'Si'), ('b', 'No')], validators=[DataRequired()])
     resp_2 = RadioField("¿Te ha pasado algo divertido en la clase de hoy?", choices=[
@@ -102,6 +137,11 @@ class CuestionarioForm(FlaskForm):
 
 
 class ConclusionesForm(FlaskForm):
+    """_summary_
+
+    Args:
+        FlaskForm (_type_): _description_
+    """
     emocion_percibida = SelectField("Emoción percibida", choices=[('-1', ' '), ('a', 'Felicidad'), ('b',
                                                                                                     'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutral')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
     observacion = TextAreaField("Observaciones")
