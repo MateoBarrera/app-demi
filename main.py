@@ -143,7 +143,7 @@ def inicio():
     return render_template('inicio.html', **context)
 
 
-@app.route('/iniciar-terapia', methods=['GET', 'POST'])
+@app.route("/iniciar-terapia", methods=["GET", "POST"])
 @login_required
 def iniciar_terapia():
     """_summary_
@@ -154,26 +154,21 @@ def iniciar_terapia():
     """
     # Inicializar el contexto de la vista con el modelo de usuario
     user = current_user
-    # if user.cargo == 'Investigador':
-    if True:
-        students = app.mysql_object.get_all_students()
-        all_sessions = app.mysql_object.get_all_session_info()
-    else:
-        students = app.mysql_object.get_all_doc_students(user.id_table)
-        all_sessions = app.mysql_object.get_all_doc_session_info(user.id_table)
-
+    students = app.mysql_object.get_all_doc_students(user.id_table)
+    all_sessions = app.mysql_object.get_all_session_info()
     terapia_form = TerapiaForm()
     context = {
-        'students': students,
-        'rol': user.rol,
-        'data': user,
-        'username': user.id,
-        'terapia_form': terapia_form,
-        'all_sessions': all_sessions,
+        "students": students,
+        "rol": user.rol,
+        "data": user,
+        "username": user.id,
+        "terapia_form": terapia_form,
+        "all_sessions": all_sessions,
+        "other_students": app.mysql_object.get_all_students()
     }
     # Check de sesiones previas
 
-    session['prev_session'] = False
+    session["prev_session"] = False
     try:  # Cambiar el uso de prev data sesion a una lista e iterar sobre ella
         prev_session_data = list()
         for item in session["tokens"]:

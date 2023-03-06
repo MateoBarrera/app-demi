@@ -41,6 +41,29 @@ Iniciar Terapia
                         class="form-input form-select-sm"></select>
                     </div>
                   </div>
+                  <div class="modal fade " id="other-student" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-content radius-10 px-4">
+                        <div class="modal-header">
+                          <h5 class="modal-title h5 text-primary" id="newtemaLabel">Listado de estudiantes</h5>
+                          <img class="icon-modal" alt="shortcut icon"
+                            src="{{ url_for('static', filename='images/favicon.ico') }}">
+                        </div>
+                        <div class="modal-body">
+                          <p class="fs-5 pb-3">Estudiantes disponibles en la plataforma</p>
+                          <div class="select-input">
+                            <select type="text" class="form-input form-select-sm" id="input-other-student"></select>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary radius-10"
+                            data-bs-dismiss="modal">Cancelar</button>
+                          <button type="button" class="btn btn-primary radius-10" data-bs-dismiss="modal"
+                            onclick="set_other_student()">Cargar estudiante</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </fieldset>
                 <fieldset>
                   <div class="single-input mb-1 row d-flex">
@@ -274,6 +297,7 @@ Iniciar Terapia
 </script> -->
 
 <script type="text/javascript">
+  let others_students;
   window.onload = function () {
     /* alert("Page is loaded"); */
     var x = document.getElementById("nombre");
@@ -286,25 +310,64 @@ Iniciar Terapia
       option.text = element['estudiante'].charAt(0).toUpperCase() + element['estudiante'].slice(1);
       x.add(option);
     });
+    if (JSON.parse('{{other_students| tojson | safe}}') != students) {
+      var option = document.createElement("option");
+      option.classList.add('text-primary')
+      option.text = "Otros estudiantes disponibles";
+      x.add(option);
+      addHr(x);
+      load_other_students();
+    }
+  }
+
+  async function load_other_students() {
+    var x = document.getElementById("input-other-student");
+    let students = JSON.parse('{{other_students| tojson | safe}}');
+    students.forEach(element => {
+      var option = document.createElement("option");
+      option.text = element['estudiante'].charAt(0).toUpperCase() + element['estudiante'].slice(1);
+      x.add(option);
+    });
+  }
+
+  function set_other_student() {
+    var other_student = $('#input-other-student').find(":selected").text();
+    var options = $('#nombre option');
+    var values = $.map(options, function (option) {
+      return option.value;
+    });
+    let add_this = false;
+    values.forEach(item => {
+      add_this ||= (item == other_student);
+    })
+    if (!add_this) {
+      var option = document.createElement("option");
+      option.text = other_student;
+      document.getElementById("nombre").add(option);
+    }
+    document.getElementById("nombre").value = other_student;
+    set_values();
   }
 
   function set_values() {
-    var index = document.getElementById("nombre").selectedIndex;
+    var nombre_test = $('#nombre').find(":selected").text().toLowerCase();
+    if (nombre_test == "otros estudiantes disponibles") {
+      $("#other-student").modal('show');
+    }
     var nombre = "";
     var inst = "";
     var grado = "";
     var identificacion = "";
-    var i = 0;
-    let students = JSON.parse('{{students| tojson | safe}}');
+    let students = JSON.parse('{{other_students| tojson | safe}}');
     students.forEach(element => {
-      i += 1;
-      if (index == i) {
+      if (element['estudiante'].toLowerCase() == nombre_test) {
         nombre = element['estudiante'];
         inst = element['institucion'];
         grado = element['grado'];
         identificacion = element['identificacion'];
       }
-    });
+    })
+
     document.getElementById('nombre_form').value = nombre;
     document.getElementById('institucion').value = inst;
     document.getElementById('grado').value = grado;
@@ -329,7 +392,6 @@ Iniciar Terapia
 
   function set_tema() {
     var select_text = $('#tema').find(":selected").text();
-    console.log("Select " + select_text)
     if (select_text == "Iniciar con tema nuevo") {
       $("#newtema").modal('show');
     }
@@ -345,8 +407,6 @@ Iniciar Terapia
     var option = document.createElement("option");
     option.text = ' '
     x_tema.add(option);
-    console.log("Temas list")
-    console.log(tema_list)
     removeDuplicates(tema_list).forEach(element => {
       if (element) {
         var option = document.createElement("option");
@@ -386,6 +446,7 @@ Iniciar Terapia
 
 <script>
   var temaModal = new bootstrap.Modal(document.getElementById("newtema"), {});
+  var otherStudentModal = new bootstrap.Modal(document.getElementById("other-student"), {});
 </script>
 
 {% if prev_session %}

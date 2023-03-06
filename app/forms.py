@@ -1,6 +1,6 @@
 """Form file
 
-This module includes the forms structure to implemnt in HTTP requests for DEMI. 
+This module includes the forms structure to implement in HTTP requests for DEMI. 
 
 @Author: Mateo Barrera
 @Date: 12-07-2022  
@@ -142,7 +142,7 @@ class ConclusionesForm(FlaskForm):
     Args:
         FlaskForm (_type_): _description_
     """
-    emocion_percibida = SelectField("Emoción percibida", choices=[('-1', ' '), ('a', 'Felicidad'), ('b',
-                                                                                                    'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutral')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
+    emocion_percibida = SelectField("Emoción percibida", choices=[
+                                    ('-1', ' '), ('a', 'Felicidad'), ('b', 'Tristeza'), ('c', 'Enojo'), ('d', 'Sorpresa'), ('e', 'Neutral')], validators=[InputRequired(), NoneOf(' ', message="Seleccione un campo valido.")])
     observacion = TextAreaField("Observaciones")
     iniciar = SubmitField('Finalizar')
