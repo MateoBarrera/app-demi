@@ -174,8 +174,7 @@ function SetInfo(session, parent, arr) {
 function SetGraph(id_session, parent, props) {
 	var canvas = _canvas_.cloneNode(false)
 	let width = "100%",
-		height = "155"
-
+		height = "156"
 	canvas.id = id_session + "-chart-1"
 	canvas.width = width
 	canvas.height = height

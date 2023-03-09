@@ -426,6 +426,10 @@ div[style*="margin: 16px 0;"] {
 	background-color: #D94343;
 }
 
+.row-info-chart {
+	height: 156px;
+}
+
 @media only print{
 	body {
 			background: white;
