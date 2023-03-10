@@ -167,7 +167,6 @@ def iniciar_terapia():
         "other_students": app.mysql_object.get_all_students()
     }
     # Check de sesiones previas
-
     session["prev_session"] = False
     try:  # Cambiar el uso de prev data sesion a una lista e iterar sobre ella
         prev_session_data = list()
@@ -180,11 +179,9 @@ def iniciar_terapia():
             session["prev_session"] = True
             context["prev_session"] = session["prev_session"]
             flash("Existe una sesión previa en curso")
-    except KeyError as error:
+    except (KeyError, TypeError) as error:
         print(error)
         session["tokens"] = list()
-
-    print(f"prev_session {session['prev_session']}")
 
     # Gestión de los post en el formulario de iniciar terapia, reanudar o iniciar de cero
     if terapia_form.validate_on_submit() and (user.rol == "inv/doc"):

@@ -416,8 +416,7 @@ def guardar(token):
     print(session_data)
     app.mysql_object.save_session(session_data)
     app.session_object.pop(key)
-    session.pop('session_token')
-    session['prev_session'] = False
+    session["tokens"].remove(key)
     return redirect(url_for('inicio'))
 
 
