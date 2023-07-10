@@ -1,4 +1,4 @@
-# demi-app
+# app-demi
 
 <a name="readme-top"></a>
 
@@ -28,7 +28,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/MateoBarrera/demi-app">
+  <a href="https://github.com/MateoBarrera/app-demi">
     <img src="src/MB_lila_dev.png" alt="Logo MB" width="80" height="80">
   </a>
 
@@ -37,14 +37,14 @@
   <p align="center">
     Basado en el proyecto <a href="https://refactoring.guru/es">Refactoring.guru</a>
     <br />
-    <a href="https://github.com/MateoBarrera/demi-app"><strong>Explorar »</strong></a>
+    <a href="https://github.com/MateoBarrera/app-demi"><strong>Explorar »</strong></a>
     <br />
     <br />
     <a href="https://github.com/MateoBarrera">Autor</a>
     ·
-    <a href="https://github.com/MateoBarrera/demi-app/issues">Reportar Bug</a>
+    <a href="https://github.com/MateoBarrera/app-demi/issues">Reportar Bug</a>
     ·
-    <a href="https://github.com/MateoBarrera/demi-app/issues">Solicitar Feature</a>
+    <a href="https://github.com/MateoBarrera/app-demi/issues">Solicitar Feature</a>
   </p>
 </div>
 
@@ -112,7 +112,7 @@ Este repositorio y su información es de libre uso, siempre que se respete el ob
 - [ ] Cargar Creacionales/FactoryMethod
 - [ ] ...
 
-Visite [open issues](https://github.com/MateoBarrera/demi-app/issues) para ver una lista completa de las funciones propuestas y los problemas conocidos.
+Visite [open issues](https://github.com/MateoBarrera/app-demi/issues) para ver una lista completa de las funciones propuestas y los problemas conocidos.
 
 <p align="right">(<a href="#readme-top">Regresar al inicio</a>)</p>
 
@@ -147,7 +147,7 @@ Distribuido bajo la licencia MIT. Para mas información visite `LICENSE.txt` .
 
 Mateo Barrera- [@materile_19](https://twitter.com/materile_19) - mateobarrerazapata@gmail.com
 
-Enlace del proyecto: [https://github.com/MateoBarrera/demi-app](https://github.com/MateoBarrera/demi-app)
+Enlace del proyecto: [https://github.com/MateoBarrera/app-demi](https://github.com/MateoBarrera/app-demi)
 
 <p align="right">(<a href="#readme-top">Regresar al inicio</a>)</p>
 
@@ -173,22 +173,22 @@ Enlace del proyecto: [https://github.com/MateoBarrera/demi-app](https://github.c
 <!-- examples -->
 
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/MateoBarrera/demi-app/graphs/contributors
+[contributors-url]: https://github.com/MateoBarrera/app-demi/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/MateoBarrera/demi-app/network/members
+[forks-url]: https://github.com/MateoBarrera/app-demi/network/members
 [stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/MateoBarrera/demi-app/stargazers
+[stars-url]: https://github.com/MateoBarrera/app-demi/stargazers
 
 <!-- examples -->
 
 <!-- main -->
 
-[watchers-shield]: https://img.shields.io/github/watchers/MateoBarrera/demi-app?style=for-the-badge
-[watchers-url]: https://github.com/MateoBarrera/demi-app
-[issues-shield]: https://img.shields.io/bitbucket/issues-raw/MateoBarrera/demi-app?style=for-the-badge
-[issues-url]: https://github.com/MateoBarrera/demi-app/issues
+[watchers-shield]: https://img.shields.io/github/watchers/MateoBarrera/app-demi?style=for-the-badge
+[watchers-url]: https://github.com/MateoBarrera/app-demi
+[issues-shield]: https://img.shields.io/bitbucket/issues-raw/MateoBarrera/app-demi?style=for-the-badge
+[issues-url]: https://github.com/MateoBarrera/app-demi/issues
 [license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/MateoBarrera/demi-app/blob/master/LICENSE.txt
+[license-url]: https://github.com/MateoBarrera/app-demi/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://www.linkedin.com/in/mateobarrerazapata
 [python-shield]: https://img.shields.io/badge/python-3.10.6-green?style=for-the-badge&logo=python
